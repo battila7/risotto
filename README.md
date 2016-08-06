@@ -1,2 +1,3 @@
-# dijon
-Dijon
+# Dijon
+
+Lightweight dependency injection framework.
