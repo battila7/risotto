@@ -1,13 +1,7 @@
 package com.dijon.core.binding;
 
-import java.lang.annotation.Annotation;
+import com.dijon.core.dependency.Dependency;
 
-public class Binding<T> extends AbstractBinding<T> {
-  public NamedBinding<T> as(String name) {
-    return null;
-  }
-
-  public AnnotatedBinding<T> withAnnotation(Class<? extends Annotation> annotation) {
-    return null;
-  }
+public interface Binding<T> {
+  boolean canResolve(Dependency<T> dependency);
 }
