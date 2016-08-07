@@ -1,17 +1,21 @@
 package com.dijon;
 
 import com.dijon.binding.Binding;
+import com.dijon.binding.BindingHolder;
 import com.dijon.binding.InstantiatableBinding;
+import com.dijon.dependency.Dependency;
+import com.dijon.dependency.management.DependencyDetector;
 import com.dijon.dependency.management.DependencyInjector;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Abstract dependency container class that must be subclassed by custom dependency containers.
  */
 public abstract class AbstractContainer {
-  private Map<Class, List<Binding>> bindingMap;
+  private Map<Class, List<BindingHolder>> bindingMap;
 
   private List<AbstractContainer> childContainerList;
 
@@ -57,5 +61,9 @@ public abstract class AbstractContainer {
     }
 
     return false;
+  }
+
+  public <T> Optional<BindingHolder<? extends T>> resolveDependency(Dependency<T> dependency) {
+    return null;
   }
 }
