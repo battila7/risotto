@@ -1,5 +1,7 @@
 package com.dijon.core;
 
+import com.dijon.core.binding.Binding;
+
 /**
  * Abstract dependency container class that must be subclassed by custom dependency containers.
  */
@@ -31,5 +33,9 @@ public abstract class AbstractContainer {
    */
   public void addChildContainer(Class<? extends AbstractContainer> childContainer, String name) {
     // TODO: Implement
+  }
+
+  public <T> Binding<T> bind(Class<T> clazz) {
+    return null;
   }
 }
