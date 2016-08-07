@@ -2,6 +2,7 @@ package com.dijon.binding;
 
 import com.dijon.dependency.Dependency;
 
+import java.util.Collections;
 import java.util.List;
 
 public class InstanceBinding<T> extends InstantiatableBinding<T> {
@@ -14,10 +15,6 @@ public class InstanceBinding<T> extends InstantiatableBinding<T> {
   }
 
   public T getInstance() {
-    return null;
-  }
-
-  public List<Dependency> getDependencies() {
     return null;
   }
 }

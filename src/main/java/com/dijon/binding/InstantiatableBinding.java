@@ -13,8 +13,6 @@ public abstract class InstantiatableBinding<T> implements Binding<T> {
 
   public abstract T getInstance();
 
-  public abstract List<Dependency> getDependencies();
-
   public boolean canResolve(Dependency<T> dependency) {
     return binding.canResolve(dependency);
   }

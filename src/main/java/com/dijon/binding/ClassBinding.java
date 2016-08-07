@@ -16,8 +16,4 @@ public class ClassBinding<T> extends InstantiatableBinding<T> {
   public T getInstance() {
     return null;
   }
-
-  public List<Dependency> getDependencies() {
-    return null;
-  }
 }

@@ -1,11 +1,22 @@
 package com.dijon;
 
 import com.dijon.binding.Binding;
+import com.dijon.binding.InstantiatableBinding;
+import com.dijon.dependency.management.DependencyInjector;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Abstract dependency container class that must be subclassed by custom dependency containers.
  */
 public abstract class AbstractContainer {
+  private Map<Class, List<Binding>> bindingMap;
+
+  private List<AbstractContainer> childContainerList;
+
+  private Map<Class, DependencyInjector> injectorMap;
+
   /**
    * Configures the contents of the container. By overriding this method, instances and child
    * containers can be added to the container object.
@@ -16,9 +27,8 @@ public abstract class AbstractContainer {
    * Adds a child container to this container. The dependency resolution of the passed child
    * container is deferred until the dependency resolution of the current container takes place.
    *
-   * Note that if you wish to add two or more containers with the same type then use
-   * the {@link AbstractContainer#addChildContainer(Class, String)} method to avoid
-   * type collision.
+   * Note that if you wish to add two or more containers with the same type then use the {@link
+   * AbstractContainer#addChildContainer(Class, String)} method to avoid type collision.
    * @param childContainer the new child container class
    */
   public void addChildContainer(Class<? extends AbstractContainer> childContainer) {
@@ -35,7 +45,17 @@ public abstract class AbstractContainer {
     // TODO: Implement
   }
 
-  public <T> Binding<T> bind(Class<T> clazz) {
-    return null;
+  public void addBinding(InstantiatableBinding binding) {
+
+  }
+
+  public boolean hasBindingFor(Class clazz) {
+    for (Class cls : bindingMap.keySet()) {
+      if (cls.isAssignableFrom(clazz)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }

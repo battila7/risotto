@@ -8,9 +8,22 @@ import java.util.Optional;
 public abstract class DependencyDetector<T> {
   protected final Class<T> clazz;
 
+  protected DependencyInjector<T> dependencyInjector;
+
   public DependencyDetector(Class<T> clazz) {
     this.clazz = clazz;
   }
 
-  public abstract Optional<List<Dependency>> detectDependencies();
+  public abstract Optional<List<Dependency>> detectImmediateDependencies();
+
+  public DependencyInjector<T> getInjector() {
+    if (dependencyInjector == null) {
+      throw new IllegalStateException(
+          "Dependency detection is not yet performed or could not create injector!");
+    }
+
+    return this.dependencyInjector;
+  }
+
+  protected abstract void setupInjector();
 }
