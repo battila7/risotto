@@ -1,6 +1,6 @@
-package com.dijon.core;
+package com.dijon;
 
-import com.dijon.core.binding.Binding;
+import com.dijon.binding.Binding;
 
 /**
  * Abstract dependency container class that must be subclassed by custom dependency containers.

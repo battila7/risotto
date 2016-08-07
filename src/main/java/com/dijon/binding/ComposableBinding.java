@@ -1,4 +1,4 @@
-package com.dijon.core.binding;
+package com.dijon.binding;
 
 public abstract class ComposableBinding<T> implements Binding<T> {
   protected final Binding<T> binding;

@@ -1,6 +1,6 @@
-package com.dijon.core.binding;
+package com.dijon.binding;
 
-import com.dijon.core.dependency.Dependency;
+import com.dijon.dependency.Dependency;
 
 public class NamedBinding<T> extends ComposableBinding<T> {
   private final String name;
