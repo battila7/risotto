@@ -7,3 +7,5 @@
 
 #### Logo credits
 Original icon made by [Madebyoliver](http://www.flaticon.com/authors/madebyoliver) from [www.flaticon.com](www.flaticon.cm).
+
+Modified for Dijon by [daergoth](https://github.com/daergoth).
