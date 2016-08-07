@@ -29,6 +29,4 @@ public abstract class DependencyDetector<T> {
 
     return this.dependencyInjector;
   }
-
-  protected abstract void setupInjector();
 }

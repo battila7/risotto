@@ -63,7 +63,7 @@ public abstract class AbstractContainer {
     return false;
   }
 
-  public <T> Optional<BindingHolder<? extends T>> resolveDependency(Dependency<T> dependency) {
+  public <T> Optional<DependencyInjector<? extends T>> resolveDependency(Dependency<T> dependency) {
     return null;
   }
 }

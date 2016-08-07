@@ -44,9 +44,4 @@ public class ConstructorDependencyDetector<T> extends DependencyDetector<T> {
   private List<Dependency> processParameters(Constructor<?> constructor) {
     return null;
   }
-
-  @Override
-  protected void setupInjector() {
-    // TODO: Create ConstructorDependencyInjector
-  }
 }
