@@ -19,7 +19,7 @@ public abstract class DependencyDetector<T> {
     this.clazz = clazz;
   }
 
-  public abstract Optional<List<Dependency>> detectImmediateDependencies();
+  public abstract Optional<List<Dependency<?>>> detectImmediateDependencies();
 
   public DependencyInjector<T> getInjector() {
     if (dependencyInjector == null) {

@@ -1,9 +1,15 @@
 package com.dijon.dependency.management;
 
 import com.dijon.annotations.Inject;
+import com.dijon.annotations.Named;
+import com.dijon.dependency.AnnotatedDependency;
 import com.dijon.dependency.Dependency;
+import com.dijon.dependency.NamedDependency;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Parameter;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,19 +19,30 @@ public class ConstructorDependencyDetector<T> extends DependencyDetector<T> {
   }
 
   @Override
-  public Optional<List<Dependency>> detectImmediateDependencies() {
-    Optional<Constructor<?>> injectableConstructorOptional = getInjectableConstructor();
+  public Optional<List<Dependency<?>>> detectImmediateDependencies() {
+    Optional<Constructor<T>> injectableConstructorOptional;
+
+    try {
+       injectableConstructorOptional = getInjectableConstructor();
+    } catch (Exception e) {
+      return Optional.empty();
+    }
 
     if (!injectableConstructorOptional.isPresent()) {
       return Optional.empty();
     }
 
-    List<Dependency> dependencies = processParameters(injectableConstructorOptional.get());
+    Constructor<T> injectableConstructor = injectableConstructorOptional.get();
+
+    List<Dependency<?>> dependencies = processParameters(injectableConstructor);
+
+    this.dependencyInjector =
+        new ConstructorDependencyInjector<>(clazz, dependencies, injectableConstructor);
 
     return Optional.of(dependencies);
   }
 
-  private Optional<Constructor<?>> getInjectableConstructor() {
+  private Optional<Constructor<T>> getInjectableConstructor() throws Exception {
     Constructor<?>[] constructors = clazz.getConstructors();
 
     if (constructors.length != 1) {
@@ -35,13 +52,42 @@ public class ConstructorDependencyDetector<T> extends DependencyDetector<T> {
     Constructor<?> targetConstructor = constructors[0];
 
     if (targetConstructor.isAnnotationPresent(Inject.class)) {
-      return Optional.of(targetConstructor);
+      // retrieve Constructor<T> instead of Constructor<?>
+      Constructor<T> typedConstructor = clazz.getConstructor(targetConstructor.getParameterTypes());
+
+      return Optional.of(typedConstructor);
     }
 
     return Optional.empty();
   }
 
-  private List<Dependency> processParameters(Constructor<?> constructor) {
-    return null;
+  private List<Dependency<?>> processParameters(Constructor<?> constructor) {
+    Parameter[] parameters = constructor.getParameters();
+
+    List<Dependency<?>> dependencies = new LinkedList<>();
+
+    for (Parameter param : parameters) {
+      Annotation[] annotations = param.getAnnotations();
+
+      if (annotations.length == 0) {
+        dependencies.add(new Dependency<>(param.getType()));
+      } else {
+        if (param.isAnnotationPresent(Named.class)) {
+          Named namedAnnotation = param.getAnnotation(Named.class);
+
+          NamedDependency<?> dependency =
+              new NamedDependency<>(param.getType(), namedAnnotation.value());
+
+          dependencies.add(dependency);
+        } else {
+          AnnotatedDependency<?> dependency =
+              new AnnotatedDependency<>(param.getType(), annotations[0].getClass());
+
+          dependencies.add(dependency);
+        }
+      }
+    }
+
+    return dependencies;
   }
 }
