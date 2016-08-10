@@ -1,13 +1,11 @@
 package com.dijon;
 
-import com.dijon.binding.ClassBinding;
 import com.dijon.binding.InstanceBinding;
 import com.dijon.binding.InstantiatableBinding;
 import com.dijon.dependency.Dependency;
-import com.dijon.dependency.management.DependencyInjector;
+import com.dijon.exception.DependencyResolutionFailedException;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -19,6 +17,8 @@ public abstract class AbstractContainer {
   private List<Dependency<?>> dependencyList;
 
   private List<AbstractContainer> childContainerList;
+
+  private AbstractContainer parentContainer;
 
   /**
    * Configures the contents of the container. By overriding this method, instances and child
@@ -48,7 +48,7 @@ public abstract class AbstractContainer {
     // TODO: Implement
   }
 
-  public void addBinding(InstanceBinding<?> instanceBinding) {
+  protected void addBinding(InstanceBinding<?> instanceBinding) {
     bindingList.add(instanceBinding);
 
     List<Dependency<?>> immediateDependencies = instanceBinding.getImmediateDependencies();
@@ -60,7 +60,25 @@ public abstract class AbstractContainer {
     }
   }
 
-  public <T> Optional<InstanceBinding<? extends T>> resolve(Dependency<T> dependency) {
-    return null;
+  protected void performResolution() throws DependencyResolutionFailedException {
+    for (Dependency<?> dependency : dependencyList) {
+      Optional<InstantiatableBinding<?>> bindingOptional = resolve(dependency);
+
+      if (!bindingOptional.isPresent()) {
+        throw new DependencyResolutionFailedException(dependency);
+      }
+
+      dependency.setResolvingBinding(bindingOptional.get());
+    }
+  }
+
+  protected Optional<InstantiatableBinding<?>> resolve(Dependency<?> dependency) {
+    for (InstantiatableBinding<?> binding : bindingList) {
+      if (binding.canResolve(dependency)) {
+        return Optional.of(binding);
+      }
+    }
+
+    return parentContainer.resolve(dependency);
   }
 }

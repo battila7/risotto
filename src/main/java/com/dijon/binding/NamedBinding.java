@@ -11,7 +11,7 @@ public class NamedBinding<T> extends ComposableBinding<T> {
     this.name = name;
   }
 
-  public boolean canResolve(Dependency<T> dependency) {
+  public boolean canResolve(Dependency<?> dependency) {
     return false;
   }
 }

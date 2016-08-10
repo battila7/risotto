@@ -13,7 +13,7 @@ public class AnnotatedBinding<T> extends ComposableBinding<T> {
     this.annotation = annotation;
   }
 
-  public boolean canResolve(Dependency<T> dependency) {
+  public boolean canResolve(Dependency<?> dependency) {
     return false;
   }
 }

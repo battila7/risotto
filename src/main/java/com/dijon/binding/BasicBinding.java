@@ -19,7 +19,7 @@ public class BasicBinding<T> implements Binding<T> {
     return clazz;
   }
 
-  public boolean canResolve(Dependency<T> dependency) {
+  public boolean canResolve(Dependency<?> dependency) {
     return false;
   }
 

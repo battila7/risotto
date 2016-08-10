@@ -1,7 +1,9 @@
 package com.dijon.binding;
 
 import com.dijon.dependency.Dependency;
+import com.dijon.instantiation.InstantiationMode;
 import com.dijon.instantiation.Instantiator;
+import com.dijon.instantiation.InstantiatorFactory;
 
 import java.util.List;
 
@@ -26,11 +28,17 @@ public abstract class InstantiatableBinding<T> implements Binding<T> {
     return instantiator.getImmediateDependencies();
   }
 
-  public boolean canResolve(Dependency<T> dependency) {
+  public boolean canResolve(Dependency<?> dependency) {
     return binding.canResolve(dependency);
   }
 
   public Class<T> getBoundedClass() {
     return binding.getBoundedClass();
+  }
+
+  public InstantiatableBinding<T> withMode(InstantiationMode mode) {
+    InstantiatorFactory.decorateInstantiatorForMode(instantiator, mode);
+
+    return this;
   }
 }
