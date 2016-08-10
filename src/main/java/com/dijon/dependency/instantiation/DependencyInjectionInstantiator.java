@@ -1,9 +1,9 @@
 package com.dijon.dependency.instantiation;
 
 public class DependencyInjectionInstantiator<T> implements Instantiator<T> {
-  private final Class<T> clazz;
+  private final Class<? extends T> clazz;
 
-  public DependencyInjectionInstantiator(Class<T> clazz) {
+  public DependencyInjectionInstantiator(Class<? extends T> clazz) {
     this.clazz = clazz;
   }
 

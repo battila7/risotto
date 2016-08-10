@@ -1,5 +1,7 @@
 package com.dijon;
 
+import com.dijon.binding.ClassBinding;
+import com.dijon.binding.InstanceBinding;
 import com.dijon.binding.InstantiatableBinding;
 import com.dijon.dependency.Dependency;
 import com.dijon.dependency.management.DependencyInjector;
@@ -44,7 +46,7 @@ public abstract class AbstractContainer {
     // TODO: Implement
   }
 
-  public void addBinding(InstantiatableBinding binding) {
+  public <T> void addBinding(InstanceBinding<T> instanceBinding) {
 
   }
 
