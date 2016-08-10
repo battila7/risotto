@@ -1,4 +1,4 @@
-package com.dijon.dependency.instantiation;
+package com.dijon.instantiation;
 
 public class InstantiatorFactory {
   public static <T> Instantiator<T> decorateInstantiatorForMode(Instantiator<T> instantiator,

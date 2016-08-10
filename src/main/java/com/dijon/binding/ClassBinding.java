@@ -1,9 +1,6 @@
 package com.dijon.binding;
 
-import com.dijon.dependency.Dependency;
-import com.dijon.dependency.instantiation.DependencyInjectionInstantiator;
-
-import java.util.List;
+import com.dijon.instantiation.DependencyInjectionInstantiator;
 
 public class ClassBinding<T> extends InstantiatableBinding<T> {
   private final Class<? extends T> clazz;

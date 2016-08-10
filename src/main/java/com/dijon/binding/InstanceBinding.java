@@ -1,10 +1,6 @@
 package com.dijon.binding;
 
-import com.dijon.dependency.Dependency;
-import com.dijon.dependency.instantiation.NoOpInstantiator;
-
-import java.util.Collections;
-import java.util.List;
+import com.dijon.instantiation.NoOpInstantiator;
 
 public class InstanceBinding<T> extends InstantiatableBinding<T> {
   public <K extends T> InstanceBinding(Binding<T> binding, K instance) {

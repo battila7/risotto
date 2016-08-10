@@ -14,7 +14,9 @@ import java.util.Optional;
  * Abstract dependency container class that must be subclassed by custom dependency containers.
  */
 public abstract class AbstractContainer {
-  private Map<Class, List<InstantiatableBinding<?>>> bindingMap;
+  private List<InstanceBinding<?>> bindingList;
+
+  private List<Dependency<?>> dependencyList;
 
   private List<AbstractContainer> childContainerList;
 
@@ -46,21 +48,19 @@ public abstract class AbstractContainer {
     // TODO: Implement
   }
 
-  public <T> void addBinding(InstanceBinding<T> instanceBinding) {
+  public void addBinding(InstanceBinding<?> instanceBinding) {
+    bindingList.add(instanceBinding);
 
-  }
+    List<Dependency<?>> immediateDependencies = instanceBinding.getImmediateDependencies();
 
-  public boolean hasBindingFor(Class clazz) {
-    for (Class cls : bindingMap.keySet()) {
-      if (cls.isAssignableFrom(clazz)) {
-        return true;
+    for (Dependency<?> dependency : immediateDependencies) {
+      if (!dependencyList.contains(dependency)) {
+        dependencyList.add(dependency);
       }
     }
-
-    return false;
   }
 
-  public <T> Optional<DependencyInjector<? extends T>> resolveDependency(Dependency<T> dependency) {
+  public <T> Optional<InstanceBinding<? extends T>> resolve(Dependency<T> dependency) {
     return null;
   }
 }

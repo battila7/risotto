@@ -1,4 +1,8 @@
-package com.dijon.dependency.instantiation;
+package com.dijon.instantiation;
+
+import com.dijon.dependency.Dependency;
+
+import java.util.List;
 
 public abstract class InstantiatorDecorator<T> implements Instantiator<T> {
   protected final Instantiator<T> decoratedInstantiator;
@@ -20,5 +24,10 @@ public abstract class InstantiatorDecorator<T> implements Instantiator<T> {
   @Override
   public Instantiator<T> getBaseInstantiator() {
     return decoratedInstantiator.getBaseInstantiator();
+  }
+
+  @Override
+  public List<Dependency<?>> getImmediateDependencies() {
+    return decoratedInstantiator.getImmediateDependencies();
   }
 }

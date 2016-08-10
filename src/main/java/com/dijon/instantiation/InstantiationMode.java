@@ -1,4 +1,4 @@
-package com.dijon.dependency.instantiation;
+package com.dijon.instantiation;
 
 public enum InstantiationMode {
   SINGLETON,

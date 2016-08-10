@@ -1,25 +1,25 @@
 package com.dijon.dependency;
 
-import com.dijon.dependency.management.DependencyInjector;
+import com.dijon.binding.InstantiatableBinding;
 
 public class Dependency<T> {
   private final Class<T> clazz;
 
-  private DependencyInjector<? extends T> dependencyInjector;
+  private InstantiatableBinding<? extends T> resolvingBinding;
 
   public Dependency(Class<T> clazz) {
     this.clazz = clazz;
   }
 
-  public DependencyInjector<? extends T> getDependencyInjector() {
-    return dependencyInjector;
-  }
-
-  public void setDependencyInjector(DependencyInjector<? extends T> dependencyInjector) {
-    this.dependencyInjector = dependencyInjector;
-  }
-
   public Class<T> getBoundedClass() {
     return clazz;
+  }
+
+  public InstantiatableBinding<? extends T> getResolvingBinding() {
+    return resolvingBinding;
+  }
+
+  public void setResolvingBinding(InstantiatableBinding<? extends T> resolvingBinding) {
+    this.resolvingBinding = resolvingBinding;
   }
 }

@@ -1,7 +1,7 @@
 package com.dijon.binding;
 
 import com.dijon.dependency.Dependency;
-import com.dijon.dependency.instantiation.Instantiator;
+import com.dijon.instantiation.Instantiator;
 
 import java.util.List;
 
@@ -20,6 +20,10 @@ public abstract class InstantiatableBinding<T> implements Binding<T> {
 
   public void instantiate() {
     instantiator.instantiate();
+  }
+
+  public List<Dependency<?>> getImmediateDependencies() {
+    return instantiator.getImmediateDependencies();
   }
 
   public boolean canResolve(Dependency<T> dependency) {

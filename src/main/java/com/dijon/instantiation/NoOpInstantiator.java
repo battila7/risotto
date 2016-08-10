@@ -1,4 +1,9 @@
-package com.dijon.dependency.instantiation;
+package com.dijon.instantiation;
+
+import com.dijon.dependency.Dependency;
+
+import java.util.Collections;
+import java.util.List;
 
 public class NoOpInstantiator<T> implements Instantiator<T> {
   private final T instance;
@@ -22,5 +27,10 @@ public class NoOpInstantiator<T> implements Instantiator<T> {
   @Override
   public Instantiator<T> getBaseInstantiator() {
     return this;
+  }
+
+  @Override
+  public List<Dependency<?>> getImmediateDependencies() {
+    return Collections.emptyList();
   }
 }
