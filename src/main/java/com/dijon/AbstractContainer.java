@@ -12,19 +12,9 @@ import java.util.Optional;
  * Abstract dependency container class that must be subclassed by custom dependency containers.
  */
 public abstract class AbstractContainer {
-  private List<InstanceBinding<?>> bindingList;
+  protected List<AbstractContainer> childContainerList;
 
-  private List<Dependency<?>> dependencyList;
-
-  private List<AbstractContainer> childContainerList;
-
-  private AbstractContainer parentContainer;
-
-  /**
-   * Configures the contents of the container. By overriding this method, instances and child
-   * containers can be added to the container object.
-   */
-  protected abstract void configure();
+  protected AbstractContainer parentContainer;
 
   /**
    * Adds a child container to this container. The dependency resolution of the passed child
@@ -48,37 +38,5 @@ public abstract class AbstractContainer {
     // TODO: Implement
   }
 
-  protected void addBinding(InstanceBinding<?> instanceBinding) {
-    bindingList.add(instanceBinding);
-
-    List<Dependency<?>> immediateDependencies = instanceBinding.getImmediateDependencies();
-
-    for (Dependency<?> dependency : immediateDependencies) {
-      if (!dependencyList.contains(dependency)) {
-        dependencyList.add(dependency);
-      }
-    }
-  }
-
-  protected void performResolution() throws DependencyResolutionFailedException {
-    for (Dependency<?> dependency : dependencyList) {
-      Optional<InstantiatableBinding<?>> bindingOptional = resolve(dependency);
-
-      if (!bindingOptional.isPresent()) {
-        throw new DependencyResolutionFailedException(dependency);
-      }
-
-      dependency.setResolvingBinding(bindingOptional.get());
-    }
-  }
-
-  protected Optional<InstantiatableBinding<?>> resolve(Dependency<?> dependency) {
-    for (InstantiatableBinding<?> binding : bindingList) {
-      if (binding.canResolve(dependency)) {
-        return Optional.of(binding);
-      }
-    }
-
-    return parentContainer.resolve(dependency);
-  }
+  protected abstract Optional<InstantiatableBinding<?>> resolve(Dependency<?> dependency);
 }
