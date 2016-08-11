@@ -1,20 +1,20 @@
 package com.dijon;
 
-import com.dijon.binding.InstanceBinding;
 import com.dijon.binding.InstantiatableBinding;
 import com.dijon.dependency.Dependency;
-import com.dijon.exception.DependencyResolutionFailedException;
+import com.dijon.exception.InvalidContainerNameException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Abstract dependency container class that must be subclassed by custom dependency containers.
  */
 public abstract class AbstractContainer {
-  protected List<AbstractContainer> childContainerList;
+  protected List<CustomContainer> childContainerList;
 
-  protected AbstractContainer parentContainer;
+  protected Object lockObject = new Object();
 
   /**
    * Adds a child container to this container. The dependency resolution of the passed child
@@ -24,8 +24,9 @@ public abstract class AbstractContainer {
    * AbstractContainer#addChildContainer(Class, String)} method to avoid type collision.
    * @param childContainer the new child container class
    */
-  public void addChildContainer(Class<? extends AbstractContainer> childContainer) {
-    // TODO: Implement
+  public void addChildContainer(Class<? extends CustomContainer> childContainer) throws
+      InvalidContainerNameException {
+    addChildContainer(childContainer, childContainer.getName());
   }
 
   /**
@@ -34,9 +35,13 @@ public abstract class AbstractContainer {
    * @param childContainer the new child container class
    * @param name a unique name for the child container
    */
-  public void addChildContainer(Class<? extends AbstractContainer> childContainer, String name) {
-    // TODO: Implement
-  }
+  public abstract void addChildContainer(Class<? extends CustomContainer> childContainer,
+                                         String name) throws InvalidContainerNameException;
+
+  public abstract Optional<CustomContainer> getChildContainer(String name);
 
   protected abstract Optional<InstantiatableBinding<?>> resolve(Dependency<?> dependency);
+
+  protected abstract CompletableFuture<Optional<InstantiatableBinding<?>>> resolveAsync(
+      Dependency<?> dependency);
 }

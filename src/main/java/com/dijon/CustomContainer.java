@@ -7,11 +7,22 @@ import com.dijon.exception.DependencyResolutionFailedException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 public abstract class CustomContainer extends AbstractContainer {
+  protected final AbstractContainer parentContainer;
+
+  private final String name;
+
   private List<InstanceBinding<?>> bindingList;
 
   private List<Dependency<?>> dependencyList;
+
+  public CustomContainer(AbstractContainer parentContainer, String name) {
+    this.parentContainer = parentContainer;
+
+    this.name = name;
+  }
 
   /**
    * Configures the contents of the container. By overriding this method, instances and child
@@ -43,6 +54,7 @@ public abstract class CustomContainer extends AbstractContainer {
     }
   }
 
+  @Override
   protected Optional<InstantiatableBinding<?>> resolve(Dependency<?> dependency) {
     for (InstantiatableBinding<?> binding : bindingList) {
       if (binding.canResolve(dependency)) {
@@ -51,5 +63,15 @@ public abstract class CustomContainer extends AbstractContainer {
     }
 
     return parentContainer.resolve(dependency);
+  }
+
+  @Override
+  protected CompletableFuture<Optional<InstantiatableBinding<?>>> resolveAsync(
+      Dependency<?> dependency) {
+    return null;
+  }
+
+  public String getName() {
+    return name;
   }
 }
