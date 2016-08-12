@@ -13,7 +13,7 @@ public class ClassBinding<T> extends InstantiatableBinding<T> {
     this.instantiator = new DependencyInjectionInstantiator<>(clazz);
   }
 
-  public T getInstance() {
-    return null;
+  public T getInstance() throws Exception {
+    return instantiator.getInstance();
   }
 }
