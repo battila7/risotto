@@ -8,7 +8,7 @@ public class BasicBinding<T> implements Binding<T> {
   private final Class<T> clazz;
 
   public static <T> BasicBinding<T> bind(Class<T> clazz) {
-   return new BasicBinding<T>(clazz);
+    return new BasicBinding<T>(clazz);
   }
 
   private BasicBinding(Class<T> clazz) {
@@ -21,6 +21,14 @@ public class BasicBinding<T> implements Binding<T> {
 
   public boolean canResolve(Dependency<?> dependency) {
     return clazz.isAssignableFrom(dependency.getBoundedClass());
+  }
+
+  public InstantiatableBinding<T> toClass(Class<? extends T> clazz) {
+    return new ClassBinding<T>(this, clazz);
+  }
+
+  public <K extends T> InstantiatableBinding<T> toInstance(K instance) {
+    return new InstanceBinding<T>(this, instance);
   }
 
   public NamedBinding<T> as(String name) {

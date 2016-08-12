@@ -36,6 +36,10 @@ public final class RootContainer extends AbstractContainer {
         throw new ContainerInstantiationException();
       }
 
+      newContainer.setName(name);
+
+      newContainer.setParentContainer(this);
+
       childContainerMap.put(name, newContainer);
     }
 

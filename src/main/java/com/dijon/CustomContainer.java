@@ -1,6 +1,5 @@
 package com.dijon;
 
-import com.dijon.binding.InstanceBinding;
 import com.dijon.binding.InstantiatableBinding;
 import com.dijon.dependency.AnnotatedDependency;
 import com.dijon.dependency.Dependency;
@@ -16,26 +15,29 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public abstract class CustomContainer extends AbstractContainer {
-  protected final AbstractContainer parentContainer;
-
-  private final String name;
-
-  private final List<InstanceBinding<?>> bindingList;
+  private final List<InstantiatableBinding<?>> bindingList;
 
   private final List<Dependency<?>> dependencyList;
 
-  public CustomContainer(AbstractContainer parentContainer, String name) {
+  private AbstractContainer parentContainer;
+
+  private String name;
+
+  public CustomContainer() {
     super();
-
-    this.parentContainer = parentContainer;
-
-    this.name = name;
 
     this.bindingList = new ArrayList<>();
 
     this.dependencyList = new ArrayList<>();
   }
 
+  public void setParentContainer(AbstractContainer parentContainer) {
+    this.parentContainer = parentContainer;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
 
   public <T> Optional<T> getInstance(Class<T> clazz) {
     Dependency<T> dependency = new Dependency<>(clazz);
@@ -63,7 +65,7 @@ public abstract class CustomContainer extends AbstractContainer {
       return Optional.empty();
     }
 
-    InstantiatableBinding<T> binding = (InstantiatableBinding<T>)bindingOptional.get();
+    InstantiatableBinding<T> binding = (InstantiatableBinding<T>) bindingOptional.get();
 
     return Optional.of(binding.getInstance());
   }
@@ -86,6 +88,10 @@ public abstract class CustomContainer extends AbstractContainer {
         throw new ContainerInstantiationException();
       }
 
+      newContainer.setName(name);
+
+      newContainer.setParentContainer(this);
+
       childContainerMap.put(name, newContainer);
     }
   }
@@ -96,7 +102,7 @@ public abstract class CustomContainer extends AbstractContainer {
    */
   protected abstract void configure();
 
-  void configureChildren() throws DependencyResolutionFailedException{
+  void configureChildren() throws DependencyResolutionFailedException {
     synchronized (lockObject) {
       for (CustomContainer container : childContainerMap.values()) {
         container.configure();
@@ -108,10 +114,10 @@ public abstract class CustomContainer extends AbstractContainer {
     }
   }
 
-  protected void addBinding(InstanceBinding<?> instanceBinding) {
-    bindingList.add(instanceBinding);
+  protected void addBinding(InstantiatableBinding<?> instantiatableBinding) {
+    bindingList.add(instantiatableBinding);
 
-    List<Dependency<?>> immediateDependencies = instanceBinding.getImmediateDependencies();
+    List<Dependency<?>> immediateDependencies = instantiatableBinding.getImmediateDependencies();
 
     for (Dependency<?> dependency : immediateDependencies) {
       if (!dependencyList.contains(dependency)) {
