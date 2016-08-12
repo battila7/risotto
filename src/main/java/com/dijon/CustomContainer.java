@@ -5,6 +5,7 @@ import com.dijon.binding.InstantiatableBinding;
 import com.dijon.dependency.Dependency;
 import com.dijon.exception.DependencyResolutionFailedException;
 
+import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -24,11 +25,38 @@ public abstract class CustomContainer extends AbstractContainer {
     this.name = name;
   }
 
+  @SuppressWarnings("unchecked")
+  public <T> Optional<? extends T> getInstance(Class<T> clazz) {
+    Dependency<T> dependency = new Dependency<>(clazz);
+
+    Optional<InstantiatableBinding<?>> bindingOptional = resolve(dependency);
+
+    if (!bindingOptional.isPresent()) {
+      return Optional.empty();
+    }
+
+    InstantiatableBinding<? extends T> binding = (InstantiatableBinding<? extends T>)bindingOptional.get();
+
+    return Optional.of(binding.getInstance());
+  }
+
+  public <T> Optional<T> getInstance(Class<? super T> clazz, String name) {
+    return null;
+  }
+
+  public <T> Optional<T> getInstance(Class<? super T> clazz, Class<? extends Annotation> annotation) {
+    return null;
+  }
+
   /**
    * Configures the contents of the container. By overriding this method, instances and child
    * containers can be added to the container object.
    */
   protected abstract void configure();
+
+  void configureChildren() {
+
+  }
 
   protected void addBinding(InstanceBinding<?> instanceBinding) {
     bindingList.add(instanceBinding);

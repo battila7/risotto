@@ -20,10 +20,6 @@ public abstract class InstantiatableBinding<T> implements Binding<T> {
     return instantiator.getInstance();
   }
 
-  public void instantiate() {
-    instantiator.instantiate();
-  }
-
   public List<Dependency<?>> getImmediateDependencies() {
     return instantiator.getImmediateDependencies();
   }
