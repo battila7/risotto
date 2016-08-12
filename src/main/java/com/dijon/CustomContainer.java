@@ -2,7 +2,9 @@ package com.dijon;
 
 import com.dijon.binding.InstanceBinding;
 import com.dijon.binding.InstantiatableBinding;
+import com.dijon.dependency.AnnotatedDependency;
 import com.dijon.dependency.Dependency;
+import com.dijon.dependency.NamedDependency;
 import com.dijon.exception.DependencyResolutionFailedException;
 
 import java.lang.annotation.Annotation;
@@ -25,27 +27,36 @@ public abstract class CustomContainer extends AbstractContainer {
     this.name = name;
   }
 
-  @SuppressWarnings("unchecked")
-  public <T> Optional<? extends T> getInstance(Class<T> clazz) {
+
+  public <T> Optional<T> getInstance(Class<T> clazz) {
     Dependency<T> dependency = new Dependency<>(clazz);
 
+    return returnInstance(dependency);
+  }
+
+  public <T> Optional<T> getInstance(Class<T> clazz, String name) {
+    NamedDependency<T> dependency = new NamedDependency<T>(clazz, name);
+
+    return returnInstance(dependency);
+  }
+
+  public <T> Optional<T> getInstance(Class<T> clazz, Class<? extends Annotation> annotation) {
+    AnnotatedDependency<T> dependency = new AnnotatedDependency<T>(clazz, annotation);
+
+    return returnInstance(dependency);
+  }
+
+  @SuppressWarnings("unchecked")
+  private <T> Optional<T> returnInstance(Dependency<T> dependency) {
     Optional<InstantiatableBinding<?>> bindingOptional = resolve(dependency);
 
     if (!bindingOptional.isPresent()) {
       return Optional.empty();
     }
 
-    InstantiatableBinding<? extends T> binding = (InstantiatableBinding<? extends T>)bindingOptional.get();
+    InstantiatableBinding<T> binding = (InstantiatableBinding<T>)bindingOptional.get();
 
     return Optional.of(binding.getInstance());
-  }
-
-  public <T> Optional<T> getInstance(Class<? super T> clazz, String name) {
-    return null;
-  }
-
-  public <T> Optional<T> getInstance(Class<? super T> clazz, Class<? extends Annotation> annotation) {
-    return null;
   }
 
   /**
