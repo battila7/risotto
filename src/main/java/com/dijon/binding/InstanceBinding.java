@@ -10,6 +10,6 @@ public class InstanceBinding<T> extends InstantiatableBinding<T> {
   }
 
   public T getInstance() {
-    return null;
+    return instantiator.getInstance();
   }
 }

@@ -3,6 +3,7 @@ package com.dijon;
 import com.dijon.binding.InstantiatableBinding;
 import com.dijon.dependency.Dependency;
 import com.dijon.exception.ContainerInstantiationException;
+import com.dijon.exception.DependencyResolutionFailedException;
 import com.dijon.exception.InvalidContainerNameException;
 
 import java.util.ArrayList;
@@ -35,7 +36,8 @@ public abstract class AbstractContainer {
    * @param childContainer the new child container class
    */
   public void addChildContainer(Class<? extends CustomContainer> childContainer) throws
-      InvalidContainerNameException, ContainerInstantiationException {
+      InvalidContainerNameException, ContainerInstantiationException,
+      DependencyResolutionFailedException {
     addChildContainer(childContainer, childContainer.getName());
   }
 
@@ -47,7 +49,8 @@ public abstract class AbstractContainer {
    */
   public abstract void addChildContainer(Class<? extends CustomContainer> childContainer,
                                          String name)
-      throws InvalidContainerNameException, ContainerInstantiationException;
+      throws InvalidContainerNameException, ContainerInstantiationException,
+      DependencyResolutionFailedException;
 
   public Optional<CustomContainer> getChildContainer(String name) {
     synchronized (lockObject) {

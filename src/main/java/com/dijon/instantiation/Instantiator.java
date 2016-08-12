@@ -10,8 +10,6 @@ import java.util.List;
 public interface Instantiator<T> {
   T getInstance();
 
-  void instantiate();
-
   Instantiator<T> getBaseInstantiator();
 
   List<Dependency<?>> getImmediateDependencies();

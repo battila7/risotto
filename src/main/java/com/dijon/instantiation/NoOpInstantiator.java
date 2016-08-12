@@ -18,13 +18,6 @@ public class NoOpInstantiator<T> implements Instantiator<T> {
   }
 
   @Override
-  public void instantiate() {
-    /*
-     *  Do nothing.
-     */
-  }
-
-  @Override
   public Instantiator<T> getBaseInstantiator() {
     return this;
   }

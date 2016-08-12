@@ -17,11 +17,6 @@ public class DependencyInjectionInstantiator<T> implements Instantiator<T> {
   }
 
   @Override
-  public void instantiate() {
-
-  }
-
-  @Override
   public Instantiator<T> getBaseInstantiator() {
     return this;
   }

@@ -96,10 +96,12 @@ public abstract class CustomContainer extends AbstractContainer {
    */
   protected abstract void configure();
 
-  void configureChildren() {
+  void configureChildren() throws DependencyResolutionFailedException{
     synchronized (lockObject) {
       for (CustomContainer container : childContainerMap.values()) {
         container.configure();
+
+        container.performResolution();
 
         container.configureChildren();
       }

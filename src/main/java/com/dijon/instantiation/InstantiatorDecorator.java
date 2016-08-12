@@ -17,11 +17,6 @@ public abstract class InstantiatorDecorator<T> implements Instantiator<T> {
   }
 
   @Override
-  public void instantiate() {
-    decoratedInstantiator.instantiate();;
-  }
-
-  @Override
   public Instantiator<T> getBaseInstantiator() {
     return decoratedInstantiator.getBaseInstantiator();
   }

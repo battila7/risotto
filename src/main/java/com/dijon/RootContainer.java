@@ -3,6 +3,7 @@ package com.dijon;
 import com.dijon.binding.InstantiatableBinding;
 import com.dijon.dependency.Dependency;
 import com.dijon.exception.ContainerInstantiationException;
+import com.dijon.exception.DependencyResolutionFailedException;
 import com.dijon.exception.InvalidContainerNameException;
 
 import java.util.Optional;
@@ -18,7 +19,8 @@ public final class RootContainer extends AbstractContainer {
 
   @Override
   public void addChildContainer(Class<? extends CustomContainer> childContainer, String name) throws
-      InvalidContainerNameException, ContainerInstantiationException {
+      InvalidContainerNameException, ContainerInstantiationException,
+      DependencyResolutionFailedException {
     CustomContainer newContainer;
 
     synchronized (lockObject) {
@@ -39,7 +41,10 @@ public final class RootContainer extends AbstractContainer {
 
     newContainer.configure();
 
-    newContainer.configureChildren();;
+    newContainer.performResolution();
+
+    newContainer.configureChildren();
+    ;
   }
 
   @Override
