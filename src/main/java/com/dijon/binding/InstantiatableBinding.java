@@ -10,13 +10,13 @@ import java.util.List;
 public abstract class InstantiatableBinding<T> implements Binding<T> {
   protected final Binding<T> binding;
 
-  protected Instantiator<T> instantiator;
+  protected Instantiator<? extends T> instantiator;
 
   public InstantiatableBinding(Binding<T> binding) {
     this.binding = binding;
   }
 
-  public T getInstance() {
+  public T getInstance() throws Exception {
     return instantiator.getInstance();
   }
 

@@ -9,7 +9,7 @@ public class InstanceBinding<T> extends InstantiatableBinding<T> {
     instantiator = new NoOpInstantiator<>(instance);
   }
 
-  public T getInstance() {
+  public T getInstance() throws Exception {
     return instantiator.getInstance();
   }
 }

@@ -12,7 +12,7 @@ public abstract class DependencyDetector<T> {
   protected DependencyInjector<T> dependencyInjector;
 
   public static <C> List<DependencyDetector<C>> createDetectors(Class<C> clazz) {
-    return Arrays.asList(new ConstructorDependencyDetector<C>(clazz));
+    return Arrays.asList(new ConstructorDependencyDetector<>(clazz));
   }
 
   public DependencyDetector(Class<T> clazz) {

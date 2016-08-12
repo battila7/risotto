@@ -3,6 +3,7 @@ package com.dijon.dependency.management;
 import com.dijon.dependency.Dependency;
 
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ConstructorDependencyInjector<T> extends DependencyInjector<T> {
@@ -17,10 +18,12 @@ public class ConstructorDependencyInjector<T> extends DependencyInjector<T> {
 
   @Override
   public T createInstance() throws Exception {
-    Object[] params = dependencies.stream()
-                                   .map(x -> x.getResolvingBinding().getInstance())
-                                   .toArray();
+    ArrayList injectableDependencies = new ArrayList();
 
-    return injectableConstructor.newInstance(params);
+    for (Dependency dependency : dependencies) {
+      injectableDependencies.add(dependency.getResolvingBinding().getInstance());
+    }
+
+    return injectableConstructor.newInstance(injectableDependencies.toArray());
   }
 }

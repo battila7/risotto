@@ -12,7 +12,7 @@ public abstract class InstantiatorDecorator<T> implements Instantiator<T> {
   }
 
   @Override
-  public T getInstance() {
+  public T getInstance() throws Exception {
     return decoratedInstantiator.getInstance();
   }
 
