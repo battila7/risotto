@@ -5,9 +5,12 @@ import com.dijon.binding.InstantiatableBinding;
 import com.dijon.dependency.AnnotatedDependency;
 import com.dijon.dependency.Dependency;
 import com.dijon.dependency.NamedDependency;
+import com.dijon.exception.ContainerInstantiationException;
 import com.dijon.exception.DependencyResolutionFailedException;
+import com.dijon.exception.InvalidContainerNameException;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -17,14 +20,20 @@ public abstract class CustomContainer extends AbstractContainer {
 
   private final String name;
 
-  private List<InstanceBinding<?>> bindingList;
+  private final List<InstanceBinding<?>> bindingList;
 
-  private List<Dependency<?>> dependencyList;
+  private final List<Dependency<?>> dependencyList;
 
   public CustomContainer(AbstractContainer parentContainer, String name) {
+    super();
+
     this.parentContainer = parentContainer;
 
     this.name = name;
+
+    this.bindingList = new ArrayList<>();
+
+    this.dependencyList = new ArrayList<>();
   }
 
 
@@ -59,6 +68,28 @@ public abstract class CustomContainer extends AbstractContainer {
     return Optional.of(binding.getInstance());
   }
 
+  @Override
+  public void addChildContainer(Class<? extends CustomContainer> childContainer, String name)
+      throws InvalidContainerNameException, ContainerInstantiationException {
+    synchronized (lockObject) {
+      for (String containerName : childContainerMap.keySet()) {
+        if (containerName.equals(name)) {
+          throw new InvalidContainerNameException();
+        }
+      }
+
+      CustomContainer newContainer;
+
+      try {
+        newContainer = childContainer.newInstance();
+      } catch (IllegalAccessException | InstantiationException e) {
+        throw new ContainerInstantiationException();
+      }
+
+      childContainerMap.put(name, newContainer);
+    }
+  }
+
   /**
    * Configures the contents of the container. By overriding this method, instances and child
    * containers can be added to the container object.
@@ -66,7 +97,13 @@ public abstract class CustomContainer extends AbstractContainer {
   protected abstract void configure();
 
   void configureChildren() {
+    synchronized (lockObject) {
+      for (CustomContainer container : childContainerMap.values()) {
+        container.configure();
 
+        container.configureChildren();
+      }
+    }
   }
 
   protected void addBinding(InstanceBinding<?> instanceBinding) {

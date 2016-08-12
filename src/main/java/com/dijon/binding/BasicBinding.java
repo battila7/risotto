@@ -20,7 +20,7 @@ public class BasicBinding<T> implements Binding<T> {
   }
 
   public boolean canResolve(Dependency<?> dependency) {
-    return false;
+    return clazz.isAssignableFrom(dependency.getBoundedClass());
   }
 
   public NamedBinding<T> as(String name) {

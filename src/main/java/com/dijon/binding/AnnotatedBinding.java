@@ -1,5 +1,6 @@
 package com.dijon.binding;
 
+import com.dijon.dependency.AnnotatedDependency;
 import com.dijon.dependency.Dependency;
 
 import java.lang.annotation.Annotation;
@@ -14,6 +15,16 @@ public class AnnotatedBinding<T> extends ComposableBinding<T> {
   }
 
   public boolean canResolve(Dependency<?> dependency) {
-    return false;
+    if (!(dependency instanceof AnnotatedDependency)) {
+      return false;
+    }
+
+    AnnotatedDependency<?> annotatedDependency = (AnnotatedDependency<?>)dependency;
+
+    if (!(annotatedDependency.getAnnotation().equals(annotation))) {
+      return false;
+    }
+
+    return binding.canResolve(dependency);
   }
 }

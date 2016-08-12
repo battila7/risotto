@@ -2,6 +2,8 @@ package com.dijon;
 
 import com.dijon.binding.InstantiatableBinding;
 import com.dijon.dependency.Dependency;
+import com.dijon.exception.ContainerInstantiationException;
+import com.dijon.exception.InvalidContainerNameException;
 
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -10,33 +12,34 @@ import java.util.concurrent.CompletableFuture;
  * Created by Attila on 2016. 08. 11..
  */
 public final class RootContainer extends AbstractContainer {
-  @Override
-  public Optional<CustomContainer> getChildContainer(String name) {
-    synchronized (lockObject) {
-      for (CustomContainer container : childContainerList) {
-        if (container.getName().equals(name)) {
-          return Optional.of(container);
-        }
-      }
-
-      return Optional.empty();
-    }
+  public RootContainer() {
+    super();
   }
 
   @Override
-  public void addChildContainer(Class<? extends CustomContainer> childContainer, String name) {
-    synchronized (lockObject) {
-      for (CustomContainer container : childContainerList) {
-        if (container.getName().equals(name)) {
+  public void addChildContainer(Class<? extends CustomContainer> childContainer, String name) throws
+      InvalidContainerNameException, ContainerInstantiationException {
+    CustomContainer newContainer;
 
+    synchronized (lockObject) {
+      for (String containerName : childContainerMap.keySet()) {
+        if (containerName.equals(name)) {
+          throw new InvalidContainerNameException();
         }
       }
+
+      try {
+        newContainer = childContainer.newInstance();
+      } catch (IllegalAccessException | InstantiationException e) {
+        throw new ContainerInstantiationException();
+      }
+
+      childContainerMap.put(name, newContainer);
     }
-  }
 
-  @Override
-  public void addChildContainer(Class<? extends CustomContainer> childContainer) {
+    newContainer.configure();
 
+    newContainer.configureChildren();;
   }
 
   @Override
