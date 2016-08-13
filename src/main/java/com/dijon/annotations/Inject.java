@@ -1,4 +1,4 @@
-package com.dijon.core.annotations;
+package com.dijon.annotations;
 
 import static java.lang.annotation.ElementType.CONSTRUCTOR;
 import static java.lang.annotation.ElementType.FIELD;
