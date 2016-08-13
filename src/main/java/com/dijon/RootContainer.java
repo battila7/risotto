@@ -10,10 +10,6 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public final class RootContainer extends AbstractContainer {
-  public RootContainer() {
-    super();
-  }
-
   @Override
   public void addChildContainer(Class<? extends CustomContainer> childContainer, String name) throws
       InvalidContainerNameException, ContainerInstantiationException,

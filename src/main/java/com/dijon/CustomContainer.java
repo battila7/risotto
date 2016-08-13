@@ -24,8 +24,6 @@ public abstract class CustomContainer extends AbstractContainer {
   private String name;
 
   public CustomContainer() {
-    super();
-
     this.bindingList = new ArrayList<>();
 
     this.dependencyList = new ArrayList<>();
@@ -35,8 +33,16 @@ public abstract class CustomContainer extends AbstractContainer {
     this.parentContainer = parentContainer;
   }
 
+  public AbstractContainer getParentContainer() {
+    return parentContainer;
+  }
+
   public void setName(String name) {
     this.name = name;
+  }
+
+  public String getName() {
+    return name;
   }
 
   public <T> Optional<T> getInstance(Class<T> clazz) throws Exception {
@@ -56,18 +62,6 @@ public abstract class CustomContainer extends AbstractContainer {
     AnnotatedDependency<T> dependency = new AnnotatedDependency<T>(clazz, annotation);
 
     return returnInstance(clazz, dependency);
-  }
-
-  private <T> Optional<T> returnInstance(Class<T> clazz, Dependency<T> dependency) throws Exception {
-    Optional<InstantiatableBinding<?>> bindingOptional = resolve(dependency);
-
-    if (!bindingOptional.isPresent()) {
-      return Optional.empty();
-    }
-
-    InstantiatableBinding<?> binding = bindingOptional.get();
-
-    return Optional.of(clazz.cast(binding.getInstance()));
   }
 
   @Override
@@ -96,12 +90,6 @@ public abstract class CustomContainer extends AbstractContainer {
     }
   }
 
-  /**
-   * Configures the contents of the container. By overriding this method, instances and child
-   * containers can be added to the container object.
-   */
-  protected abstract void configure();
-
   void configureChildren() throws DependencyResolutionFailedException {
     synchronized (lockObject) {
       for (CustomContainer container : childContainerMap.values()) {
@@ -113,6 +101,12 @@ public abstract class CustomContainer extends AbstractContainer {
       }
     }
   }
+
+  /**
+   * Configures the contents of the container. By overriding this method, instances and child
+   * containers can be added to the container object.
+   */
+  protected abstract void configure();
 
   protected void addBinding(InstantiatableBinding<?> instantiatableBinding) {
     bindingList.add(instantiatableBinding);
@@ -155,7 +149,15 @@ public abstract class CustomContainer extends AbstractContainer {
     return null;
   }
 
-  public String getName() {
-    return name;
+  private <T> Optional<T> returnInstance(Class<T> clazz, Dependency<T> dependency) throws Exception {
+    Optional<InstantiatableBinding<?>> bindingOptional = resolve(dependency);
+
+    if (!bindingOptional.isPresent()) {
+      return Optional.empty();
+    }
+
+    InstantiatableBinding<?> binding = bindingOptional.get();
+
+    return Optional.of(clazz.cast(binding.getInstance()));
   }
 }
