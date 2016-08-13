@@ -8,6 +8,9 @@ import com.dijon.dependency.Dependency;
 import com.dijon.dependency.NamedDependency;
 import com.dijon.dependency.management.DependencyDetector;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Parameter;
@@ -16,6 +19,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class ConstructorDependencyDetector<T> extends DependencyDetector<T> {
+  private static final Logger logger = LoggerFactory.getLogger(ConstructorDependencyDetector.class);
+
   private final ParameterProcessor processorChain;
 
   public ConstructorDependencyDetector(Class<T> clazz) {
@@ -48,7 +53,9 @@ public class ConstructorDependencyDetector<T> extends DependencyDetector<T> {
 
     try {
       injectableConstructorOptional = getInjectableConstructor();
-    } catch (Exception e) {
+    } catch (NoSuchMethodException e) {
+      logger.warn("Constructor with @Inject found but could not been retrieved.");
+
       return Optional.empty();
     }
 
@@ -61,6 +68,8 @@ public class ConstructorDependencyDetector<T> extends DependencyDetector<T> {
     Optional<List<Dependency<?>>> dependenciesOptional = processParameters(injectableConstructor);
 
     if (dependenciesOptional.isPresent()) {
+      logger.info("Successfully set up constructor injection for {}.", clazz.getCanonicalName());
+
       dependencyInjector =
           new ConstructorDependencyInjector<>(clazz, dependenciesOptional.get(),
               injectableConstructor);
@@ -69,7 +78,7 @@ public class ConstructorDependencyDetector<T> extends DependencyDetector<T> {
     return dependenciesOptional;
   }
 
-  private Optional<Constructor<T>> getInjectableConstructor() throws Exception {
+  private Optional<Constructor<T>> getInjectableConstructor() throws NoSuchMethodException {
     Constructor<?>[] constructors = clazz.getConstructors();
 
     if (constructors.length != 1) {

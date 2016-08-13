@@ -76,7 +76,7 @@ public abstract class CustomContainer extends AbstractContainer {
     synchronized (lockObject) {
       for (String containerName : childContainerMap.keySet()) {
         if (containerName.equals(name)) {
-          throw new InvalidContainerNameException();
+          throw new InvalidContainerNameException(name);
         }
       }
 
@@ -85,7 +85,7 @@ public abstract class CustomContainer extends AbstractContainer {
       try {
         newContainer = childContainer.newInstance();
       } catch (IllegalAccessException | InstantiationException e) {
-        throw new ContainerInstantiationException();
+        throw new ContainerInstantiationException(childContainer, e);
       }
 
       newContainer.setName(name);

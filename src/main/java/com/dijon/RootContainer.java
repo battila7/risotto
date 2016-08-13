@@ -9,9 +9,6 @@ import com.dijon.exception.InvalidContainerNameException;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-/**
- * Created by Attila on 2016. 08. 11..
- */
 public final class RootContainer extends AbstractContainer {
   public RootContainer() {
     super();
@@ -26,14 +23,14 @@ public final class RootContainer extends AbstractContainer {
     synchronized (lockObject) {
       for (String containerName : childContainerMap.keySet()) {
         if (containerName.equals(name)) {
-          throw new InvalidContainerNameException();
+          throw new InvalidContainerNameException(name);
         }
       }
 
       try {
         newContainer = childContainer.newInstance();
       } catch (IllegalAccessException | InstantiationException e) {
-        throw new ContainerInstantiationException();
+        throw new ContainerInstantiationException(childContainer, e);
       }
 
       newContainer.setName(name);

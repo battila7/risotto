@@ -3,14 +3,17 @@ package com.dijon.exception;
 import com.dijon.dependency.Dependency;
 
 public class DependencyDetectionFailedException extends Exception {
+  private static final String MESSAGE = "Dependency detection failed for dependency: ";
+
   private final Dependency<?> dependency;
 
   public DependencyDetectionFailedException(Dependency<?> dependency) {
+    super(MESSAGE + dependency.toString());
+
     this.dependency = dependency;
   }
 
-  @Override
-  public String getMessage() {
-    return "Dependency detection failed for dependency: " + dependency.toString();
+  public Dependency<?> getDependency() {
+    return dependency;
   }
 }
