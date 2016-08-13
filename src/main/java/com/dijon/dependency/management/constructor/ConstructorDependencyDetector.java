@@ -1,4 +1,4 @@
-package com.dijon.dependency.management;
+package com.dijon.dependency.management.constructor;
 
 import com.dijon.annotations.Inject;
 import com.dijon.annotations.InjectSpecifier;
@@ -6,6 +6,7 @@ import com.dijon.annotations.Named;
 import com.dijon.dependency.AnnotatedDependency;
 import com.dijon.dependency.Dependency;
 import com.dijon.dependency.NamedDependency;
+import com.dijon.dependency.management.DependencyDetector;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -15,8 +16,30 @@ import java.util.List;
 import java.util.Optional;
 
 public class ConstructorDependencyDetector<T> extends DependencyDetector<T> {
+  private final ParameterProcessor processorChain;
+
   public ConstructorDependencyDetector(Class<T> clazz) {
     super(clazz);
+
+    processorChain = setUpProcessorChain();
+  }
+
+  private ParameterProcessor setUpProcessorChain() {
+    ParameterProcessor basicProcessor = new BasicParameterProcessor();
+
+    ParameterProcessor namedProcessor = new NamedParameterProcessor();
+
+    ParameterProcessor annotatedProcessor = new AnnotatedParameterProcessor();
+
+    ParameterProcessor unableProcessor = new UnableProcessor();
+
+    basicProcessor.setSuccessor(namedProcessor);
+
+    namedProcessor.setSuccessor(annotatedProcessor);
+
+    annotatedProcessor.setSuccessor(unableProcessor);
+
+    return basicProcessor;
   }
 
   @Override
@@ -35,12 +58,15 @@ public class ConstructorDependencyDetector<T> extends DependencyDetector<T> {
 
     Constructor<T> injectableConstructor = injectableConstructorOptional.get();
 
-    List<Dependency<?>> dependencies = processParameters(injectableConstructor);
+    Optional<List<Dependency<?>>> dependenciesOptional = processParameters(injectableConstructor);
 
-    this.dependencyInjector =
-        new ConstructorDependencyInjector<>(clazz, dependencies, injectableConstructor);
+    if (dependenciesOptional.isPresent()) {
+      dependencyInjector =
+          new ConstructorDependencyInjector<>(clazz, dependenciesOptional.get(),
+              injectableConstructor);
+    }
 
-    return Optional.of(dependencies);
+    return dependenciesOptional;
   }
 
   private Optional<Constructor<T>> getInjectableConstructor() throws Exception {
@@ -62,42 +88,21 @@ public class ConstructorDependencyDetector<T> extends DependencyDetector<T> {
     return Optional.empty();
   }
 
-  private List<Dependency<?>> processParameters(Constructor<?> constructor) {
+  private Optional<List<Dependency<?>>> processParameters(Constructor<?> constructor) {
     Parameter[] parameters = constructor.getParameters();
 
     List<Dependency<?>> dependencies = new LinkedList<>();
 
-    for (Parameter param : parameters) {
-      Annotation[] annotations = param.getAnnotations();
+    for (Parameter parameter : parameters) {
+      Optional<Dependency<?>> dependencyOptional = processorChain.process(parameter);
 
-      if (annotations.length == 0) {
-        dependencies.add(new Dependency<>(param.getType()));
-      } else {
-        if (param.isAnnotationPresent(Named.class)) {
-          Named namedAnnotation = param.getAnnotation(Named.class);
-
-          NamedDependency<?> dependency =
-              new NamedDependency<>(param.getType(), namedAnnotation.value());
-
-          dependencies.add(dependency);
-        } else {
-          for (Annotation annotation : annotations) {
-            Class<? extends Annotation> annotationType =
-                annotation.annotationType();
-
-            if (annotationType.isAnnotationPresent(InjectSpecifier.class)) {
-              AnnotatedDependency<?> dependency =
-                  new AnnotatedDependency<>(param.getType(), annotations[0].annotationType());
-
-              dependencies.add(dependency);
-
-              break;
-            }
-          }
-        }
+      if (!dependencyOptional.isPresent()) {
+        return Optional.empty();
       }
+
+      dependencies.add(dependencyOptional.get());
     }
 
-    return dependencies;
+    return Optional.of(dependencies);
   }
 }
