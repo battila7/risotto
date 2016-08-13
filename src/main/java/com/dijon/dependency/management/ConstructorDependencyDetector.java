@@ -10,7 +10,6 @@ import com.dijon.dependency.NamedDependency;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Parameter;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +24,7 @@ public class ConstructorDependencyDetector<T> extends DependencyDetector<T> {
     Optional<Constructor<T>> injectableConstructorOptional;
 
     try {
-       injectableConstructorOptional = getInjectableConstructor();
+      injectableConstructorOptional = getInjectableConstructor();
     } catch (Exception e) {
       return Optional.empty();
     }
