@@ -48,7 +48,6 @@ public final class RootContainer extends AbstractContainer {
     newContainer.performResolution();
 
     newContainer.configureChildren();
-    ;
   }
 
   @Override

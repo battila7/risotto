@@ -1,6 +1,7 @@
 package com.dijon.dependency.management;
 
 import com.dijon.annotations.Inject;
+import com.dijon.annotations.InjectSpecifier;
 import com.dijon.annotations.Named;
 import com.dijon.dependency.AnnotatedDependency;
 import com.dijon.dependency.Dependency;
@@ -9,6 +10,7 @@ import com.dijon.dependency.NamedDependency;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Parameter;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -80,10 +82,19 @@ public class ConstructorDependencyDetector<T> extends DependencyDetector<T> {
 
           dependencies.add(dependency);
         } else {
-          AnnotatedDependency<?> dependency =
-              new AnnotatedDependency<>(param.getType(), annotations[0].getClass());
+          for (Annotation annotation : annotations) {
+            Class<? extends Annotation> annotationType =
+                annotation.annotationType();
 
-          dependencies.add(dependency);
+            if (annotationType.isAnnotationPresent(InjectSpecifier.class)) {
+              AnnotatedDependency<?> dependency =
+                  new AnnotatedDependency<>(param.getType(), annotations[0].annotationType());
+
+              dependencies.add(dependency);
+
+              break;
+            }
+          }
         }
       }
     }

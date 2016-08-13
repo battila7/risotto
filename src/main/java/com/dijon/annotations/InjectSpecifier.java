@@ -1,5 +1,6 @@
 package com.dijon.annotations;
 
+import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
@@ -12,7 +13,7 @@ import java.lang.annotation.Target;
 /**
  * Signals that an annotation can be used to specify the class or instance to be injected.
  */
-@Target( { PARAMETER, FIELD, METHOD })
+@Target( { ANNOTATION_TYPE })
 @Retention(RUNTIME)
 @Documented
 public @interface InjectSpecifier {

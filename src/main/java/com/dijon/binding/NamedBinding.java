@@ -17,12 +17,12 @@ public class NamedBinding<T> extends ComposableBinding<T> {
       return false;
     }
 
-    NamedDependency<?> annotatedDependency = (NamedDependency<?>)dependency;
+    NamedDependency<?> namedDependency = (NamedDependency<?>)dependency;
 
-    if (!(annotatedDependency.getName().equals(name))) {
+    if (!(namedDependency.getName().equals(name))) {
       return false;
     }
 
-    return binding.canResolve(dependency);
+    return binding.getBoundedClass().isAssignableFrom(dependency.getBoundedClass());
   }
 }

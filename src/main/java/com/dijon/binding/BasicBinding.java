@@ -20,6 +20,10 @@ public class BasicBinding<T> implements Binding<T> {
   }
 
   public boolean canResolve(Dependency<?> dependency) {
+    if (dependency.getClass() != Dependency.class) {
+      return false;
+    }
+
     return clazz.isAssignableFrom(dependency.getBoundedClass());
   }
 
@@ -32,10 +36,10 @@ public class BasicBinding<T> implements Binding<T> {
   }
 
   public NamedBinding<T> as(String name) {
-    return null;
+    return new NamedBinding<>(this, name);
   }
 
   public AnnotatedBinding<T> withAnnotation(Class<? extends Annotation> annotation) {
-    return null;
+    return new AnnotatedBinding<>(this, annotation);
   }
 }

@@ -8,11 +8,11 @@ public abstract class ComposableBinding<T> implements Binding<T> {
   }
 
   public InstantiatableBinding<T> toClass(Class<? extends T> clazz) {
-    return new ClassBinding<T>(binding, clazz);
+    return new ClassBinding<>(this, clazz);
   }
 
   public <K extends T> InstantiatableBinding<T> toInstance(K instance) {
-    return new InstanceBinding<T>(binding, instance);
+    return new InstanceBinding<>(this, instance);
   }
 
   public Class<T> getBoundedClass() {

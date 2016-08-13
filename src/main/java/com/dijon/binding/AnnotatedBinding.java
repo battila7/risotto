@@ -19,12 +19,12 @@ public class AnnotatedBinding<T> extends ComposableBinding<T> {
       return false;
     }
 
-    AnnotatedDependency<?> annotatedDependency = (AnnotatedDependency<?>)dependency;
+    AnnotatedDependency<?> annotatedDependency = (AnnotatedDependency<?>) dependency;
 
     if (!(annotatedDependency.getAnnotation().equals(annotation))) {
       return false;
     }
 
-    return binding.canResolve(dependency);
+    return binding.getBoundedClass().isAssignableFrom(dependency.getBoundedClass());
   }
 }

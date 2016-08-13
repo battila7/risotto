@@ -18,7 +18,7 @@ public class ConstructorDependencyInjector<T> extends DependencyInjector<T> {
 
   @Override
   public T createInstance() throws Exception {
-    ArrayList injectableDependencies = new ArrayList();
+    ArrayList<Object> injectableDependencies = new ArrayList<>();
 
     for (Dependency dependency : dependencies) {
       injectableDependencies.add(dependency.getResolvingBinding().getInstance());

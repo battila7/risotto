@@ -42,33 +42,32 @@ public abstract class CustomContainer extends AbstractContainer {
   public <T> Optional<T> getInstance(Class<T> clazz) throws Exception {
     Dependency<T> dependency = new Dependency<>(clazz);
 
-    return returnInstance(dependency);
+    return returnInstance(clazz, dependency);
   }
 
   public <T> Optional<T> getInstance(Class<T> clazz, String name) throws Exception {
     NamedDependency<T> dependency = new NamedDependency<T>(clazz, name);
 
-    return returnInstance(dependency);
+    return returnInstance(clazz, dependency);
   }
 
   public <T> Optional<T> getInstance(Class<T> clazz, Class<? extends Annotation> annotation)
       throws Exception {
     AnnotatedDependency<T> dependency = new AnnotatedDependency<T>(clazz, annotation);
 
-    return returnInstance(dependency);
+    return returnInstance(clazz, dependency);
   }
 
-  @SuppressWarnings("unchecked")
-  private <T> Optional<T> returnInstance(Dependency<T> dependency) throws Exception {
+  private <T> Optional<T> returnInstance(Class<T> clazz, Dependency<T> dependency) throws Exception {
     Optional<InstantiatableBinding<?>> bindingOptional = resolve(dependency);
 
     if (!bindingOptional.isPresent()) {
       return Optional.empty();
     }
 
-    InstantiatableBinding<T> binding = (InstantiatableBinding<T>) bindingOptional.get();
+    InstantiatableBinding<?> binding = bindingOptional.get();
 
-    return Optional.of(binding.getInstance());
+    return Optional.of(clazz.cast(binding.getInstance()));
   }
 
   @Override
