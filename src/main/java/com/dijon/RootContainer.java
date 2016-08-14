@@ -11,9 +11,17 @@ import java.util.concurrent.CompletableFuture;
 
 public final class RootContainer extends AbstractContainer {
   @Override
-  public void addChildContainer(Class<? extends CustomContainer> childContainer, String name) throws
+  public void addChildContainer(Class<? extends CustomContainer> childContainerClass, String name) throws
       InvalidContainerNameException, ContainerInstantiationException,
       DependencyResolutionFailedException {
+    if (childContainerClass == null) {
+      throw new NullPointerException("The container class must not be null!");
+    }
+
+    if (name == null) {
+      throw new NullPointerException("The container name must not be null!");
+    }
+
     CustomContainer newContainer;
 
     synchronized (lockObject) {
@@ -24,9 +32,9 @@ public final class RootContainer extends AbstractContainer {
       }
 
       try {
-        newContainer = childContainer.newInstance();
+        newContainer = childContainerClass.newInstance();
       } catch (IllegalAccessException | InstantiationException e) {
-        throw new ContainerInstantiationException(childContainer, e);
+        throw new ContainerInstantiationException(childContainerClass, e);
       }
 
       newContainer.setName(name);

@@ -5,8 +5,8 @@ public abstract class TerminableBinding<T> extends Binding<T> {
     super(clazz);
   }
 
-  public InstantiatableBinding<T> toClass(Class<? extends T> clazz) {
-    return new ClassBinding<>(this, clazz);
+  public InstantiatableBinding<T> toClass(Class<? extends T> targetClass) {
+    return new ClassBinding<>(this, targetClass);
   }
 
   public <K extends T> InstantiatableBinding<T> toInstance(K instance) {

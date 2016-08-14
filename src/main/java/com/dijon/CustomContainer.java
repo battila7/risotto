@@ -65,8 +65,16 @@ public abstract class CustomContainer extends AbstractContainer {
   }
 
   @Override
-  public void addChildContainer(Class<? extends CustomContainer> childContainer, String name)
+  public void addChildContainer(Class<? extends CustomContainer> childContainerClass, String name)
       throws InvalidContainerNameException, ContainerInstantiationException {
+    if (childContainerClass == null) {
+      throw new NullPointerException("The container class must not be null!");
+    }
+
+    if (name == null) {
+      throw new NullPointerException("The container name must not be null!");
+    }
+
     synchronized (lockObject) {
       for (String containerName : childContainerMap.keySet()) {
         if (containerName.equals(name)) {
@@ -77,9 +85,9 @@ public abstract class CustomContainer extends AbstractContainer {
       CustomContainer newContainer;
 
       try {
-        newContainer = childContainer.newInstance();
+        newContainer = childContainerClass.newInstance();
       } catch (IllegalAccessException | InstantiationException e) {
-        throw new ContainerInstantiationException(childContainer, e);
+        throw new ContainerInstantiationException(childContainerClass, e);
       }
 
       newContainer.setName(name);
@@ -109,6 +117,10 @@ public abstract class CustomContainer extends AbstractContainer {
   protected abstract void configure();
 
   protected void addBinding(InstantiatableBinding<?> instantiatableBinding) {
+    if (instantiatableBinding == null) {
+      throw new NullPointerException("The binding must not be null!");
+    }
+
     bindingList.add(instantiatableBinding);
 
     List<Dependency<?>> immediateDependencies = instantiatableBinding.getImmediateDependencies();
