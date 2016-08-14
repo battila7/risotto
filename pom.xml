@@ -6,7 +6,7 @@
 
     <groupId>com.dijon</groupId>
     <artifactId>dijon</artifactId>
-    <version>0.1</version>
+    <version>0.2.0</version>
     <name>Dijon Dependency Injection</name>
 
     <inceptionYear>2016</inceptionYear>
