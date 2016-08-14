@@ -12,9 +12,13 @@ import java.util.List;
 public class ConstructorDependencyInjector<T> extends DependencyInjector<T> {
   private final Constructor<T> injectableConstructor;
 
+  private final List<Dependency<?>> dependencies;
+
   public ConstructorDependencyInjector(Class<T> clazz, List<Dependency<?>> dependencies,
                                        Constructor<T> injectableConstructor) {
-    super(clazz, dependencies);
+    super(clazz);
+
+    this.dependencies = dependencies;
 
     this.injectableConstructor = injectableConstructor;
   }
