@@ -19,7 +19,7 @@ public class DependencyInjectionInstantiator<T> implements Instantiator<T> {
   }
 
   @Override
-  public T getInstance() throws Exception {
+  public T getInstance() {
     return injector.createInstance();
   }
 

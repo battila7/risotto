@@ -2,8 +2,10 @@ package com.dijon.dependency.constructor;
 
 import com.dijon.dependency.Dependency;
 import com.dijon.dependency.DependencyInjector;
+import com.dijon.exception.InstantiationFailedException;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,13 +20,17 @@ public class ConstructorDependencyInjector<T> extends DependencyInjector<T> {
   }
 
   @Override
-  public T createInstance() throws Exception {
+  public T createInstance() {
     ArrayList<Object> injectableDependencies = new ArrayList<>();
 
-    for (Dependency dependency : dependencies) {
-      injectableDependencies.add(dependency.getResolvingBinding().getInstance());
-    }
+    try {
+      for (Dependency dependency : dependencies) {
+        injectableDependencies.add(dependency.getResolvingBinding().getInstance());
+      }
 
-    return injectableConstructor.newInstance(injectableDependencies.toArray());
+      return injectableConstructor.newInstance(injectableDependencies.toArray());
+    } catch (InstantiationException | IllegalAccessException | InvocationTargetException | InstantiationFailedException e) {
+      throw new InstantiationFailedException(e);
+    }
   }
 }

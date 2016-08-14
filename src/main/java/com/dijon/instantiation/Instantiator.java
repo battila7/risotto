@@ -5,7 +5,7 @@ import com.dijon.dependency.Dependency;
 import java.util.List;
 
 public interface Instantiator<T> {
-  T getInstance() throws Exception;
+  T getInstance();
 
   Instantiator<T> getBaseInstantiator();
 

@@ -1,6 +1,7 @@
 package com.dijon.binding;
 
 import com.dijon.dependency.Dependency;
+import com.dijon.exception.InstantiationFailedException;
 import com.dijon.instantiation.InstantiationMode;
 import com.dijon.instantiation.Instantiator;
 import com.dijon.instantiation.InstantiatorFactory;
@@ -18,7 +19,7 @@ public abstract class InstantiatableBinding<T> extends Binding<T> {
     this.binding = binding;
   }
 
-  public T getInstance() throws Exception {
+  public T getInstance() {
     return instantiator.getInstance();
   }
 
