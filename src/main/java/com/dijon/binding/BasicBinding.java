@@ -24,7 +24,7 @@ public class BasicBinding<T> implements Binding<T> {
       return false;
     }
 
-    return clazz.isAssignableFrom(dependency.getBoundedClass());
+    return dependency.getBoundedClass().isAssignableFrom(clazz);
   }
 
   public InstantiatableBinding<T> toClass(Class<? extends T> clazz) {

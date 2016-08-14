@@ -23,6 +23,6 @@ public class NamedBinding<T> extends ComposableBinding<T> {
       return false;
     }
 
-    return binding.getBoundedClass().isAssignableFrom(dependency.getBoundedClass());
+    return dependency.getBoundedClass().isAssignableFrom(binding.getBoundedClass());
   }
 }
