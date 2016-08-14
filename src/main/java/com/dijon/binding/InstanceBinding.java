@@ -1,15 +1,17 @@
 package com.dijon.binding;
 
+import com.dijon.instantiation.InstantiatorFactory;
 import com.dijon.instantiation.NoOpInstantiator;
 
 public class InstanceBinding<T> extends InstantiatableBinding<T> {
-  public <K extends T> InstanceBinding(Binding<T> binding, K instance) {
+  public <I extends T> InstanceBinding(Binding<T> binding, I instance) {
     super(binding);
 
-    instantiator = new NoOpInstantiator<>(instance);
-  }
+    if (instance == null) {
+      throw new NullPointerException("The instance must not be null!");
+    }
 
-  public T getInstance() throws Exception {
-    return instantiator.getInstance();
+    instantiator =
+        InstantiatorFactory.decorateWithDefaultInstantiator(new NoOpInstantiator<>(instance));
   }
 }

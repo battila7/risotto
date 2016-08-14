@@ -1,19 +1,23 @@
 package com.dijon.binding;
 
 import com.dijon.instantiation.DependencyInjectionInstantiator;
+import com.dijon.instantiation.InstantiatorFactory;
+
+import java.util.Objects;
 
 public class ClassBinding<T> extends InstantiatableBinding<T> {
-  private final Class<? extends T> clazz;
+  private final Class<? extends T> targetClass;
 
-  public ClassBinding(Binding<T> binding, Class<? extends T> clazz) {
+  public ClassBinding(Binding<T> binding, Class<? extends T> targetClass) {
     super(binding);
 
-    this.clazz = clazz;
+    this.targetClass = Objects.requireNonNull(targetClass, "The target class must not be null!");
 
-    this.instantiator = new DependencyInjectionInstantiator<>(clazz);
+    instantiator = InstantiatorFactory
+        .decorateWithDefaultInstantiator(new DependencyInjectionInstantiator<>(targetClass));
   }
 
-  public T getInstance() throws Exception {
-    return instantiator.getInstance();
+  public Class<? extends T> getTargetClass() {
+    return targetClass;
   }
 }

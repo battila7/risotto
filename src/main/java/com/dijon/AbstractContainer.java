@@ -6,9 +6,7 @@ import com.dijon.exception.ContainerInstantiationException;
 import com.dijon.exception.DependencyResolutionFailedException;
 import com.dijon.exception.InvalidContainerNameException;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -27,30 +25,16 @@ public abstract class AbstractContainer {
     this.lockObject = new Object();
   }
 
-  /**
-   * Adds a child container to this container. The dependency resolution of the passed child
-   * container is deferred until the dependency resolution of the current container takes place.
-   *
-   * Note that if you wish to add two or more containers with the same type then use the {@link
-   * AbstractContainer#addChildContainer(Class, String)} method to avoid type collision.
-   * @param childContainer the new child container class
-   */
+  public abstract void addChildContainer(Class<? extends CustomContainer> childContainer,
+                                         String name)
+      throws InvalidContainerNameException, ContainerInstantiationException,
+      DependencyResolutionFailedException;
+
   public void addChildContainer(Class<? extends CustomContainer> childContainer) throws
       InvalidContainerNameException, ContainerInstantiationException,
       DependencyResolutionFailedException {
     addChildContainer(childContainer, childContainer.getName());
   }
-
-  /**
-   * Adds a child container to this container with the specified name. Behaves the same as {@link
-   * AbstractContainer#addChildContainer(Class)}.
-   * @param childContainer the new child container class
-   * @param name a unique name for the child container
-   */
-  public abstract void addChildContainer(Class<? extends CustomContainer> childContainer,
-                                         String name)
-      throws InvalidContainerNameException, ContainerInstantiationException,
-      DependencyResolutionFailedException;
 
   public Optional<CustomContainer> getChildContainer(String name) {
     synchronized (lockObject) {

@@ -1,22 +1,26 @@
 package com.dijon.binding;
 
 import com.dijon.dependency.Dependency;
+import com.dijon.exception.DependencyDetectionException;
+import com.dijon.exception.InstantiationFailedException;
 import com.dijon.instantiation.InstantiationMode;
 import com.dijon.instantiation.Instantiator;
 import com.dijon.instantiation.InstantiatorFactory;
 
 import java.util.List;
 
-public abstract class InstantiatableBinding<T> implements Binding<T> {
+public abstract class InstantiatableBinding<T> extends Binding<T> {
   protected final Binding<T> binding;
 
   protected Instantiator<? extends T> instantiator;
 
   public InstantiatableBinding(Binding<T> binding) {
+    super(binding.getBoundedClass());
+
     this.binding = binding;
   }
 
-  public T getInstance() throws Exception {
+  public T getInstance() {
     return instantiator.getInstance();
   }
 
@@ -26,10 +30,6 @@ public abstract class InstantiatableBinding<T> implements Binding<T> {
 
   public boolean canResolve(Dependency<?> dependency) {
     return binding.canResolve(dependency);
-  }
-
-  public Class<T> getBoundedClass() {
-    return binding.getBoundedClass();
   }
 
   public InstantiatableBinding<T> withMode(InstantiationMode mode) {
