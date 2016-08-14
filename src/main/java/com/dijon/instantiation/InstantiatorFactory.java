@@ -1,6 +1,6 @@
 package com.dijon.instantiation;
 
-public class InstantiatorFactory {
+public final class InstantiatorFactory {
   public static <T> Instantiator<T> decorateInstantiatorForMode(Instantiator<T> instantiator,
                                                                 InstantiationMode mode) {
     Instantiator<T> base = instantiator.getBaseInstantiator();
@@ -21,5 +21,11 @@ public class InstantiatorFactory {
     Instantiator<T> base = instantiator.getBaseInstantiator();
 
     return new SingletonInstantiator<>(base);
+  }
+
+  private InstantiatorFactory() {
+    /*
+     * Cannot be instantiated.
+     */
   }
 }

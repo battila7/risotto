@@ -21,13 +21,13 @@ public final class ProcessorChain {
     processorChain = basicProcessor;
   }
 
+  public static DependencyProcessor getProcessorChain() {
+    return processorChain;
+  }
+
   private ProcessorChain() {
     /*
      * Cannot be instantiated.
      */
-  }
-
-  public static DependencyProcessor getProcessorChain() {
-    return processorChain;
   }
 }
