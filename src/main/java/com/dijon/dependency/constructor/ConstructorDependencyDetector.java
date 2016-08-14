@@ -1,17 +1,13 @@
-package com.dijon.dependency.management.constructor;
+package com.dijon.dependency.constructor;
 
 import com.dijon.annotations.Inject;
-import com.dijon.annotations.InjectSpecifier;
-import com.dijon.annotations.Named;
-import com.dijon.dependency.AnnotatedDependency;
 import com.dijon.dependency.Dependency;
-import com.dijon.dependency.NamedDependency;
-import com.dijon.dependency.management.DependencyDetector;
-
+import com.dijon.dependency.DependencyDetector;
+import com.dijon.dependency.processor.DependencyProcessor;
+import com.dijon.dependency.processor.ProcessorChain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Parameter;
 import java.util.LinkedList;
@@ -21,30 +17,8 @@ import java.util.Optional;
 public class ConstructorDependencyDetector<T> extends DependencyDetector<T> {
   private static final Logger logger = LoggerFactory.getLogger(ConstructorDependencyDetector.class);
 
-  private final ParameterProcessor processorChain;
-
   public ConstructorDependencyDetector(Class<T> clazz) {
     super(clazz);
-
-    processorChain = setUpProcessorChain();
-  }
-
-  private ParameterProcessor setUpProcessorChain() {
-    ParameterProcessor basicProcessor = new BasicParameterProcessor();
-
-    ParameterProcessor namedProcessor = new NamedParameterProcessor();
-
-    ParameterProcessor annotatedProcessor = new AnnotatedParameterProcessor();
-
-    ParameterProcessor unableProcessor = new UnableProcessor();
-
-    basicProcessor.setSuccessor(namedProcessor);
-
-    namedProcessor.setSuccessor(annotatedProcessor);
-
-    annotatedProcessor.setSuccessor(unableProcessor);
-
-    return basicProcessor;
   }
 
   @Override
@@ -101,6 +75,8 @@ public class ConstructorDependencyDetector<T> extends DependencyDetector<T> {
     Parameter[] parameters = constructor.getParameters();
 
     List<Dependency<?>> dependencies = new LinkedList<>();
+
+    DependencyProcessor processorChain = ProcessorChain.getProcessorChain();
 
     for (Parameter parameter : parameters) {
       Optional<Dependency<?>> dependencyOptional = processorChain.process(parameter);

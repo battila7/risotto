@@ -8,7 +8,7 @@ public class BasicBinding<T> implements Binding<T> {
   private final Class<T> clazz;
 
   public static <T> BasicBinding<T> bind(Class<T> clazz) {
-    return new BasicBinding<T>(clazz);
+    return new BasicBinding<>(clazz);
   }
 
   private BasicBinding(Class<T> clazz) {
@@ -28,11 +28,11 @@ public class BasicBinding<T> implements Binding<T> {
   }
 
   public InstantiatableBinding<T> toClass(Class<? extends T> clazz) {
-    return new ClassBinding<T>(this, clazz);
+    return new ClassBinding<>(this, clazz);
   }
 
   public <K extends T> InstantiatableBinding<T> toInstance(K instance) {
-    return new InstanceBinding<T>(this, instance);
+    return new InstanceBinding<>(this, instance);
   }
 
   public NamedBinding<T> as(String name) {

@@ -1,14 +1,14 @@
-package com.dijon.dependency.management.constructor;
+package com.dijon.dependency.processor;
 
 import com.dijon.dependency.Dependency;
 
 import java.lang.reflect.Parameter;
 import java.util.Optional;
 
-abstract class ParameterProcessor {
-  private ParameterProcessor successor;
+public abstract class DependencyProcessor {
+  private DependencyProcessor successor;
 
-  public void setSuccessor(ParameterProcessor successor) {
+  public void setSuccessor(DependencyProcessor successor) {
     this.successor = successor;
   }
 

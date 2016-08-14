@@ -1,4 +1,4 @@
-package com.dijon.dependency.management;
+package com.dijon.dependency;
 
 import com.dijon.dependency.Dependency;
 

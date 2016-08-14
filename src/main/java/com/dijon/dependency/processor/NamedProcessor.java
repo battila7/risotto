@@ -1,4 +1,4 @@
-package com.dijon.dependency.management.constructor;
+package com.dijon.dependency.processor;
 
 import com.dijon.annotations.Named;
 import com.dijon.dependency.Dependency;
@@ -7,7 +7,7 @@ import com.dijon.dependency.NamedDependency;
 import java.lang.reflect.Parameter;
 import java.util.Optional;
 
-class NamedParameterProcessor extends ParameterProcessor {
+class NamedProcessor extends DependencyProcessor {
   @Override
   public Optional<Dependency<?>> process(Parameter parameter) {
     if (!parameter.isAnnotationPresent(Named.class)) {

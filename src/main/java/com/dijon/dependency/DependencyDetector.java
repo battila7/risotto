@@ -1,7 +1,6 @@
-package com.dijon.dependency.management;
+package com.dijon.dependency;
 
-import com.dijon.dependency.Dependency;
-import com.dijon.dependency.management.constructor.ConstructorDependencyDetector;
+import com.dijon.dependency.constructor.ConstructorDependencyDetector;
 
 import java.util.Arrays;
 import java.util.List;

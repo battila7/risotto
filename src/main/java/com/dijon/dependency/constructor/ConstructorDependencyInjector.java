@@ -1,7 +1,7 @@
-package com.dijon.dependency.management.constructor;
+package com.dijon.dependency.constructor;
 
 import com.dijon.dependency.Dependency;
-import com.dijon.dependency.management.DependencyInjector;
+import com.dijon.dependency.DependencyInjector;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;

@@ -1,10 +1,10 @@
 package com.dijon.instantiation;
 
-import static com.dijon.dependency.management.DependencyDetector.createDetectors;
+import static com.dijon.dependency.DependencyDetector.createDetectors;
 
 import com.dijon.dependency.Dependency;
-import com.dijon.dependency.management.DependencyDetector;
-import com.dijon.dependency.management.DependencyInjector;
+import com.dijon.dependency.DependencyDetector;
+import com.dijon.dependency.DependencyInjector;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package com.dijon.dependency.management.constructor;
+package com.dijon.dependency.processor;
 
 import com.dijon.annotations.InjectSpecifier;
 import com.dijon.dependency.AnnotatedDependency;
@@ -8,7 +8,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Parameter;
 import java.util.Optional;
 
-class AnnotatedParameterProcessor extends ParameterProcessor {
+class AnnotatedProcessor extends DependencyProcessor {
   @Override
   public Optional<Dependency<?>> process(Parameter parameter) {
     for (Annotation annotation : parameter.getAnnotations()) {
