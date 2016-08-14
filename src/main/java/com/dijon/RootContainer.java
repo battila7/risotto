@@ -11,7 +11,8 @@ import java.util.concurrent.CompletableFuture;
 
 public final class RootContainer extends AbstractContainer {
   @Override
-  public void addChildContainer(Class<? extends CustomContainer> childContainerClass, String name) throws
+  public void addChildContainer(Class<? extends CustomContainer> childContainerClass, String name)
+      throws
       InvalidContainerNameException, ContainerInstantiationException,
       DependencyResolutionFailedException {
     if (childContainerClass == null) {

@@ -1,8 +1,6 @@
 package com.dijon.binding;
 
 import com.dijon.dependency.Dependency;
-import com.dijon.exception.DependencyDetectionException;
-import com.dijon.exception.InstantiationFailedException;
 import com.dijon.instantiation.InstantiationMode;
 import com.dijon.instantiation.Instantiator;
 import com.dijon.instantiation.InstantiatorFactory;
