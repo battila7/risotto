@@ -5,11 +5,11 @@ import com.dijon.dependency.Dependency;
 
 import java.lang.annotation.Annotation;
 
-public class AnnotatedBinding<T> extends ComposableBinding<T> {
+public class AnnotatedBinding<T> extends TerminableBinding<T> {
   private final Class<? extends Annotation> annotation;
 
-  public AnnotatedBinding(Binding<T> binding, Class<? extends Annotation> annotation) {
-    super(binding);
+  public AnnotatedBinding(Class<T> clazz, Class<? extends Annotation> annotation) {
+    super(clazz);
 
     this.annotation = annotation;
   }
@@ -25,6 +25,6 @@ public class AnnotatedBinding<T> extends ComposableBinding<T> {
       return false;
     }
 
-    return dependency.getBoundedClass().isAssignableFrom(binding.getBoundedClass());
+    return dependency.getBoundedClass().isAssignableFrom(boundedClass);
   }
 }

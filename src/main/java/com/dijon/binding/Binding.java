@@ -2,8 +2,16 @@ package com.dijon.binding;
 
 import com.dijon.dependency.Dependency;
 
-public interface Binding<T> {
-  boolean canResolve(Dependency<?> dependency);
+public abstract class Binding<T> {
+  protected final Class<T> boundedClass;
 
-  Class<T> getBoundedClass();
+  public Binding(Class<T> boundedClass) {
+    this.boundedClass = boundedClass;
+  }
+
+  public abstract boolean canResolve(Dependency<?> dependency);
+
+  public Class<T> getBoundedClass() {
+    return boundedClass;
+  }
 }

@@ -7,12 +7,14 @@ import com.dijon.instantiation.InstantiatorFactory;
 
 import java.util.List;
 
-public abstract class InstantiatableBinding<T> implements Binding<T> {
+public abstract class InstantiatableBinding<T> extends Binding<T> {
   protected final Binding<T> binding;
 
   protected Instantiator<? extends T> instantiator;
 
   public InstantiatableBinding(Binding<T> binding) {
+    super(binding.getBoundedClass());
+
     this.binding = binding;
   }
 
@@ -26,10 +28,6 @@ public abstract class InstantiatableBinding<T> implements Binding<T> {
 
   public boolean canResolve(Dependency<?> dependency) {
     return binding.canResolve(dependency);
-  }
-
-  public Class<T> getBoundedClass() {
-    return binding.getBoundedClass();
   }
 
   public InstantiatableBinding<T> withMode(InstantiationMode mode) {

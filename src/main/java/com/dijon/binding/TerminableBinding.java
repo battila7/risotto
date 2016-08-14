@@ -1,10 +1,8 @@
 package com.dijon.binding;
 
-public abstract class ComposableBinding<T> implements Binding<T> {
-  protected final Binding<T> binding;
-
-  public ComposableBinding(Binding<T> binding) {
-    this.binding = binding;
+public abstract class TerminableBinding<T> extends Binding<T> {
+  public TerminableBinding(Class<T> clazz) {
+    super(clazz);
   }
 
   public InstantiatableBinding<T> toClass(Class<? extends T> clazz) {
@@ -13,9 +11,5 @@ public abstract class ComposableBinding<T> implements Binding<T> {
 
   public <K extends T> InstantiatableBinding<T> toInstance(K instance) {
     return new InstanceBinding<>(this, instance);
-  }
-
-  public Class<T> getBoundedClass() {
-    return binding.getBoundedClass();
   }
 }

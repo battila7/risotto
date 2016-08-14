@@ -3,11 +3,11 @@ package com.dijon.binding;
 import com.dijon.dependency.Dependency;
 import com.dijon.dependency.NamedDependency;
 
-public class NamedBinding<T> extends ComposableBinding<T> {
+public class NamedBinding<T> extends TerminableBinding<T> {
   private final String name;
 
-  public NamedBinding(Binding<T> binding, String name) {
-    super(binding);
+  public NamedBinding(Class<T> clazz, String name) {
+    super(clazz);
 
     this.name = name;
   }
@@ -23,6 +23,6 @@ public class NamedBinding<T> extends ComposableBinding<T> {
       return false;
     }
 
-    return dependency.getBoundedClass().isAssignableFrom(binding.getBoundedClass());
+    return dependency.getBoundedClass().isAssignableFrom(boundedClass);
   }
 }
