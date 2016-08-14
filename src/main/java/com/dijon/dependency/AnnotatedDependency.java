@@ -30,7 +30,6 @@ public class AnnotatedDependency<T> extends Dependency<T> {
     AnnotatedDependency<?> that = (AnnotatedDependency<?>) o;
 
     return annotation.equals(that.annotation);
-
   }
 
   @Override

@@ -10,7 +10,7 @@ public class SingletonInstantiator<T> extends InstantiatorDecorator<T> {
   }
 
   @Override
-  public T getInstance() throws Exception {
+  public T getInstance() {
     if (instance == null) {
       instance = super.getInstance();
     }

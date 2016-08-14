@@ -1,14 +1,12 @@
 package com.dijon.instantiation;
 
 import com.dijon.dependency.Dependency;
+import com.dijon.exception.DependencyDetectionException;
 
 import java.util.List;
 
-/**
- * Created by Attila on 2016. 08. 10..
- */
 public interface Instantiator<T> {
-  T getInstance() throws Exception;
+  T getInstance();
 
   Instantiator<T> getBaseInstantiator();
 

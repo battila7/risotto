@@ -1,6 +1,7 @@
 package com.dijon.instantiation;
 
 import com.dijon.dependency.Dependency;
+import com.dijon.exception.DependencyDetectionException;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ public abstract class InstantiatorDecorator<T> implements Instantiator<T> {
   }
 
   @Override
-  public T getInstance() throws Exception {
+  public T getInstance() {
     return decoratedInstantiator.getInstance();
   }
 

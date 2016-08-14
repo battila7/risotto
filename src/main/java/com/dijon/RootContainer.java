@@ -9,31 +9,32 @@ import com.dijon.exception.InvalidContainerNameException;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-/**
- * Created by Attila on 2016. 08. 11..
- */
 public final class RootContainer extends AbstractContainer {
-  public RootContainer() {
-    super();
-  }
-
   @Override
-  public void addChildContainer(Class<? extends CustomContainer> childContainer, String name) throws
+  public void addChildContainer(Class<? extends CustomContainer> childContainerClass, String name) throws
       InvalidContainerNameException, ContainerInstantiationException,
       DependencyResolutionFailedException {
+    if (childContainerClass == null) {
+      throw new NullPointerException("The container class must not be null!");
+    }
+
+    if (name == null) {
+      throw new NullPointerException("The container name must not be null!");
+    }
+
     CustomContainer newContainer;
 
     synchronized (lockObject) {
       for (String containerName : childContainerMap.keySet()) {
         if (containerName.equals(name)) {
-          throw new InvalidContainerNameException();
+          throw new InvalidContainerNameException(name);
         }
       }
 
       try {
-        newContainer = childContainer.newInstance();
+        newContainer = childContainerClass.newInstance();
       } catch (IllegalAccessException | InstantiationException e) {
-        throw new ContainerInstantiationException();
+        throw new ContainerInstantiationException(childContainerClass, e);
       }
 
       newContainer.setName(name);

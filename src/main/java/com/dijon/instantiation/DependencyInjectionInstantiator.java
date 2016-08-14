@@ -1,10 +1,11 @@
 package com.dijon.instantiation;
 
-import static com.dijon.dependency.management.DependencyDetector.createDetectors;
+import static com.dijon.dependency.DependencyDetector.createDetectors;
 
 import com.dijon.dependency.Dependency;
-import com.dijon.dependency.management.DependencyDetector;
-import com.dijon.dependency.management.DependencyInjector;
+import com.dijon.dependency.DependencyDetector;
+import com.dijon.dependency.DependencyInjector;
+import com.dijon.exception.DependencyDetectionException;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +20,7 @@ public class DependencyInjectionInstantiator<T> implements Instantiator<T> {
   }
 
   @Override
-  public T getInstance() throws Exception {
+  public T getInstance() {
     return injector.createInstance();
   }
 
@@ -47,7 +48,7 @@ public class DependencyInjectionInstantiator<T> implements Instantiator<T> {
     }
 
     if (immediateDependencies == null) {
-      // TODO: THROW IF NOTHING
+      throw new DependencyDetectionException(clazz);
     }
 
     return immediateDependencies;
