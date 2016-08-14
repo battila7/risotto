@@ -22,14 +22,6 @@ public class BasicBinding<T> extends TerminableBinding<T> {
     return dependency.getBoundedClass().isAssignableFrom(boundedClass);
   }
 
-  public InstantiatableBinding<T> toClass(Class<? extends T> clazz) {
-    return new ClassBinding<>(this, clazz);
-  }
-
-  public <K extends T> InstantiatableBinding<T> toInstance(K instance) {
-    return new InstanceBinding<>(this, instance);
-  }
-
   public NamedBinding<T> as(String name) {
     return new NamedBinding<>(boundedClass, name);
   }
