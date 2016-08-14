@@ -10,9 +10,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- *  Marks an injection target to be injected with the specified named instance or class.
+ * Marks an injection target to be injected with the specified named instance or class.
  */
-@Target( { PARAMETER, FIELD, METHOD })
+@Target({PARAMETER, FIELD, METHOD})
 @Retention(RUNTIME)
 @Documented
 public @interface Named {

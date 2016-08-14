@@ -149,7 +149,8 @@ public abstract class CustomContainer extends AbstractContainer {
     return null;
   }
 
-  private <T> Optional<T> returnInstance(Class<T> clazz, Dependency<T> dependency) throws Exception {
+  private <T> Optional<T> returnInstance(Class<T> clazz, Dependency<T> dependency)
+      throws Exception {
     Optional<InstantiatableBinding<?>> bindingOptional = resolve(dependency);
 
     if (!bindingOptional.isPresent()) {

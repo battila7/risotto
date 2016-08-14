@@ -16,4 +16,10 @@ public class InstantiatorFactory {
         return null;
     }
   }
+
+  public static <T> Instantiator<T> decorateWithDefaultInstantiator(Instantiator<T> instantiator) {
+    Instantiator<T> base = instantiator.getBaseInstantiator();
+
+    return new SingletonInstantiator<>(base);
+  }
 }

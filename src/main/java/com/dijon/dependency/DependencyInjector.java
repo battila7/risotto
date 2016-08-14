@@ -1,7 +1,5 @@
 package com.dijon.dependency;
 
-import com.dijon.dependency.Dependency;
-
 import java.util.List;
 
 public abstract class DependencyInjector<T> {

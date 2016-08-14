@@ -7,7 +7,8 @@ public class ContainerInstantiationException extends Exception {
 
   private final Class<? extends CustomContainer> containerClass;
 
-  public ContainerInstantiationException(Class<? extends CustomContainer> containerClass, Throwable cause) {
+  public ContainerInstantiationException(Class<? extends CustomContainer> containerClass,
+                                         Throwable cause) {
     super(MESSAGE + containerClass.toString(), cause);
 
     this.containerClass = containerClass;

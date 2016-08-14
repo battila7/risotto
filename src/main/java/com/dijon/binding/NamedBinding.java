@@ -17,7 +17,7 @@ public class NamedBinding<T> extends TerminableBinding<T> {
       return false;
     }
 
-    NamedDependency<?> namedDependency = (NamedDependency<?>)dependency;
+    NamedDependency<?> namedDependency = (NamedDependency<?>) dependency;
 
     if (!(namedDependency.getName().equals(name))) {
       return false;

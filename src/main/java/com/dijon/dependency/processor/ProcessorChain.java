@@ -1,6 +1,6 @@
 package com.dijon.dependency.processor;
 
-public class ProcessorChain {
+public final class ProcessorChain {
   private static final DependencyProcessor processorChain;
 
   static {
