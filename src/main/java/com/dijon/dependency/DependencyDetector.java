@@ -1,6 +1,7 @@
 package com.dijon.dependency;
 
 import com.dijon.dependency.constructor.ConstructorDependencyDetector;
+import com.dijon.dependency.setter.SetterDependencyDetector;
 
 import java.util.Arrays;
 import java.util.List;
@@ -12,7 +13,8 @@ public abstract class DependencyDetector<T> {
   protected DependencyInjector<T> dependencyInjector;
 
   public static <C> List<DependencyDetector<C>> createDetectors(Class<C> clazz) {
-    return Arrays.asList(new ConstructorDependencyDetector<>(clazz));
+    return Arrays
+        .asList(new ConstructorDependencyDetector<>(clazz), new SetterDependencyDetector<C>(clazz));
   }
 
   public DependencyDetector(Class<T> clazz) {
