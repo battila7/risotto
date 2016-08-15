@@ -32,8 +32,11 @@ public class ConstructorDependencyInjector<T> extends DependencyInjector<T> {
         injectableDependencies.add(dependency.getResolvingBinding().getInstance());
       }
 
+      injectableConstructor.setAccessible(true);
+
       return injectableConstructor.newInstance(injectableDependencies.toArray());
-    } catch (InstantiationException | IllegalAccessException | InvocationTargetException | InstantiationFailedException e) {
+    } catch (InstantiationException | IllegalAccessException | InvocationTargetException
+            | InstantiationFailedException | SecurityException e) {
       throw new InstantiationFailedException(e);
     }
   }
