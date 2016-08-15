@@ -4,6 +4,8 @@ import com.dijon.annotations.Named;
 import com.dijon.dependency.Dependency;
 import com.dijon.dependency.NamedDependency;
 
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Optional;
@@ -15,9 +17,7 @@ class NamedProcessor extends DependencyProcessor {
       return super.process(parameter);
     }
 
-    Named namedAnnotation = parameter.getDeclaredAnnotation(Named.class);
-
-    return Optional.of(new NamedDependency<>(parameter.getType(), namedAnnotation.value()));
+    return Optional.of(new NamedDependency<>(parameter.getType(), getAnnotationValue(parameter)));
   }
 
   @Override
@@ -26,10 +26,23 @@ class NamedProcessor extends DependencyProcessor {
       return super.process(method);
     }
 
-    Named namedAnnotation = method.getDeclaredAnnotation(Named.class);
-
     Class<?> targetParameterType = method.getParameterTypes()[0];
 
-    return Optional.of(new NamedDependency<>(targetParameterType, namedAnnotation.value()));
+    return Optional.of(new NamedDependency<>(targetParameterType, getAnnotationValue(method)));
+  }
+
+  @Override
+  public Optional<Dependency<?>> process(Field field) {
+    if (!field.isAnnotationPresent(Named.class)) {
+      return super.process(field);
+    }
+
+    Class<?> targetFieldType = field.getType();
+
+    return Optional.of(new NamedDependency<>(targetFieldType, getAnnotationValue(field)));
+  }
+
+  private String getAnnotationValue(AnnotatedElement element) {
+    return element.getDeclaredAnnotation(Named.class).value();
   }
 }

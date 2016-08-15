@@ -32,7 +32,13 @@ public class SetterDependencyDetector<T> extends DependencyDetector<T> {
 
     List<Dependency<?>> immediateDependencies = new ArrayList<>();
 
-    for (Method method : getInjectableMethods()) {
+    List<Method> injectableMethods = getInjectableMethods();
+
+    if (injectableMethods.size() == 0) {
+      return Optional.empty();
+    }
+
+    for (Method method : injectableMethods) {
       Optional<Dependency<?>> dependencyOptional = processorChain.process(method);
 
       if (!dependencyOptional.isPresent()) {

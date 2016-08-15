@@ -5,6 +5,8 @@ import com.dijon.dependency.AnnotatedDependency;
 import com.dijon.dependency.Dependency;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Optional;
@@ -12,15 +14,13 @@ import java.util.Optional;
 class AnnotatedProcessor extends DependencyProcessor {
   @Override
   public Optional<Dependency<?>> process(Parameter parameter) {
-    for (Annotation annotation : parameter.getAnnotations()) {
-      Class<? extends Annotation> annotationType = annotation.annotationType();
+    Optional<Class<? extends Annotation>> annotationOptional = getInjectSpecifier(parameter);
 
-      if (annotationType.isAnnotationPresent(InjectSpecifier.class)) {
-        AnnotatedDependency<?> annotatedDependency =
-            new AnnotatedDependency<>(parameter.getType(), annotationType);
+    if (annotationOptional.isPresent()) {
+      AnnotatedDependency<?> annotatedDependency =
+          new AnnotatedDependency<>(parameter.getType(), annotationOptional.get());
 
-        return Optional.of(annotatedDependency);
-      }
+      return Optional.of(annotatedDependency);
     }
 
     return super.process(parameter);
@@ -28,19 +28,45 @@ class AnnotatedProcessor extends DependencyProcessor {
 
   @Override
   public Optional<Dependency<?>> process(Method method) {
-    for (Annotation annotation : method.getAnnotations()) {
-      Class<? extends Annotation> annotationType = annotation.annotationType();
+    Optional<Class<? extends Annotation>> annotationOptional = getInjectSpecifier(method);
 
-      if (annotationType.isAnnotationPresent(InjectSpecifier.class)) {
-        Class<?> targetParameterType = method.getParameterTypes()[0];
+    if (annotationOptional.isPresent()) {
+      Class<?> targetParameterType = method.getParameterTypes()[0];
 
-        AnnotatedDependency<?> annotatedDependency =
-            new AnnotatedDependency<>(targetParameterType, annotationType);
+      AnnotatedDependency<?> annotatedDependency =
+          new AnnotatedDependency<>(targetParameterType, annotationOptional.get());
 
-        return Optional.of(annotatedDependency);
-      }
+      return Optional.of(annotatedDependency);
     }
 
     return super.process(method);
+  }
+
+  @Override
+  public Optional<Dependency<?>> process(Field field) {
+    Optional<Class<? extends Annotation>> annotationOptional = getInjectSpecifier(field);
+
+    if (annotationOptional.isPresent()) {
+      Class<?> targetFieldType = field.getType();
+
+      AnnotatedDependency<?> annotatedDependency =
+          new AnnotatedDependency<>(targetFieldType, annotationOptional.get());
+
+      return Optional.of(annotatedDependency);
+    }
+
+    return super.process(field);
+  }
+
+  private Optional<Class<? extends Annotation>> getInjectSpecifier(AnnotatedElement element) {
+    for (Annotation annotation : element.getAnnotations()) {
+      Class<? extends Annotation> annotationType = annotation.annotationType();
+
+      if (annotationType.isAnnotationPresent(InjectSpecifier.class)) {
+        return Optional.of(annotationType);
+      }
+    }
+
+    return Optional.empty();
   }
 }
