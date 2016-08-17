@@ -4,6 +4,7 @@ import com.dijon.binding.InstantiatableBinding;
 import com.dijon.dependency.AnnotatedDependency;
 import com.dijon.dependency.Dependency;
 import com.dijon.dependency.NamedDependency;
+import com.dijon.exception.DependencyResolutionFailedException;
 import com.dijon.exception.InvalidContainerNameException;
 
 import java.lang.annotation.Annotation;
@@ -12,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * Abstract dependency container class that must be subclassed by custom dependency containers.
@@ -26,11 +26,11 @@ public abstract class Container {
 
   private final List<Dependency<?>> dependencyList;
 
-  private final Container parentContainer;
+  private Container parentContainer;
 
-  private final ContainerSettings initialSettings;
+  private ContainerSettings initialSettings;
 
-  public Container(ContainerSettings containerSettings, Container parentContainer) {
+  public Container() {
     this.childContainerMap = new HashMap<>();
 
     this.configurableChildList = new ArrayList<>();
@@ -38,31 +38,27 @@ public abstract class Container {
     this.bindingList = new ArrayList<>();
 
     this.dependencyList = new ArrayList<>();
-
-    this.parentContainer = parentContainer;
-
-    this.initialSettings = containerSettings;
   }
 
-  public <T> Optional<T> getInstance(Class<T> clazz) {
+  public final <T> Optional<T> getInstance(Class<T> clazz) {
     Dependency<T> dependency = new Dependency<>(clazz);
 
     return returnInstance(clazz, dependency);
   }
 
-  public <T> Optional<T> getInstance(Class<T> clazz, String name) {
+  public final <T> Optional<T> getInstance(Class<T> clazz, String name) {
     NamedDependency<T> dependency = new NamedDependency<T>(clazz, name);
 
     return returnInstance(clazz, dependency);
   }
 
-  public <T> Optional<T> getInstance(Class<T> clazz, Class<? extends Annotation> annotation) {
+  public final <T> Optional<T> getInstance(Class<T> clazz, Class<? extends Annotation> annotation) {
     AnnotatedDependency<T> dependency = new AnnotatedDependency<T>(clazz, annotation);
 
     return returnInstance(clazz, dependency);
   }
 
-  public Optional<Container> getChild(String name) {
+  public final Optional<Container> getChild(String name) {
     if (name == null) {
       throw new NullPointerException("The name must not be null!");
     }
@@ -76,7 +72,13 @@ public abstract class Container {
     return Optional.of(container);
   }
 
-  protected void addChild(ContainerSettings containerSettings)
+  /**
+   * Configures the contents of the container. By overriding this method, instances and container
+   * containers can be added to the container object.
+   */
+  protected abstract void configure();
+
+  protected final void addChild(ContainerSettings containerSettings)
       throws InvalidContainerNameException {
     if (containerSettings == null) {
       throw new NullPointerException("The container settings parameter must not be null!");
@@ -91,7 +93,27 @@ public abstract class Container {
     configurableChildList.add(containerSettings);
   }
 
-  protected abstract Optional<InstantiatableBinding<?>> resolve(Dependency<?> dependency);
+  /* package */ void performResolution() throws DependencyResolutionFailedException {
+    for (Dependency<?> dependency : dependencyList) {
+      Optional<InstantiatableBinding<?>> bindingOptional = resolve(dependency);
+
+      if (!bindingOptional.isPresent()) {
+        throw new DependencyResolutionFailedException(dependency);
+      }
+
+      dependency.setResolvingBinding(bindingOptional.get());
+    }
+  }
+
+  private Optional<InstantiatableBinding<?>> resolve(Dependency<?> dependency) {
+    for (InstantiatableBinding<?> binding : bindingList) {
+      if (binding.canResolve(dependency)) {
+        return Optional.of(binding);
+      }
+    }
+
+    return parentContainer.resolve(dependency);
+  }
 
   private <T> Optional<T> returnInstance(Class<T> clazz, Dependency<T> dependency) {
     Optional<InstantiatableBinding<?>> bindingOptional = resolve(dependency);

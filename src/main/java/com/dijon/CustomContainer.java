@@ -132,12 +132,6 @@ public abstract class CustomContainer extends Container {
     return parentContainer.resolve(dependency);
   }
 
-  @Override
-  protected CompletableFuture<Optional<InstantiatableBinding<?>>> resolveAsync(
-      Dependency<?> dependency) {
-    return null;
-  }
-
   private <T> Optional<T> returnInstance(Class<T> clazz, Dependency<T> dependency) {
     Optional<InstantiatableBinding<?>> bindingOptional = resolve(dependency);
 
