@@ -14,12 +14,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-public abstract class CustomContainer extends AbstractContainer {
+public abstract class CustomContainer extends Container {
   private final List<InstantiatableBinding<?>> bindingList;
 
   private final List<Dependency<?>> dependencyList;
 
-  private AbstractContainer parentContainer;
+  private Container parentContainer;
 
   private String name;
 
@@ -29,11 +29,11 @@ public abstract class CustomContainer extends AbstractContainer {
     this.dependencyList = new ArrayList<>();
   }
 
-  public void setParentContainer(AbstractContainer parentContainer) {
+  public void setParentContainer(Container parentContainer) {
     this.parentContainer = parentContainer;
   }
 
-  public AbstractContainer getParentContainer() {
+  public Container getParentContainer() {
     return parentContainer;
   }
 

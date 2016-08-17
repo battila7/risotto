@@ -9,7 +9,7 @@ import com.dijon.exception.InvalidContainerNameException;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-public final class RootContainer extends AbstractContainer {
+public final class RootContainer extends Container {
   @Override
   public void addChildContainer(ChildSettings childSettings)
       throws

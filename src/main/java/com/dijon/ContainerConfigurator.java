@@ -5,10 +5,10 @@ import com.dijon.exception.ContainerInstantiationException;
 final class ContainerConfigurator {
   private final ChildSettings childSettings;
 
-  private final AbstractContainer parentContainer;
+  private final Container parentContainer;
 
   public ContainerConfigurator(ChildSettings childSettings,
-                               AbstractContainer parentContainer) {
+                               Container parentContainer) {
     this.childSettings = childSettings;
 
     this.parentContainer = parentContainer;
