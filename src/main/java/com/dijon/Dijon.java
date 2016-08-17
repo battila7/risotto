@@ -7,7 +7,7 @@ public final class Dijon {
 
   private static Container rootContainer;
 
-  public static Container addRootContainer(ChildSettings childSettings) {
+  public static Container addRootContainer(ContainerSettings containerSettings) {
     return rootContainer;
   }
 

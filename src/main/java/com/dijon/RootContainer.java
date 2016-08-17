@@ -11,34 +11,34 @@ import java.util.concurrent.CompletableFuture;
 
 public final class RootContainer extends Container {
   @Override
-  public void addChildContainer(ChildSettings childSettings)
+  public void addChildContainer(ContainerSettings containerSettings)
       throws
       InvalidContainerNameException, ContainerInstantiationException,
       DependencyResolutionFailedException {
-    if (childSettings == null) {
-      throw new NullPointerException("The child settings parameter must not be null!");
+    if (containerSettings == null) {
+      throw new NullPointerException("The container settings parameter must not be null!");
     }
 
     CustomContainer newContainer;
 
     synchronized (lockObject) {
       for (String containerName : childContainerMap.keySet()) {
-        if (containerName.equals(childSettings.getName())) {
-          throw new InvalidContainerNameException(childSettings.getName());
+        if (containerName.equals(containerSettings.getName())) {
+          throw new InvalidContainerNameException(containerSettings.getName());
         }
       }
 
       try {
-        newContainer = childSettings.getContainerClass().newInstance();
+        newContainer = containerSettings.getContainerClass().newInstance();
       } catch (IllegalAccessException | InstantiationException e) {
-        throw new ContainerInstantiationException(childSettings.getContainerClass(), e);
+        throw new ContainerInstantiationException(containerSettings.getContainerClass(), e);
       }
 
-      newContainer.setName(childSettings.getName());
+      newContainer.setName(containerSettings.getName());
 
       newContainer.setParentContainer(this);
 
-      childContainerMap.put(childSettings.getName(), newContainer);
+      childContainerMap.put(containerSettings.getName(), newContainer);
     }
 
     newContainer.configure();

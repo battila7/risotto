@@ -6,18 +6,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public final class ChildSettings {
+public final class ContainerSettings {
   private final Class<? extends CustomContainer> containerClass;
 
   private final List<Configurator> configuratorList;
 
   private String name;
 
-  public static ChildSettings child(Class<? extends CustomContainer> containerClass) {
-    return new ChildSettings(containerClass);
+  public static ContainerSettings container(Class<? extends CustomContainer> containerClass) {
+    return new ContainerSettings(containerClass);
   }
 
-  private ChildSettings(Class<? extends CustomContainer> containerClass) {
+  private ContainerSettings(Class<? extends CustomContainer> containerClass) {
     this.containerClass = containerClass;
 
     this.name = containerClass.getName();
@@ -25,13 +25,13 @@ public final class ChildSettings {
     this.configuratorList = new ArrayList<>();
   }
 
-  public ChildSettings as(String name) {
+  public ContainerSettings as(String name) {
     this.name = name;
 
     return this;
   }
 
-  public ChildSettings withConfigurators(Configurator... configurators) {
+  public ContainerSettings withConfigurators(Configurator... configurators) {
     Collections.addAll(configuratorList, configurators);
 
     return this;
