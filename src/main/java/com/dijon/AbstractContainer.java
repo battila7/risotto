@@ -25,16 +25,9 @@ public abstract class AbstractContainer {
     this.lockObject = new Object();
   }
 
-  public abstract void addChildContainer(Class<? extends CustomContainer> childContainer,
-                                         String name)
+  public abstract void addChildContainer(ChildSettings childSettings)
       throws InvalidContainerNameException, ContainerInstantiationException,
       DependencyResolutionFailedException;
-
-  public void addChildContainer(Class<? extends CustomContainer> childContainer) throws
-      InvalidContainerNameException, ContainerInstantiationException,
-      DependencyResolutionFailedException {
-    addChildContainer(childContainer, childContainer.getName());
-  }
 
   public Optional<CustomContainer> getChildContainer(String name) {
     synchronized (lockObject) {

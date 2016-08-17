@@ -64,36 +64,32 @@ public abstract class CustomContainer extends AbstractContainer {
   }
 
   @Override
-  public void addChildContainer(Class<? extends CustomContainer> childContainerClass, String name)
+  public void addChildContainer(ChildSettings childSettings)
       throws InvalidContainerNameException, ContainerInstantiationException {
-    if (childContainerClass == null) {
-      throw new NullPointerException("The container class must not be null!");
-    }
-
-    if (name == null) {
-      throw new NullPointerException("The container name must not be null!");
+    if (childSettings == null) {
+      throw new NullPointerException("The child settings parameter must not be null!");
     }
 
     synchronized (lockObject) {
       for (String containerName : childContainerMap.keySet()) {
-        if (containerName.equals(name)) {
-          throw new InvalidContainerNameException(name);
+        if (containerName.equals(childSettings.getName())) {
+          throw new InvalidContainerNameException(childSettings.getName());
         }
       }
 
       CustomContainer newContainer;
 
       try {
-        newContainer = childContainerClass.newInstance();
+        newContainer = childSettings.getContainerClass().newInstance();
       } catch (IllegalAccessException | InstantiationException e) {
-        throw new ContainerInstantiationException(childContainerClass, e);
+        throw new ContainerInstantiationException(childSettings.getContainerClass(), e);
       }
 
-      newContainer.setName(name);
+      newContainer.setName(childSettings.getName());
 
       newContainer.setParentContainer(this);
 
-      childContainerMap.put(name, newContainer);
+      childContainerMap.put(childSettings.getName(), newContainer);
     }
   }
 

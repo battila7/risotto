@@ -9,9 +9,9 @@ import java.util.List;
 public final class ChildSettings {
   private final Class<? extends CustomContainer> containerClass;
 
-  private String name;
-
   private final List<Configurator> configuratorList;
+
+  private String name;
 
   public static ChildSettings child(Class<? extends CustomContainer> containerClass) {
     return new ChildSettings(containerClass);
@@ -35,5 +35,17 @@ public final class ChildSettings {
     Collections.addAll(configuratorList, configurators);
 
     return this;
+  }
+
+  public Class<? extends CustomContainer> getContainerClass() {
+    return containerClass;
+  }
+
+  public List<Configurator> getConfiguratorList() {
+    return configuratorList;
+  }
+
+  public String getName() {
+    return name;
   }
 }
