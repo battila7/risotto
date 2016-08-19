@@ -124,6 +124,14 @@ public abstract class Container {
     }
   }
 
+  /* package */ Map<String, Container> getChildContainerMap() {
+    return childContainerMap;
+  }
+
+  /* package */ List<ContainerSettings> getConfigurableChildList() {
+    return configurableChildList;
+  }
+
   private Optional<InstantiatableBinding<?>> resolve(Dependency<?> dependency) {
     return resolver.resolve(bindingList, dependency, () -> {
       for (Container childContainer : childContainerMap.values()) {
