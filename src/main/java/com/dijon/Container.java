@@ -4,6 +4,7 @@ import com.dijon.binding.InstantiatableBinding;
 import com.dijon.dependency.AnnotatedDependency;
 import com.dijon.dependency.Dependency;
 import com.dijon.dependency.NamedDependency;
+import com.dijon.dependency.resolution.Resolver;
 import com.dijon.exception.DependencyResolutionFailedException;
 import com.dijon.exception.InvalidContainerNameException;
 
@@ -29,6 +30,8 @@ public abstract class Container {
   private Container parentContainer;
 
   private ContainerSettings initialSettings;
+
+  private Resolver resolver;
 
   public Container() {
     this.childContainerMap = new HashMap<>();
@@ -122,13 +125,18 @@ public abstract class Container {
   }
 
   private Optional<InstantiatableBinding<?>> resolve(Dependency<?> dependency) {
-    for (InstantiatableBinding<?> binding : bindingList) {
-      if (binding.canResolve(dependency)) {
-        return Optional.of(binding);
-      }
-    }
+    return resolver.resolve(bindingList, dependency, () -> {
+      for (Container childContainer : childContainerMap.values()) {
+        Optional<InstantiatableBinding<?>> result =
+            childContainer.resolve(dependency);
 
-    return parentContainer.resolve(dependency);
+        if (result.isPresent()) {
+          return result;
+        }
+      }
+
+      return Optional.empty();
+    });
   }
 
   private <T> Optional<T> returnInstance(Class<T> clazz, Dependency<T> dependency) {
