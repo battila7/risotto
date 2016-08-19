@@ -3,6 +3,7 @@
 ### Lightweight dependency injection framework
 
 [![Build Status](https://travis-ci.org/battila7/dijon.svg?branch=master)](https://travis-ci.org/battila7/dijon)
+[![Beerpay](https://beerpay.io/battila7/dijon/badge.svg?style=beer)](https://beerpay.io/battila7/dijon)
 
 #### Logo credits
 Original icon made by [Madebyoliver](http://www.flaticon.com/authors/madebyoliver) from [www.flaticon.com](www.flaticon.cm).
