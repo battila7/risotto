@@ -7,17 +7,17 @@ import java.util.Collections;
 import java.util.List;
 
 public final class ContainerSettings {
-  private final Class<? extends CustomContainer> containerClass;
+  private final Class<? extends Container> containerClass;
 
   private final List<Configurator> configuratorList;
 
   private String name;
 
-  public static ContainerSettings container(Class<? extends CustomContainer> containerClass) {
+  public static ContainerSettings container(Class<? extends Container> containerClass) {
     return new ContainerSettings(containerClass);
   }
 
-  private ContainerSettings(Class<? extends CustomContainer> containerClass) {
+  private ContainerSettings(Class<? extends Container> containerClass) {
     this.containerClass = containerClass;
 
     this.name = containerClass.getName();
@@ -37,7 +37,7 @@ public final class ContainerSettings {
     return this;
   }
 
-  public Class<? extends CustomContainer> getContainerClass() {
+  public Class<? extends Container> getContainerClass() {
     return containerClass;
   }
 

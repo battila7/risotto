@@ -14,8 +14,8 @@ final class ContainerConfigurator {
     this.parentContainer = parentContainer;
   }
 
-  public CustomContainer instantiateContainer() throws ContainerInstantiationException {
-    Class<? extends CustomContainer> containerClass = containerSettings.getContainerClass();
+  public Container instantiateContainer() throws ContainerInstantiationException {
+    Class<? extends Container> containerClass = containerSettings.getContainerClass();
 
     try {
       return containerClass.newInstance();

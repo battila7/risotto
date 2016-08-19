@@ -93,6 +93,22 @@ public abstract class Container {
     configurableChildList.add(containerSettings);
   }
 
+  protected void addBinding(InstantiatableBinding<?> instantiatableBinding) {
+    if (instantiatableBinding == null) {
+      throw new NullPointerException("The binding must not be null!");
+    }
+
+    bindingList.add(instantiatableBinding);
+
+    List<Dependency<?>> immediateDependencies = instantiatableBinding.getImmediateDependencies();
+
+    for (Dependency<?> dependency : immediateDependencies) {
+      if (!dependencyList.contains(dependency)) {
+        dependencyList.add(dependency);
+      }
+    }
+  }
+
   /* package */ void performResolution() throws DependencyResolutionFailedException {
     for (Dependency<?> dependency : dependencyList) {
       Optional<InstantiatableBinding<?>> bindingOptional = resolve(dependency);

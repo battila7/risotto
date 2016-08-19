@@ -1,24 +1,24 @@
 package com.dijon.configurator;
 
-import com.dijon.CustomContainer;
+import com.dijon.Container;
 import com.dijon.exception.ContainerInstantiationException;
 
 public class ContainerConfigurator {
-  private final Class<? extends CustomContainer> containerClass;
+  private final Class<? extends Container> containerClass;
 
-  public ContainerConfigurator(Class<? extends CustomContainer> containerClass) {
+  public ContainerConfigurator(Class<? extends Container> containerClass) {
     this.containerClass = containerClass;
   }
 
-  public Class<? extends CustomContainer> getContainerClass() {
+  public Class<? extends Container> getContainerClass() {
     return containerClass;
   }
 
-  public CustomContainer getContainerInstance() throws ContainerInstantiationException {
+  public Container getContainerInstance() throws ContainerInstantiationException {
     try {
-      CustomContainer newContainer = containerClass.newInstance();
+      Container newContainer = containerClass.newInstance();
 
-      newContainer.add
+
 
       return newContainer;
     } catch (IllegalAccessException | InstantiationException e) {

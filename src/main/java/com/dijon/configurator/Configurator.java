@@ -1,7 +1,7 @@
 package com.dijon.configurator;
 
-import com.dijon.CustomContainer;
+import com.dijon.Container;
 
 public interface Configurator {
-  void configure(CustomContainer containerInstance, Class<? extends CustomContainer> containerClass);
+  void configure(Container containerInstance, Class<? extends Container> containerClass);
 }
