@@ -12,3 +12,5 @@ Things to do until the next release.
   * Create path-based child getter
   * Investigate thread-safety and multithreaded usage
   * Add proper toString() hashCode() and equals() methods (on Bindings and Dependencies mostly)
+  * Add useful logging using SLF4J
+  * Review parameter null-safety
