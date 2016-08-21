@@ -1,37 +1,40 @@
 package com.dijon;
 
+import static java.util.stream.Collectors.toList;
+
 import com.dijon.binding.InstantiatableBinding;
+import com.dijon.binding.scope.Scope;
 import com.dijon.dependency.AnnotatedDependency;
 import com.dijon.dependency.Dependency;
 import com.dijon.dependency.NamedDependency;
-import com.dijon.dependency.resolution.Resolver;
 import com.dijon.exception.DependencyResolutionFailedException;
 import com.dijon.exception.InvalidContainerNameException;
+import com.dijon.exception.ScopeInstantiationException;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Abstract dependency container class that must be subclassed by custom dependency containers.
  */
 public abstract class Container {
+  public static final Container HAS_NO_PARENT = null;
+
   private final Map<String, Container> childContainerMap;
 
   private final List<ContainerSettings> configurableChildList;
 
   private final List<InstantiatableBinding<?>> bindingList;
 
-  private final List<Dependency<?>> dependencyList;
+  private final Set<Dependency<?>> dependencySet;
 
   private Container parentContainer;
-
-  private ContainerSettings initialSettings;
-
-  private Resolver resolver;
 
   public Container() {
     this.childContainerMap = new HashMap<>();
@@ -40,11 +43,13 @@ public abstract class Container {
 
     this.bindingList = new ArrayList<>();
 
-    this.dependencyList = new ArrayList<>();
+    this.dependencySet = new HashSet<>();
   }
 
   public final <T> Optional<T> getInstance(Class<T> clazz) {
     Dependency<T> dependency = new Dependency<>(clazz);
+
+    dependency.setOrigin(Scope.GET_INSTANCE_REQUEST);
 
     return returnInstance(clazz, dependency);
   }
@@ -52,13 +57,25 @@ public abstract class Container {
   public final <T> Optional<T> getInstance(Class<T> clazz, String name) {
     NamedDependency<T> dependency = new NamedDependency<T>(clazz, name);
 
+    dependency.setOrigin(Scope.GET_INSTANCE_REQUEST);
+
     return returnInstance(clazz, dependency);
   }
 
   public final <T> Optional<T> getInstance(Class<T> clazz, Class<? extends Annotation> annotation) {
     AnnotatedDependency<T> dependency = new AnnotatedDependency<T>(clazz, annotation);
 
+    dependency.setOrigin(Scope.GET_INSTANCE_REQUEST);
+
     return returnInstance(clazz, dependency);
+  }
+
+  public Container getParentContainer() {
+    return parentContainer;
+  }
+
+  /* package */ void setParentContainer(Container parentContainer) {
+    this.parentContainer = parentContainer;
   }
 
   public final Optional<Container> getChild(String name) {
@@ -101,19 +118,35 @@ public abstract class Container {
       throw new NullPointerException("The binding must not be null!");
     }
 
+    // TODO: Check if exists
     bindingList.add(instantiatableBinding);
 
-    List<Dependency<?>> immediateDependencies = instantiatableBinding.getImmediateDependencies();
+    setBindingScope(instantiatableBinding);
 
-    for (Dependency<?> dependency : immediateDependencies) {
-      if (!dependencyList.contains(dependency)) {
-        dependencyList.add(dependency);
-      }
+    instantiatableBinding.getImmediateDependencies().stream()
+        .forEach(d -> {
+          d.setOrigin(this);
+          dependencySet.add(d);
+        });
+  }
+
+  private void setBindingScope(InstantiatableBinding<?> instantiatableBinding)
+      throws ScopeInstantiationException {
+    try {
+      Class<? extends Scope> scopeClass = instantiatableBinding.getScopeClass();
+
+      Scope bindingScope = scopeClass.newInstance();
+
+      bindingScope.setOrigin(this);
+
+      instantiatableBinding.setScope(bindingScope);
+    } catch (InstantiationException | IllegalAccessException e) {
+      throw new ScopeInstantiationException(instantiatableBinding.getScopeClass(), e);
     }
   }
 
   /* package */ void performResolution() throws DependencyResolutionFailedException {
-    for (Dependency<?> dependency : dependencyList) {
+    for (Dependency<?> dependency : dependencySet) {
       Optional<InstantiatableBinding<?>> bindingOptional = resolve(dependency);
 
       if (!bindingOptional.isPresent()) {
@@ -132,19 +165,24 @@ public abstract class Container {
     return configurableChildList;
   }
 
+  /* package */ List<InstantiatableBinding<?>> getImportedBindings(Container targetContainer) {
+    return bindingList.stream()
+        .filter(b -> b.isImportAllowedTo(targetContainer))
+        .collect(toList());
+  }
+
   private Optional<InstantiatableBinding<?>> resolve(Dependency<?> dependency) {
-    return resolver.resolve(bindingList, dependency, () -> {
-      for (Container childContainer : childContainerMap.values()) {
-        Optional<InstantiatableBinding<?>> result =
-            childContainer.resolve(dependency);
-
-        if (result.isPresent()) {
-          return result;
-        }
+    for (InstantiatableBinding<?> binding : bindingList) {
+      if (binding.canResolve(dependency)) {
+        return Optional.of(binding);
       }
+    }
 
-      return Optional.empty();
-    });
+    return childContainerMap.values().stream()
+        .map(c -> c.resolve(dependency))
+        .filter(Optional::isPresent)
+        .findAny()
+        .orElse(Optional.empty());
   }
 
   private <T> Optional<T> returnInstance(Class<T> clazz, Dependency<T> dependency) {
