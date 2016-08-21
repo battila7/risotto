@@ -7,6 +7,9 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+/**
+ * Containing annotation type for {@link Child} annotations.
+ */
 @Target(TYPE)
 @Retention(RUNTIME)
 @Documented
