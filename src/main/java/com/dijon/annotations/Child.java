@@ -3,7 +3,7 @@ package com.dijon.annotations;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-import com.dijon.CustomContainer;
+import com.dijon.Container;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Repeatable;
@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
 @Documented
 @Repeatable(Children.class)
 public @interface Child {
-  Class<? extends CustomContainer> containerClass();
+  Class<? extends Container> containerClass();
 
-  String name();
+  String name() default "";
 }

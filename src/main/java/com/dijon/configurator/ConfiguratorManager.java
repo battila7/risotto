@@ -7,6 +7,10 @@ public class ConfiguratorManager {
   private static final List<Configurator> defaultConfiguratorList =
       new ArrayList<>();
 
+  static {
+    registerDefaultConfigurator(new ChildConfigurator());
+  }
+
   public static void registerDefaultConfigurator(Configurator configurator) {
     defaultConfiguratorList.add(configurator);
   }
