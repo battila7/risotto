@@ -2,6 +2,7 @@ package com.dijon;
 
 import static com.dijon.Container.HAS_NO_PARENT;
 
+import com.dijon.exception.ContainerConfigurationException;
 import com.dijon.exception.ContainerInstantiationException;
 import com.dijon.exception.DependencyResolutionFailedException;
 import com.dijon.exception.RootContainerAlreadySetException;
@@ -14,7 +15,7 @@ public final class Dijon {
 
   public static Container addRootContainer(ContainerSettings containerSettings) throws
       RootContainerAlreadySetException, ContainerInstantiationException,
-      DependencyResolutionFailedException {
+      ContainerConfigurationException, DependencyResolutionFailedException {
     if (containerSettings == null) {
       throw new NullPointerException("The container settings parameter must not be null!");
     }

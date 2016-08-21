@@ -1,6 +1,8 @@
 package com.dijon;
 
+import com.dijon.configurator.Configurator;
 import com.dijon.configurator.ConfiguratorManager;
+import com.dijon.exception.ContainerConfigurationException;
 import com.dijon.exception.ContainerInstantiationException;
 
 import java.util.Map;
@@ -31,7 +33,8 @@ final class ContainerConfigurator {
     }
   }
 
-  public void configureContainer() throws ContainerInstantiationException {
+  public void configureContainer()
+      throws ContainerInstantiationException, ContainerConfigurationException {
     instance.setParentContainer(parentContainer);
 
     instance.configure();
@@ -41,15 +44,18 @@ final class ContainerConfigurator {
     configureChildren();
   }
 
-  private void callConfigurators() {
-    ConfiguratorManager.getDefaultConfigurators().stream()
-        .forEach(c -> c.configure(instance, containerSettings.getContainerClass()));
+  private void callConfigurators() throws ContainerConfigurationException {
+    for (Configurator configurator : ConfiguratorManager.getDefaultConfigurators()) {
+      configurator.configure(instance, containerSettings.getContainerClass());
+    }
 
-    containerSettings.getConfiguratorList().stream()
-        .forEach(c -> c.configure(instance, containerSettings.getContainerClass()));
+    for (Configurator configurator : containerSettings.getConfiguratorList()) {
+      configurator.configure(instance, containerSettings.getContainerClass());
+    }
   }
 
-  private void configureChildren() throws ContainerInstantiationException {
+  private void configureChildren()
+      throws ContainerInstantiationException, ContainerConfigurationException {
     Map<String, Container> childMap = instance.getChildContainerMap();
 
     for (ContainerSettings settings : instance.getConfigurableChildList()) {
