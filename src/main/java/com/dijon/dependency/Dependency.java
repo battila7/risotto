@@ -1,18 +1,29 @@
 package com.dijon.dependency;
 
+import com.dijon.Container;
 import com.dijon.binding.InstantiatableBinding;
 
 public class Dependency<T> {
-  private final Class<T> clazz;
+  private final Class<T> boundedClass;
+
+  private Container origin;
 
   private InstantiatableBinding<?> resolvingBinding;
 
-  public Dependency(Class<T> clazz) {
-    this.clazz = clazz;
+  public Dependency(Class<T> boundedClass) {
+    this.boundedClass = boundedClass;
   }
 
   public Class<T> getBoundedClass() {
-    return clazz;
+    return boundedClass;
+  }
+
+  public Container getOrigin() {
+    return origin;
+  }
+
+  public void setOrigin(Container origin) {
+    this.origin = origin;
   }
 
   public InstantiatableBinding<?> getResolvingBinding() {
@@ -34,11 +45,11 @@ public class Dependency<T> {
 
     Dependency<?> that = (Dependency<?>) o;
 
-    return clazz.equals(that.clazz);
+    return boundedClass.equals(that.boundedClass);
   }
 
   @Override
   public int hashCode() {
-    return clazz.hashCode();
+    return boundedClass.hashCode();
   }
 }
