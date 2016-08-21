@@ -20,3 +20,7 @@ With parent-child relationships and binding scopes, Risotto allows developers to
 ### Should I use Risotto?
 
 Definitely, but just for experimenting because Risotto but does not have a stable release yet. Check back regularly for updates!
+
+### How to use Risotto?
+
+While the Wiki and the Javadoc is being updated, please take a look at the [Hello Risotto](https://github.com/battila7/hello-risotto) example project.
