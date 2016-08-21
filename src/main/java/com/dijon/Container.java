@@ -146,6 +146,10 @@ public abstract class Container {
   }
 
   /* package */ void performResolution() throws DependencyResolutionFailedException {
+    for (Container childContainer : childContainerMap.values()) {
+      childContainer.performResolution();
+    }
+
     for (Dependency<?> dependency : dependencySet) {
       Optional<InstantiatableBinding<?>> bindingOptional = resolve(dependency);
 
@@ -165,10 +169,10 @@ public abstract class Container {
     return configurableChildList;
   }
 
-  /* package */ List<InstantiatableBinding<?>> getImportedBindings(Container targetContainer) {
-    return bindingList.stream()
+  /* package */ void importBindingsTo(Container targetContainer) {
+    bindingList.stream()
         .filter(b -> b.isImportAllowedTo(targetContainer))
-        .collect(toList());
+        .forEach(b -> targetContainer.bindingList.add(b));
   }
 
   private Optional<InstantiatableBinding<?>> resolve(Dependency<?> dependency) {

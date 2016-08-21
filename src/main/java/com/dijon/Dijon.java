@@ -3,6 +3,7 @@ package com.dijon;
 import static com.dijon.Container.HAS_NO_PARENT;
 
 import com.dijon.exception.ContainerInstantiationException;
+import com.dijon.exception.DependencyResolutionFailedException;
 import com.dijon.exception.RootContainerAlreadySetException;
 import com.dijon.exception.RootContainerUnsetException;
 
@@ -12,7 +13,8 @@ public final class Dijon {
   private static Container rootContainer = null;
 
   public static Container addRootContainer(ContainerSettings containerSettings) throws
-      RootContainerAlreadySetException, ContainerInstantiationException {
+      RootContainerAlreadySetException, ContainerInstantiationException,
+      DependencyResolutionFailedException {
     if (containerSettings == null) {
       throw new NullPointerException("The container settings parameter must not be null!");
     }
@@ -28,6 +30,8 @@ public final class Dijon {
       rootContainer = configurator.instantiateContainer();
 
       configurator.configureContainer();
+
+      rootContainer.performResolution();
 
       return rootContainer;
     }
