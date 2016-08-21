@@ -36,7 +36,7 @@ public class ConstructorDependencyInjector<T> extends DependencyInjector<T> {
 
       return injectableConstructor.newInstance(injectableDependencies.toArray());
     } catch (InstantiationException | IllegalAccessException | InvocationTargetException
-            | InstantiationFailedException | SecurityException e) {
+        | InstantiationFailedException | SecurityException e) {
       throw new InstantiationFailedException(e);
     }
   }

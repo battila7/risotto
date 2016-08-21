@@ -1,20 +1,20 @@
 package com.dijon.exception;
 
-import com.dijon.CustomContainer;
+import com.dijon.Container;
 
 public class ContainerInstantiationException extends Exception {
   private static final String MESSAGE = "Could not instantiate container class: ";
 
-  private final Class<? extends CustomContainer> containerClass;
+  private final Class<? extends Container> containerClass;
 
-  public ContainerInstantiationException(Class<? extends CustomContainer> containerClass,
+  public ContainerInstantiationException(Class<? extends Container> containerClass,
                                          Throwable cause) {
     super(MESSAGE + containerClass.toString(), cause);
 
     this.containerClass = containerClass;
   }
 
-  public Class<? extends CustomContainer> getContainerClass() {
+  public Class<? extends Container> getContainerClass() {
     return containerClass;
   }
 }

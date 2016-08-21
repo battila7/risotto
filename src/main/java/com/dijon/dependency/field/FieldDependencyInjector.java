@@ -33,7 +33,7 @@ public class FieldDependencyInjector<T> extends DependencyInjector<T> {
 
       return instance;
     } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-            | SecurityException | InstantiationFailedException e) {
+        | SecurityException | InstantiationFailedException e) {
       throw new InstantiationFailedException(e);
     }
   }
