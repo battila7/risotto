@@ -1,7 +1,5 @@
 package com.dijon;
 
-import static java.util.stream.Collectors.toList;
-
 import com.dijon.binding.InstantiatableBinding;
 import com.dijon.binding.scope.Scope;
 import com.dijon.dependency.AnnotatedDependency;

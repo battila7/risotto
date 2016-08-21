@@ -1,25 +1,16 @@
 package com.dijon;
 
-import com.dijon.binding.InstantiatableBinding;
-import com.dijon.configurator.Configurator;
+import com.dijon.configurator.ConfiguratorManager;
 import com.dijon.exception.ContainerInstantiationException;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
-public final class ContainerConfigurator {
-  private static final List<Configurator> defaultConfiguratorList = new ArrayList<>();
-
+final class ContainerConfigurator {
   private final ContainerSettings containerSettings;
 
   private final Container parentContainer;
 
   private Container instance;
-
-  public static void registerDefaultConfigurator(Configurator configurator) {
-    defaultConfiguratorList.add(configurator);
-  }
 
   public ContainerConfigurator(ContainerSettings containerSettings,
                                Container parentContainer) {
@@ -51,7 +42,7 @@ public final class ContainerConfigurator {
   }
 
   private void callConfigurators() {
-    defaultConfiguratorList.stream()
+    ConfiguratorManager.getDefaultConfigurators().stream()
         .forEach(c -> c.configure(instance, containerSettings.getContainerClass()));
 
     containerSettings.getConfiguratorList().stream()
