@@ -39,7 +39,7 @@ public abstract class Container {
   private Container parentContainer;
 
   /**
-   * Constructs a new @{code Container} instance.
+   * Constructs a new {@code Container} instance.
    */
   public Container() {
     this.childContainerMap = new HashMap<>();
@@ -57,6 +57,7 @@ public abstract class Container {
    *
    * If no instance can be returned, returns an empty {@code Optional}.
    * @param clazz the class of which an instance is requested
+   * @param <T> the type of the requested instance
    * @return an {@code Optional} that either contains an instance or is empty
    */
   public final <T> Optional<T> getInstance(Class<T> clazz) {
@@ -74,6 +75,7 @@ public abstract class Container {
    * If no instance can be returned, returns an empty {@code Optional}.
    * @param clazz the class of which an instance is requested
    * @param name the associated name that should be used to retrieve the instance
+   * @param <T> the type of the requested instance
    * @return an {@code Optional} that either contains an instance or is empty
    */
   public final <T> Optional<T> getInstance(Class<T> clazz, String name) {
@@ -91,6 +93,7 @@ public abstract class Container {
    * If no instance can be returned, returns an empty {@code Optional}.
    * @param clazz the class of which an instance is requested
    * @param annotation the associated annotation class that should be used to retrieve the instance
+   * @param <T> the type of the requested instance
    * @return an {@code Optional} that either contains an instance or is empty
    */
   public final <T> Optional<T> getInstance(Class<T> clazz, Class<? extends Annotation> annotation) {
@@ -102,7 +105,7 @@ public abstract class Container {
   }
 
   /**
-   * Gets the parent container or {@link Container##HAS_NO_PARENT} if there's no parent container.
+   * Gets the parent container or {@link Container#HAS_NO_PARENT} if there's no parent container.
    * @return the parent container
    */
   public Container getParentContainer() {
