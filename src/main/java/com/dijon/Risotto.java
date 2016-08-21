@@ -8,7 +8,7 @@ import com.dijon.exception.DependencyResolutionFailedException;
 import com.dijon.exception.RootContainerAlreadySetException;
 import com.dijon.exception.RootContainerUnsetException;
 
-public final class Dijon {
+public final class Risotto {
   private static final Object rootContainerLockObject = new Object();
 
   private static Container rootContainer = null;
@@ -48,7 +48,7 @@ public final class Dijon {
     }
   }
 
-  private Dijon() {
+  private Risotto() {
     /*
      *  Cannot be instantiated.
      */
