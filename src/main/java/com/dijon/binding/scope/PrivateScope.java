@@ -11,6 +11,6 @@ public class PrivateScope extends Scope {
 
   @Override
   public boolean isVisibleTo(Dependency<?> dependency) {
-    return false;
+    return dependency.getOrigin() == origin;
   }
 }
