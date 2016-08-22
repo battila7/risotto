@@ -14,9 +14,24 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * {@code ConstructorDependencyDetector} inspects the constructors of a class and looks for the
+ * {@link Inject} annotation. If an injectable constructor is found, a new {@link
+ * ConstructorDependencyInjector} is created.
+ *
+ * Dependencies are detected using constructor parameter inspection. Each constructor parameter
+ * becomes an immediate dependency.
+ *
+ * Note that only <b>public</b> constructors are inspected.
+ * @param <T> the type to dependency detect
+ */
 public class ConstructorDependencyDetector<T> extends DependencyDetector<T> {
   private static final Logger logger = LoggerFactory.getLogger(ConstructorDependencyDetector.class);
 
+  /**
+   * Constructs a new instance that will be used to detect the dependencies of the specified class.
+   * @param clazz the dependency detectable class
+   */
   public ConstructorDependencyDetector(Class<T> clazz) {
     super(clazz);
   }

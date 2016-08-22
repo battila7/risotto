@@ -16,7 +16,22 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Detector class that inspects the fields of a class and looks for the {@link Inject} annotation on
+ * them. Public, protected, private and package scoped fields are all inspected and can be a target
+ * to dependency injection. If field inspection succeeds, a new {@link FieldDependencyInjector} is
+ * created.
+ *
+ * Each field (with the {@code Inject} annotation) becomes an immediate dependency.
+ *
+ * Note that <b>static</b> and/or <b>final</b> fields are not inspected.
+ * @param <T> the type to dependency detect
+ */
 public class FieldDependencyDetector<T> extends DependencyDetector<T> {
+  /**
+   * Constructs a new instance that will be used to detect the dependencies of the specified class.
+   * @param clazz the dependency detectable class
+   */
   public FieldDependencyDetector(Class<T> clazz) {
     super(clazz);
   }
