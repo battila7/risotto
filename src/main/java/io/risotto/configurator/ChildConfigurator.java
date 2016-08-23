@@ -9,8 +9,14 @@ import io.risotto.exception.ContainerConfigurationException;
 
 import java.lang.reflect.Method;
 
+/**
+ * Configurator that can add child containers to a container using {@link Child} annotations. Uses
+ * {@link Container#addChild(ContainerSettings)} under the hood.
+ */
 public class ChildConfigurator implements Configurator {
   private static final String EMPTY_STRING = "";
+
+  private static final String ADD_CHILD_METHOD_NAME = "addChild";
 
   @Override
   public void configure(Container containerInstance, Class<? extends Container> containerClass)
@@ -45,7 +51,8 @@ public class ChildConfigurator implements Configurator {
     try {
       Class<?> superclass = containerClass.getSuperclass();
 
-      Method addChildMethod = superclass.getDeclaredMethod("addChild", ContainerSettings.class);
+      Method addChildMethod =
+          superclass.getDeclaredMethod(ADD_CHILD_METHOD_NAME, ContainerSettings.class);
 
       addChildMethod.setAccessible(true);
 

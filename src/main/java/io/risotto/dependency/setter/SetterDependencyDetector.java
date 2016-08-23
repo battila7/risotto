@@ -19,7 +19,21 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Detector implementation that inspects <b>public</b> setter methods of a class and looks for the
+ * {@link Inject} annotation on them. If setter inspection succeeds, a new {@link
+ * SetterDependencyInjector} is created.
+ *
+ * Only <b>public</b> methods having name starting with {@code set} and having one parameter
+ * are considered as a target to dependency injection. Note that <b>static</b> or <b>abstract</b>
+ * methods are ignored.
+ * @param <T> the type to dependency detect
+ */
 public class SetterDependencyDetector<T> extends DependencyDetector<T> {
+  /**
+   * Constructs a new instance that will be used to detect the dependencies of the specified class.
+   * @param clazz the dependency detectable class
+   */
   public SetterDependencyDetector(Class<T> clazz) {
     super(clazz);
   }
