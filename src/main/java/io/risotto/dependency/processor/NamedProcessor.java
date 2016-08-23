@@ -1,5 +1,6 @@
 package io.risotto.dependency.processor;
 
+import io.risotto.annotations.InjectSpecifier;
 import io.risotto.annotations.Named;
 import io.risotto.dependency.Dependency;
 import io.risotto.dependency.NamedDependency;
@@ -10,6 +11,13 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Optional;
 
+/**
+ * {@code NamedProcessor} can produce named dependencies from objects annotated with the {@link
+ * Named} annotation. This processor does not check for annotations marked with the {@link
+ * InjectSpecifier} annotation, which implies that {@code Named} and any inject specifier annotation
+ * should not be present simultaneously on the same object, because undefined behaviour may occur
+ * based on the processors' place in the processor chain.
+ */
 class NamedProcessor extends DependencyProcessor {
   @Override
   public Optional<Dependency<?>> process(Parameter parameter) {

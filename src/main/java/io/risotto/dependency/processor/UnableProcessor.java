@@ -7,6 +7,10 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Optional;
 
+/**
+ * Represents a processor that's unable to process anything. An instance of this class is the last
+ * member of the dependency processor chain.
+ */
 class UnableProcessor extends DependencyProcessor {
   @Override
   public Optional<Dependency<?>> process(Parameter parameter) {
