@@ -16,4 +16,12 @@ public class InstantiationFailedException extends RuntimeException {
 
     this.failingClass = failingClass;
   }
+
+  /**
+   * Gets the class that could not been instantiated and is the cause of the exception.
+   * @return the failing class
+   */
+  public Class<?> getFailingClass() {
+    return failingClass;
+  }
 }
