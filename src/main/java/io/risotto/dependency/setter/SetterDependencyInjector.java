@@ -31,7 +31,7 @@ public class SetterDependencyInjector<T> extends DependencyInjector<T> {
   @Override
   public T createInstance() {
     try {
-      T instance = clazz.newInstance();
+      T instance = instantiatableClass.newInstance();
 
       for (Map.Entry<Method, Dependency<?>> pair : methodMap.entrySet()) {
         Method method = pair.getKey();
@@ -43,7 +43,7 @@ public class SetterDependencyInjector<T> extends DependencyInjector<T> {
 
       return instance;
     } catch (InstantiationException | IllegalAccessException | InvocationTargetException | InstantiationFailedException e) {
-      throw new InstantiationFailedException(e);
+      throw new InstantiationFailedException(instantiatableClass, e);
     }
   }
 }

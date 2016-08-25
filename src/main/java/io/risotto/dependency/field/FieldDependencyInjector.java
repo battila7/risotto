@@ -30,7 +30,7 @@ public class FieldDependencyInjector<T> extends DependencyInjector<T> {
   @Override
   public T createInstance() {
     try {
-      T instance = clazz.newInstance();
+      T instance = instantiatableClass.newInstance();
 
       for (Map.Entry<Field, Dependency<?>> pair : fieldMap.entrySet()) {
         Field field = pair.getKey();
@@ -45,7 +45,7 @@ public class FieldDependencyInjector<T> extends DependencyInjector<T> {
       return instance;
     } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
         | SecurityException | InstantiationFailedException e) {
-      throw new InstantiationFailedException(e);
+      throw new InstantiationFailedException(instantiatableClass, e);
     }
   }
 }
