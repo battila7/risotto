@@ -19,14 +19,12 @@ public final class InstantiatorFactory {
     Instantiator<T> base = instantiator.getBaseInstantiator();
 
     switch (mode) {
-      case SINGLETON:
-        return new SingletonInstantiator<>(base);
       case PROTOTYPE:
-        return null;
+        return new PrototypeInstantiator<>(base);
       case INSTANCE:
         return new InstanceInstantiator<>(base);
       default:
-        return null;
+        return new SingletonInstantiator<>(base);
     }
   }
 
