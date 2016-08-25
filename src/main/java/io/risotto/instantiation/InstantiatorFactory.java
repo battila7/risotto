@@ -24,7 +24,7 @@ public final class InstantiatorFactory {
       case PROTOTYPE:
         return null;
       case INSTANCE:
-        return null;
+        return new InstanceInstantiator<>(base);
       default:
         return null;
     }
