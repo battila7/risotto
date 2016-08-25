@@ -7,14 +7,14 @@ package io.risotto.dependency;
  * @param <T> the target type of dependency injection
  */
 public abstract class DependencyInjector<T> {
-  protected final Class<T> clazz;
+  protected final Class<T> instantiatableClass;
 
   /**
    * Constructs a new instance that will be used to create new instances of the specified class.
-   * @param clazz the class to be instantiated
+   * @param instantiatableClass the class to be instantiated
    */
-  public DependencyInjector(Class<T> clazz) {
-    this.clazz = clazz;
+  public DependencyInjector(Class<T> instantiatableClass) {
+    this.instantiatableClass = instantiatableClass;
   }
 
   /**
