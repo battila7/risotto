@@ -25,6 +25,7 @@ public class InstanceBinding<T> extends InstantiatableBinding<T> {
     }
 
     instantiator =
-        InstantiatorFactory.decorateWithDefaultInstantiator(new NoOpInstantiator<>(instance));
+        InstantiatorFactory.decorateWithDefaultInstantiator(
+            new NoOpInstantiator<>(binding.boundedClass, instance));
   }
 }

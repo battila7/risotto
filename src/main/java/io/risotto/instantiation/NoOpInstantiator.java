@@ -11,14 +11,17 @@ import java.util.List;
  * wraps an existing instance. This is the default instantiator for {@link InstanceBinding}s.
  * @param <T> the type of the wrapped instance
  */
-public class NoOpInstantiator<T> implements Instantiator<T> {
+public class NoOpInstantiator<T> extends Instantiator<T> {
   private final T instance;
 
   /**
    * Constructs a new instance storing the specified instance.
+   * @param cloneableClass the class of which object will be created
    * @param instance the instance to wrap
    */
-  public NoOpInstantiator(T instance) {
+  public NoOpInstantiator(Class<T> cloneableClass, T instance) {
+    super(cloneableClass);
+
     this.instance = instance;
   }
 
