@@ -5,13 +5,12 @@ import io.risotto.exception.PrototypeCloneException;
 
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
-import java.util.Optional;
 import reflection.ReflectionUtils;
 
 public class ConstructorPrototypeCloner<T> extends PrototypeCloner<T> {
   private final Constructor<T> copyConstructor;
 
-  public ConstructorPrototypeCloner(Class<T> cloneableClass) {
+  public ConstructorPrototypeCloner(Class<? extends T> cloneableClass) {
     super(cloneableClass);
 
     copyConstructor = detectCopyConstructor();
@@ -40,11 +39,15 @@ public class ConstructorPrototypeCloner<T> extends PrototypeCloner<T> {
     try {
       Constructor<?> constructor =
           Arrays.stream(cloneableClass.getDeclaredConstructors())
-          .filter(c -> c.isAnnotationPresent(Clone.class))
-          .filter(c -> c.getParameterCount() == 1)
-          .filter(c -> c.getParameterTypes()[0] == cloneableClass)
-          .filter(ReflectionUtils::isPublicNotStaticNotFinal)
-          .findAny().orElse(null);
+              .filter(c -> c.isAnnotationPresent(Clone.class))
+              .filter(c -> c.getParameterCount() == 1)
+              .filter(c -> c.getParameterTypes()[0] == cloneableClass)
+              .filter(ReflectionUtils::isPublicNotStaticNotFinal)
+              .findAny().orElse(null);
+
+      if (constructor != null) {
+        constructor.setAccessible(true);
+      }
 
       return (Constructor<T>)constructor;
     } catch (SecurityException e) {

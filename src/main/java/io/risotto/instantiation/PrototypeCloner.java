@@ -1,9 +1,9 @@
 package io.risotto.instantiation;
 
 abstract class PrototypeCloner<T> {
-  protected final Class<T> cloneableClass;
+  protected final Class<? extends T> cloneableClass;
 
-  public PrototypeCloner(Class<T> cloneableClass) {
+  public PrototypeCloner(Class<? extends T> cloneableClass) {
     this.cloneableClass = cloneableClass;
   }
 

@@ -9,7 +9,7 @@ import java.util.List;
  * process of object creation can be altered. This is mostly used to cache previously created
  * instances (for example in {@link SingletonInstantiator}).
  */
-public abstract class InstantiatorDecorator<T> extends Instantiator<T> {
+public abstract class InstantiatorDecorator<T> implements Instantiator<T> {
   protected final Instantiator<T> decoratedInstantiator;
 
   /**
@@ -17,8 +17,6 @@ public abstract class InstantiatorDecorator<T> extends Instantiator<T> {
    * @param decoratedInstantiator the instantiator to decorate
    */
   public InstantiatorDecorator(Instantiator<T> decoratedInstantiator) {
-    super(decoratedInstantiator.getInstantiatableClass());
-
     this.decoratedInstantiator = decoratedInstantiator;
   }
 
@@ -35,5 +33,10 @@ public abstract class InstantiatorDecorator<T> extends Instantiator<T> {
   @Override
   public List<Dependency<?>> getImmediateDependencies() {
     return decoratedInstantiator.getImmediateDependencies();
+  }
+
+  @Override
+  public Class<T> getTargetClass() {
+    return decoratedInstantiator.getTargetClass();
   }
 }

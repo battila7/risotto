@@ -10,7 +10,7 @@ import reflection.ReflectionUtils;
 public class MethodPrototypeCloner<T> extends PrototypeCloner<T> {
   private final Method cloneMethod;
 
-  public MethodPrototypeCloner(Class<T> cloneableClass) {
+  public MethodPrototypeCloner(Class<? extends T> cloneableClass) {
     super(cloneableClass);
 
     this.cloneMethod = detectCloneMethod();
@@ -37,11 +37,21 @@ public class MethodPrototypeCloner<T> extends PrototypeCloner<T> {
   private Method detectCloneMethod() {
     Method[] methods = cloneableClass.getDeclaredMethods();
 
-    return Arrays.stream(methods)
+    Method cloneMethod = Arrays.stream(methods)
         .filter(m -> m.isAnnotationPresent(Clone.class))
         .filter(ReflectionUtils::isPublicNotStaticNotFinal)
         .filter(m -> m.getParameterCount() == 0)
         .filter(m -> m.getReturnType().equals(Object.class))
         .findAny().orElse(null);
+
+    try {
+      if (cloneMethod != null) {
+        cloneMethod.setAccessible(true);
+      }
+
+      return cloneMethod;
+    } catch(SecurityException e) {
+      return null;
+    }
   }
 }

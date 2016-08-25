@@ -52,7 +52,7 @@ public class PrototypeInstantiator<T> extends InstantiatorDecorator<T> {
   }
 
   private List<PrototypeCloner<T>> getClonerList() {
-    return Arrays.asList(new MethodPrototypeCloner<>(instantiatableClass),
-        new ConstructorPrototypeCloner<>(instantiatableClass));
+    return Arrays.asList(new MethodPrototypeCloner<>(getTargetClass()),
+        new ConstructorPrototypeCloner<>(getTargetClass()));
   }
 }

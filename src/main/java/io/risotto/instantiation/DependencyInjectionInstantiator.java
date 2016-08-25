@@ -17,7 +17,9 @@ import java.util.Optional;
  * actual object creation process. The default implementation for {@link ClassBinding}s.
  * @param <T> the type of the object to be instantiated
  */
-public class DependencyInjectionInstantiator<T> extends Instantiator<T> {
+public class DependencyInjectionInstantiator<T> implements Instantiator<T> {
+  private final Class<T> instantiatableClass;
+
   private DependencyInjector<T> injector;
 
   /**
@@ -25,7 +27,7 @@ public class DependencyInjectionInstantiator<T> extends Instantiator<T> {
    * @param instantiatableClass the class that will be dependency detected and instantiated
    */
   public DependencyInjectionInstantiator(Class<T> instantiatableClass) {
-    super(instantiatableClass);
+    this.instantiatableClass = instantiatableClass;
   }
 
   @Override
@@ -61,5 +63,10 @@ public class DependencyInjectionInstantiator<T> extends Instantiator<T> {
     }
 
     return immediateDependencies;
+  }
+
+  @Override
+  public Class<T> getTargetClass() {
+    return instantiatableClass;
   }
 }
