@@ -5,6 +5,7 @@ import io.risotto.exception.PrototypeCloneException;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import reflection.ReflectionUtils;
 
 public class MethodPrototypeCloner<T> extends PrototypeCloner<T> {
   private final Method cloneMethod;
@@ -38,6 +39,7 @@ public class MethodPrototypeCloner<T> extends PrototypeCloner<T> {
 
     return Arrays.stream(methods)
         .filter(m -> m.isAnnotationPresent(Clone.class))
+        .filter(ReflectionUtils::isPublicNotStaticNotFinal)
         .filter(m -> m.getParameterCount() == 0)
         .filter(m -> m.getReturnType().equals(Object.class))
         .findAny().orElse(null);

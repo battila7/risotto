@@ -1,8 +1,12 @@
 package io.risotto.instantiation;
 
+import io.risotto.annotations.Clone;
 import io.risotto.exception.PrototypeCloneException;
 
 import java.lang.reflect.Constructor;
+import java.util.Arrays;
+import java.util.Optional;
+import reflection.ReflectionUtils;
 
 public class ConstructorPrototypeCloner<T> extends PrototypeCloner<T> {
   private final Constructor<T> copyConstructor;
@@ -31,10 +35,19 @@ public class ConstructorPrototypeCloner<T> extends PrototypeCloner<T> {
     }
   }
 
+  @SuppressWarnings("unchecked")
   private Constructor<T> detectCopyConstructor() {
     try {
-      return cloneableClass.getDeclaredConstructor(cloneableClass);
-    } catch (NoSuchMethodException | SecurityException e) {
+      Constructor<?> constructor =
+          Arrays.stream(cloneableClass.getDeclaredConstructors())
+          .filter(c -> c.isAnnotationPresent(Clone.class))
+          .filter(c -> c.getParameterCount() == 1)
+          .filter(c -> c.getParameterTypes()[0] == cloneableClass)
+          .filter(ReflectionUtils::isPublicNotStaticNotFinal)
+          .findAny().orElse(null);
+
+      return (Constructor<T>)constructor;
+    } catch (SecurityException e) {
       return null;
     }
   }
