@@ -34,7 +34,7 @@ public abstract class Container {
 
   private final List<InstantiatableBinding<?>> bindingList;
 
-  private final Set<Dependency<?>> dependencySet;
+  private final List<Dependency<?>> dependencyList;
 
   private Container parentContainer;
 
@@ -48,7 +48,7 @@ public abstract class Container {
 
     this.bindingList = new ArrayList<>();
 
-    this.dependencySet = new HashSet<>();
+    this.dependencyList = new ArrayList<>();
   }
 
   /**
@@ -190,7 +190,7 @@ public abstract class Container {
     instantiatableBinding.getImmediateDependencies().stream()
         .forEach(d -> {
           d.setOrigin(this);
-          dependencySet.add(d);
+          dependencyList.add(d);
         });
   }
 
@@ -204,7 +204,7 @@ public abstract class Container {
       childContainer.performResolution();
     }
 
-    for (Dependency<?> dependency : dependencySet) {
+    for (Dependency<?> dependency : dependencyList) {
       Optional<InstantiatableBinding<?>> bindingOptional = resolve(dependency);
 
       if (!bindingOptional.isPresent()) {
