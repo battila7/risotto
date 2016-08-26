@@ -66,7 +66,7 @@ public class DependencyInjectionInstantiator<T> implements Instantiator<T> {
   }
 
   @Override
-  public Class<T> getTargetClass() {
+  public Class<T> getInstantiatedClass() {
     return instantiatableClass;
   }
 }

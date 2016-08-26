@@ -7,9 +7,19 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import reflection.ReflectionUtils;
 
-public class MethodPrototypeCloner<T> extends PrototypeCloner<T> {
+/**
+ * This class can produces clones using a clone method. This method must satisfy the
+ * {@link ReflectionUtils#isMethodInjectable(Method)} predicate as well as be annotated with
+ * the {@link Clone} annotation. Also the method may take no parameters and return {@code Object}.
+ * @param <T> the type of the object to be cloned
+ */
+class MethodPrototypeCloner<T> extends PrototypeCloner<T> {
   private final Method cloneMethod;
 
+  /**
+   * Constructs a new instance that will be used to clone instances of the specified class.
+   * @param cloneableClass the class of the object to be cloned
+   */
   public MethodPrototypeCloner(Class<? extends T> cloneableClass) {
     super(cloneableClass);
 
@@ -39,7 +49,7 @@ public class MethodPrototypeCloner<T> extends PrototypeCloner<T> {
 
     Method cloneMethod = Arrays.stream(methods)
         .filter(m -> m.isAnnotationPresent(Clone.class))
-        .filter(ReflectionUtils::isPublicNotStaticNotFinal)
+        .filter(ReflectionUtils::isMethodInjectable)
         .filter(m -> m.getParameterCount() == 0)
         .filter(m -> m.getReturnType().equals(Object.class))
         .findAny().orElse(null);

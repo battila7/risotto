@@ -7,9 +7,19 @@ import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import reflection.ReflectionUtils;
 
-public class ConstructorPrototypeCloner<T> extends PrototypeCloner<T> {
+/**
+ * Cloner class that utilizes a copy constructor to produce clones. The copy constructor must be
+ * a public constructor of the class with the {@link Clone} annotation present. The constructor
+ * may only have a single parameter with the same type of the object itself.
+ * @param <T> the type of the object to be cloned
+ */
+class ConstructorPrototypeCloner<T> extends PrototypeCloner<T> {
   private final Constructor<T> copyConstructor;
 
+  /**
+   * Constructs a new instance that will be used to clone instances of the specified class.
+   * @param cloneableClass the class of the object to be cloned
+   */
   public ConstructorPrototypeCloner(Class<? extends T> cloneableClass) {
     super(cloneableClass);
 

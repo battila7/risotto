@@ -36,7 +36,7 @@ public abstract class InstantiatorDecorator<T> implements Instantiator<T> {
   }
 
   @Override
-  public Class<T> getTargetClass() {
-    return decoratedInstantiator.getTargetClass();
+  public Class<T> getInstantiatedClass() {
+    return decoratedInstantiator.getInstantiatedClass();
   }
 }

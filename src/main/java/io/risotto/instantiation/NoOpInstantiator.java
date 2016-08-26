@@ -39,7 +39,7 @@ public class NoOpInstantiator<T> implements Instantiator<T> {
 
   @Override
   @SuppressWarnings("unchecked")
-  public Class<T> getTargetClass() {
+  public Class<T> getInstantiatedClass() {
     return (Class<T>)instance.getClass();
   }
 }

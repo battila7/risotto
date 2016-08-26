@@ -30,5 +30,9 @@ public interface Instantiator<T> {
    */
   List<Dependency<?>> getImmediateDependencies();
 
-  Class<T> getTargetClass();
+  /**
+   * Gets the class of the objects that this {@code Instantiator} produces.
+   * @return the class of which instances are created
+   */
+  Class<T> getInstantiatedClass();
 }

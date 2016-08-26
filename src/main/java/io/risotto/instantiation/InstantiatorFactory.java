@@ -1,5 +1,7 @@
 package io.risotto.instantiation;
 
+import static io.risotto.instantiation.InstantiationMode.INSTANCE;
+
 /**
  * Factory class that provides static methods to decorate instantiators with appropriate
  * decorator implementations. That way the concrete implementations can be abstracted away from
