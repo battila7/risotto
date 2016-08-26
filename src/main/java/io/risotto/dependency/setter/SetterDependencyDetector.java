@@ -1,9 +1,5 @@
 package io.risotto.dependency.setter;
 
-import static java.lang.reflect.Modifier.isAbstract;
-import static java.lang.reflect.Modifier.isPublic;
-import static java.lang.reflect.Modifier.isStatic;
-
 import io.risotto.annotations.Inject;
 import io.risotto.dependency.Dependency;
 import io.risotto.dependency.DependencyDetector;
@@ -18,8 +14,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import reflection.ReflectionUtils;
 
+/**
+ * Detector implementation that inspects <b>public</b> setter methods of a class and looks for the
+ * {@link Inject} annotation on them. If setter inspection succeeds, a new {@link
+ * SetterDependencyInjector} is created.
+ *
+ * Only <b>public</b> methods having name starting with {@code set} and having one parameter are
+ * considered as a target to dependency injection. Note that <b>static</b> or <b>abstract</b>
+ * methods are ignored.
+ * @param <T> the type to dependency detect
+ */
 public class SetterDependencyDetector<T> extends DependencyDetector<T> {
+  /**
+   * Constructs a new instance that will be used to detect the dependencies of the specified class.
+   * @param clazz the dependency detectable class
+   */
   public SetterDependencyDetector(Class<T> clazz) {
     super(clazz);
   }
@@ -60,17 +71,7 @@ public class SetterDependencyDetector<T> extends DependencyDetector<T> {
         .filter(m -> m.isAnnotationPresent(Inject.class))
         .filter(m -> m.getParameterCount() == 1)
         .filter(m -> m.getName().startsWith("set"))
-        .filter(m -> isMethodInjectable(m))
+        .filter(ReflectionUtils::isMethodInjectable)
         .collect(Collectors.toList());
-  }
-
-  private boolean isMethodInjectable(Method method) {
-    int modifiers = method.getModifiers();
-
-    if (isStatic(modifiers)) {
-      return false;
-    }
-
-    return (isPublic(modifiers)) && (!isAbstract(modifiers));
   }
 }

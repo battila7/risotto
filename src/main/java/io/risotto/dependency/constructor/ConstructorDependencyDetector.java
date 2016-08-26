@@ -10,13 +10,31 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Parameter;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import reflection.ReflectionUtils;
 
+/**
+ * {@code ConstructorDependencyDetector} inspects the constructors of a class and looks for the
+ * {@link Inject} annotation. If an injectable constructor is found, a new {@link
+ * ConstructorDependencyInjector} is created.
+ *
+ * Dependencies are detected using constructor parameter inspection. Each constructor parameter
+ * becomes an immediate dependency.
+ *
+ * Note that only <b>public</b> constructors are inspected.
+ * @param <T> the type to dependency detect
+ */
 public class ConstructorDependencyDetector<T> extends DependencyDetector<T> {
   private static final Logger logger = LoggerFactory.getLogger(ConstructorDependencyDetector.class);
 
+  /**
+   * Constructs a new instance that will be used to detect the dependencies of the specified class.
+   * @param clazz the dependency detectable class
+   */
   public ConstructorDependencyDetector(Class<T> clazz) {
     super(clazz);
   }
@@ -52,23 +70,24 @@ public class ConstructorDependencyDetector<T> extends DependencyDetector<T> {
     return dependenciesOptional;
   }
 
+  @SuppressWarnings("unchecked")
   private Optional<Constructor<T>> getInjectableConstructor() throws NoSuchMethodException {
-    Constructor<?>[] constructors = clazz.getConstructors();
+    List<Constructor<?>> injectableConstructors = getInjectableConstructors();
 
-    if (constructors.length != 1) {
+    if (injectableConstructors.size() != 1) {
       return Optional.empty();
     }
 
-    Constructor<?> targetConstructor = constructors[0];
+    Constructor<?> targetConstructor = injectableConstructors.get(0);
 
-    if (targetConstructor.isAnnotationPresent(Inject.class)) {
-      // retrieve Constructor<T> instead of Constructor<?>
-      Constructor<T> typedConstructor = clazz.getConstructor(targetConstructor.getParameterTypes());
+    return Optional.of((Constructor<T>)targetConstructor);
+  }
 
-      return Optional.of(typedConstructor);
-    }
-
-    return Optional.empty();
+  private List<Constructor<?>> getInjectableConstructors() {
+    return Arrays.stream(clazz.getDeclaredConstructors())
+        .filter(c -> c.isAnnotationPresent(Inject.class))
+        .filter(ReflectionUtils::isPublicNotStaticNotFinal)
+        .collect(Collectors.toList());
   }
 
   private Optional<List<Dependency<?>>> processParameters(Constructor<?> constructor) {

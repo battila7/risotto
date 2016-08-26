@@ -11,6 +11,12 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Optional;
 
+/**
+ * This class produces dependencies from parameters, methods and fields on which an inject specifier
+ * annotation is present. Inject specifier annotations are annotations marked with the {@link
+ * InjectSpecifier} annotation. If multiple inject specifier annotations are present then it's not
+ * defined which on of them will be processed.
+ */
 class AnnotatedProcessor extends DependencyProcessor {
   @Override
   public Optional<Dependency<?>> process(Parameter parameter) {
