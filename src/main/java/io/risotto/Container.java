@@ -13,11 +13,9 @@ import io.risotto.exception.ScopeInstantiationException;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * Abstract dependency container class that must be subclassed by custom dependency containers.
@@ -195,8 +193,8 @@ public abstract class Container {
   }
 
   /**
-   * Initiates the dependency resolution process. Dependency resolution is performed using
-   * a post-order traversal of the container tree.
+   * Initiates the dependency resolution process. Dependency resolution is performed using a
+   * post-order traversal of the container tree.
    * @throws DependencyResolutionFailedException if a dependency cannot be resolved
    */
   /* package */ void performResolution() throws DependencyResolutionFailedException {
@@ -268,7 +266,8 @@ public abstract class Container {
 
       instantiatableBinding.setScope(bindingScope);
     } catch (InstantiationException | IllegalAccessException e) {
-      throw new ScopeInstantiationException(instantiatableBinding.getScopeClass(), e);
+      throw new ScopeInstantiationException(instantiatableBinding,
+          instantiatableBinding.getScopeClass(), e);
     }
   }
 
