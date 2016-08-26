@@ -1,5 +1,7 @@
 package io.risotto.binding;
 
+import java.lang.reflect.Method;
+
 /**
  * Represents a binding that can be turned into an {@link InstantiatableBinding}, therefore
  * can terminate the binding-creation chain.
@@ -31,5 +33,9 @@ public abstract class TerminableBinding<T> extends Binding<T> {
    */
   public <K extends T> InstantiatableBinding<T> toInstance(K instance) {
     return new InstanceBinding<>(this, instance);
+  }
+
+  public InstantiatableBinding<T> toMethod(Method method) {
+    return new MethodBinding<>(this, method);
   }
 }

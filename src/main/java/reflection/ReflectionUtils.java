@@ -5,9 +5,15 @@ import static java.lang.reflect.Modifier.isFinal;
 import static java.lang.reflect.Modifier.isPublic;
 import static java.lang.reflect.Modifier.isStatic;
 
+import io.risotto.annotations.InjectSpecifier;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * Provides common reflection-related utility methods for other classes throughout the library.
@@ -56,6 +62,18 @@ public class ReflectionUtils {
     int modifiers = field.getModifiers();
 
     return !(isStatic(modifiers) || isFinal(modifiers) || field.isEnumConstant());
+  }
+
+  public static Optional<Class<? extends Annotation>> getInjectSpecifier(AnnotatedElement element) {
+    for (Annotation annotation : element.getDeclaredAnnotations()) {
+      Class<? extends Annotation> annotationType = annotation.annotationType();
+
+      if (annotationType.isAnnotationPresent(InjectSpecifier.class)) {
+        return Optional.of(annotationType);
+      }
+    }
+
+    return Optional.empty();
   }
 
   private ReflectionUtils() {
