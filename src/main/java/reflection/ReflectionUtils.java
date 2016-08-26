@@ -1,13 +1,13 @@
 package reflection;
 
 import static java.lang.reflect.Modifier.isAbstract;
+import static java.lang.reflect.Modifier.isFinal;
 import static java.lang.reflect.Modifier.isPublic;
 import static java.lang.reflect.Modifier.isStatic;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 
 /**
  * Provides common reflection-related utility methods for other classes throughout the library.
@@ -24,9 +24,9 @@ public class ReflectionUtils {
   public static boolean isPublicNotStaticNotFinal(Member member) {
     int modifiers = member.getModifiers();
 
-    return Modifier.isPublic(modifiers)
-        && (!Modifier.isFinal(modifiers))
-        && (!Modifier.isStatic(modifiers));
+    return isPublic(modifiers)
+        && (!isFinal(modifiers))
+        && (!isStatic(modifiers));
   }
 
   /**
@@ -55,7 +55,7 @@ public class ReflectionUtils {
   public static boolean isFieldInjectable(Field field) {
     int modifiers = field.getModifiers();
 
-    return !(Modifier.isStatic(modifiers) || Modifier.isFinal(modifiers) || field.isEnumConstant());
+    return !(isStatic(modifiers) || isFinal(modifiers) || field.isEnumConstant());
   }
 
   private ReflectionUtils() {
