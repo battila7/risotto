@@ -1,12 +1,13 @@
 package io.risotto.configurator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * Manager class that holds the list of default configurators. These are the configurators that will
  * be called on all containers when configuring the container tree. Custom configurators can be
- * registered using the {@link #registerDefaultConfigurator(Configurator)} method.
+ * registered using the {@link #registerDefaultConfigurator(Configurator...)} method.
  */
 public class ConfiguratorManager {
   private static final List<Configurator> defaultConfiguratorList =
@@ -17,11 +18,11 @@ public class ConfiguratorManager {
   }
 
   /**
-   * Registers the specified {@code Configurator} among the default configurators.
-   * @param configurator the configurator to register
+   * Registers the specified {@code Configurator}s among the default configurators.
+   * @param configurators the configurators to register
    */
-  public static void registerDefaultConfigurator(Configurator configurator) {
-    defaultConfiguratorList.add(configurator);
+  public static void registerDefaultConfigurator(Configurator... configurators) {
+    defaultConfiguratorList.addAll(Arrays.asList(configurators));
   }
 
   /**
