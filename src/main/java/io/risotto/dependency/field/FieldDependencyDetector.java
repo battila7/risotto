@@ -7,7 +7,6 @@ import io.risotto.dependency.processor.DependencyProcessor;
 import io.risotto.dependency.processor.ProcessorChain;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import reflection.ReflectionUtils;
 
 /**
  * Detector class that inspects the fields of a class and looks for the {@link Inject} annotation on
@@ -70,14 +70,7 @@ public class FieldDependencyDetector<T> extends DependencyDetector<T> {
   private List<Field> getInjectableFields() {
     return Arrays.stream(clazz.getDeclaredFields())
         .filter(f -> f.isAnnotationPresent(Inject.class))
-        .filter(f -> notStaticFinal(f))
-        .filter(f -> !f.isEnumConstant())
+        .filter(ReflectionUtils::isFieldInjectable)
         .collect(Collectors.toList());
-  }
-
-  private boolean notStaticFinal(Field field) {
-    int modifiers = field.getModifiers();
-
-    return !(Modifier.isStatic(modifiers) || Modifier.isFinal(modifiers));
   }
 }

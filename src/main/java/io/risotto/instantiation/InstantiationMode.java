@@ -17,7 +17,8 @@ public enum InstantiationMode {
 
   /**
    * A new instance is created for every dependency that's dependant on the class in question.
-   * Cannot be applied to {@link InstanceBinding}.
+   *
+   * <b>Note</b> that this mode cannot be applied to {@link InstanceBinding}.
    */
   INSTANCE,
 

@@ -1,5 +1,8 @@
 package io.risotto.binding;
 
+import static io.risotto.instantiation.InstantiationMode.INSTANCE;
+
+import io.risotto.instantiation.InstantiationMode;
 import io.risotto.instantiation.InstantiatorFactory;
 import io.risotto.instantiation.NoOpInstantiator;
 
@@ -26,5 +29,21 @@ public class InstanceBinding<T> extends InstantiatableBinding<T> {
 
     instantiator =
         InstantiatorFactory.decorateWithDefaultInstantiator(new NoOpInstantiator<>(instance));
+  }
+
+  /**
+   * Applies the specified {@code InstantiationMode} to the binding. Can be used to alter the
+   * behaviour of {@link #getInstance()}.
+   * @param mode the new mode
+   * @return the current instance
+   * @throws IllegalArgumentException if the mode is {@link InstantiationMode#INSTANCE}
+   */
+  @Override
+  public InstantiatableBinding<T> withMode(InstantiationMode mode) {
+    if (mode == INSTANCE) {
+      throw new IllegalArgumentException("INSTANCE mode cannot be applied to this binding!");
+    }
+
+    return super.withMode(mode);
   }
 }

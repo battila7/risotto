@@ -81,7 +81,7 @@ public abstract class InstantiatableBinding<T> extends Binding<T> {
    * @return the current instance
    */
   public InstantiatableBinding<T> withMode(InstantiationMode mode) {
-    InstantiatorFactory.decorateInstantiatorForMode(instantiator, mode);
+    this.instantiator = InstantiatorFactory.decorateInstantiatorForMode(instantiator, mode);
 
     return this;
   }

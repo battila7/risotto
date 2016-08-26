@@ -34,4 +34,9 @@ public abstract class InstantiatorDecorator<T> implements Instantiator<T> {
   public List<Dependency<?>> getImmediateDependencies() {
     return decoratedInstantiator.getImmediateDependencies();
   }
+
+  @Override
+  public Class<T> getInstantiatedClass() {
+    return decoratedInstantiator.getInstantiatedClass();
+  }
 }

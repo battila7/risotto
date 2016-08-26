@@ -18,16 +18,16 @@ import java.util.Optional;
  * @param <T> the type of the object to be instantiated
  */
 public class DependencyInjectionInstantiator<T> implements Instantiator<T> {
-  private final Class<T> clazz;
+  private final Class<T> instantiatableClass;
 
   private DependencyInjector<T> injector;
 
   /**
    * Constructs a new instance that's able to create instances of the specified class.
-   * @param clazz the class that will be dependency detected and instantiated
+   * @param instantiatableClass the class that will be dependency detected and instantiated
    */
-  public DependencyInjectionInstantiator(Class<T> clazz) {
-    this.clazz = clazz;
+  public DependencyInjectionInstantiator(Class<T> instantiatableClass) {
+    this.instantiatableClass = instantiatableClass;
   }
 
   @Override
@@ -42,7 +42,7 @@ public class DependencyInjectionInstantiator<T> implements Instantiator<T> {
 
   @Override
   public List<Dependency<?>> getImmediateDependencies() {
-    List<DependencyDetector<T>> detectors = createDetectors(clazz);
+    List<DependencyDetector<T>> detectors = createDetectors(instantiatableClass);
 
     List<Dependency<?>> immediateDependencies = null;
 
@@ -59,9 +59,14 @@ public class DependencyInjectionInstantiator<T> implements Instantiator<T> {
     }
 
     if (immediateDependencies == null) {
-      throw new DependencyDetectionException(clazz);
+      throw new DependencyDetectionException(instantiatableClass);
     }
 
     return immediateDependencies;
+  }
+
+  @Override
+  public Class<T> getInstantiatedClass() {
+    return instantiatableClass;
   }
 }

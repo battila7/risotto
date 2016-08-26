@@ -36,4 +36,10 @@ public class NoOpInstantiator<T> implements Instantiator<T> {
   public List<Dependency<?>> getImmediateDependencies() {
     return Collections.emptyList();
   }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public Class<T> getInstantiatedClass() {
+    return (Class<T>)instance.getClass();
+  }
 }
