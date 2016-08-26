@@ -1,5 +1,7 @@
 package io.risotto.binding;
 
+import io.risotto.Container;
+
 import java.lang.reflect.Method;
 
 /**
@@ -35,7 +37,7 @@ public abstract class TerminableBinding<T> extends Binding<T> {
     return new InstanceBinding<>(this, instance);
   }
 
-  public InstantiatableBinding<T> toMethod(Method method) {
-    return new MethodBinding<>(this, method);
+  public InstantiatableBinding<T> toMethod(Container container, Method method) {
+    return new MethodBinding<>(this, container, method);
   }
 }

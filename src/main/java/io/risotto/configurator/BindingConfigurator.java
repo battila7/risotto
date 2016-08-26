@@ -25,24 +25,34 @@ public class BindingConfigurator implements Configurator {
   @Override
   public void configure(Container containerInstance, Class<? extends Container> containerClass)
       throws ContainerConfigurationException {
-    detectBindingMethods(containerClass)
-        .stream()
-        .map(this::createBindingFromMethod)
-        .forEach(this::addToContainer);
+    for (Method method : detectBindingMethods(containerClass)) {
+      try {
+        method.setAccessible(true);
+      } catch (SecurityException e) {
+        throw new ContainerConfigurationException(containerInstance, e);
+      }
+
+      InstantiatableBinding<?> binding = createBindingFromMethod(containerInstance, method);
+
+      addToContainer(containerInstance, containerClass, binding);
+    }
   }
 
-  private InstantiatableBinding<?> createBindingFromMethod(Method method) {
+  private InstantiatableBinding<?> createBindingFromMethod(Container container, Method method) {
     Class<?> boundClass = method.getReturnType();
 
     BasicBinding<?> binding = bind(boundClass);
 
-    return mutateBinding(binding, method);
+    return mutateBinding(binding, container, method);
   }
 
-  private InstantiatableBinding<?> mutateBinding(BasicBinding<?> binding, Method method) {
+  private InstantiatableBinding<?> mutateBinding(BasicBinding<?> binding, Container container,
+                                                 Method method) {
     TerminableBinding<?> terminableBinding = toTerminableBinding(binding, method);
 
-    InstantiatableBinding<?> instantiatableBinding = new MethodBinding<>(terminableBinding, method);
+    InstantiatableBinding<?>
+        instantiatableBinding =
+        new MethodBinding<>(terminableBinding, container, method);
 
     instantiatableBinding = detectBindingScope(instantiatableBinding, method);
 
@@ -51,8 +61,9 @@ public class BindingConfigurator implements Configurator {
     return instantiatableBinding;
   }
 
-  private InstantiatableBinding<?> detectBindingScope(InstantiatableBinding<?> instantiatableBinding,
-                                                      Method method) {
+  private InstantiatableBinding<?> detectBindingScope(
+      InstantiatableBinding<?> instantiatableBinding,
+      Method method) {
     if (method.isAnnotationPresent(WithScope.class)) {
       WithScope withScope = method.getDeclaredAnnotation(WithScope.class);
 
@@ -73,8 +84,21 @@ public class BindingConfigurator implements Configurator {
     return instantiatableBinding;
   }
 
-  private void addToContainer(InstantiatableBinding<?> binding) {
+  private void addToContainer(Container container, Class<? extends Container> containerClass,
+                              InstantiatableBinding<?> binding)
+      throws ContainerConfigurationException {
+    try {
+      Class<?> superClass = containerClass.getSuperclass();
 
+      Method addBindingMethod =
+          superClass.getDeclaredMethod("addBinding", InstantiatableBinding.class);
+
+      addBindingMethod.setAccessible(true);
+
+      addBindingMethod.invoke(container, binding);
+    } catch (Exception e) {
+      throw new ContainerConfigurationException(container, e);
+    }
   }
 
   private List<Method> detectBindingMethods(Class<? extends Container> containerClass) {
