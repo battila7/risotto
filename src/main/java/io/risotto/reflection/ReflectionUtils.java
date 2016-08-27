@@ -63,16 +63,50 @@ public class ReflectionUtils {
     return !(isStatic(modifiers) || isFinal(modifiers) || field.isEnumConstant());
   }
 
+  /**
+   * Gets the inject specifier annotation (if present) on the specified element. If no inject
+   * specifier is present, an empty {@code Optional} is returned.
+   * @param element the element to be checked for the inject specifier
+   * @return an {@code Optional} that either be empty or contains the class of the inject specifier
+   * @see InjectSpecifier
+   */
   public static Optional<Class<? extends Annotation>> getInjectSpecifier(AnnotatedElement element) {
     for (Annotation annotation : element.getDeclaredAnnotations()) {
       Class<? extends Annotation> annotationType = annotation.annotationType();
 
-      if (annotationType.isAnnotationPresent(InjectSpecifier.class)) {
+      if (annotationType.getDeclaredAnnotation(InjectSpecifier.class) != null) {
         return Optional.of(annotationType);
       }
     }
 
     return Optional.empty();
+  }
+
+  /**
+   * Gets an annotation that is directly present on the specified element. If no annotation with the
+   * specified class is directly present, an empty {@code Optional} is returned.
+   * @param element the element to be checked for the annotation
+   * @param annotationClass the annotation class to be searched for
+   * @param <A> the type of the annotation returned
+   * @return an {@code Optional} that either be empty or contains a directly present instance of the
+   * specified annotation class
+   */
+  public static <A extends Annotation> Optional<A> getDirectlyPresentAnnotation(
+      AnnotatedElement element,
+      Class<A> annotationClass) {
+    return Optional.ofNullable(element.getDeclaredAnnotation(annotationClass));
+  }
+
+  /**
+   * Checks whether an instance of the specified annotation class is directly present on the
+   * element.
+   * @param element the element to be checked for the annotation
+   * @param annotationClass the annotation class to be searched for
+   * @return whether the an instance of the annotation class is directly present or not
+   */
+  public static boolean isAnnotationDirectlyPresent(AnnotatedElement element,
+                                                    Class<? extends Annotation> annotationClass) {
+    return getDirectlyPresentAnnotation(element, annotationClass).isPresent();
   }
 
   private ReflectionUtils() {

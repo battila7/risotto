@@ -5,6 +5,7 @@ import io.risotto.dependency.Dependency;
 import io.risotto.dependency.DependencyDetector;
 import io.risotto.dependency.processor.DependencyProcessor;
 import io.risotto.dependency.processor.ProcessorChain;
+import io.risotto.reflection.ReflectionUtils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -14,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import io.risotto.reflection.ReflectionUtils;
 
 /**
  * Detector class that inspects the fields of a class and looks for the {@link Inject} annotation on

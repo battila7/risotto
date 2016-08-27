@@ -2,15 +2,15 @@ package io.risotto.instantiation;
 
 import io.risotto.annotations.Clone;
 import io.risotto.exception.PrototypeCloneException;
+import io.risotto.reflection.ReflectionUtils;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import io.risotto.reflection.ReflectionUtils;
 
 /**
- * This class can produces clones using a clone method. This method must satisfy the
- * {@link ReflectionUtils#isMethodInjectable(Method)} predicate as well as be annotated with
- * the {@link Clone} annotation. Also the method may take no parameters and return {@code Object}.
+ * This class can produces clones using a clone method. This method must satisfy the {@link
+ * ReflectionUtils#isMethodInjectable(Method)} predicate as well as be annotated with the {@link
+ * Clone} annotation. Also the method may take no parameters and return {@code Object}.
  * @param <T> the type of the object to be cloned
  */
 class MethodPrototypeCloner<T> extends PrototypeCloner<T> {
@@ -60,7 +60,7 @@ class MethodPrototypeCloner<T> extends PrototypeCloner<T> {
       }
 
       return cloneMethod;
-    } catch(SecurityException e) {
+    } catch (SecurityException e) {
       return null;
     }
   }

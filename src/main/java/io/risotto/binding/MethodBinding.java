@@ -17,6 +17,6 @@ public class MethodBinding<T> extends InstantiatableBinding<T> {
 
     this.instantiator =
         InstantiatorFactory.decorateWithDefaultInstantiator(
-            new MethodInstantiator<>((Class<T>)method.getReturnType(), container, method));
+            new MethodInstantiator<>((Class<T>) method.getReturnType(), container, method));
   }
 }

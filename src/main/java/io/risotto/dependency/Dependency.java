@@ -14,9 +14,9 @@ import io.risotto.binding.InstantiatableBinding;
  * dependencies of a class. Only immediate dependencies are detected because eventually an immediate
  * dependency of a specific class might be a second or third-level dependency of another class.
  *
- * When configuring containers, all the dependencies of the classes are collected and placed in a set
- * (that means, there are no duplicates). The dependencies in this set can be resolved in an undefined
- * order using the bindings created in or imported into the container.
+ * When configuring containers, all the dependencies of the classes are collected and placed in a
+ * set (that means, there are no duplicates). The dependencies in this set can be resolved in an
+ * undefined order using the bindings created in or imported into the container.
  *
  * A specific instance of {@code Dependency} can only be resolved by {@link BasicBinding} objects
  * binding a child type of the type represented by the {@code Dependency}.
@@ -70,8 +70,8 @@ public class Dependency<T> {
   }
 
   /**
-   * Sets the binding that is able to resolve the dependency. This binding is found when
-   * dependency resolution is performed.
+   * Sets the binding that is able to resolve the dependency. This binding is found when dependency
+   * resolution is performed.
    * @param resolvingBinding the binding that can resolve the dependency
    */
   public void setResolvingBinding(InstantiatableBinding<?> resolvingBinding) {

@@ -7,8 +7,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * No operation instantiator is a fake instantiator that does not actually crete instances but
- * wraps an existing instance. This is the default instantiator for {@link InstanceBinding}s.
+ * No operation instantiator is a fake instantiator that does not actually crete instances but wraps
+ * an existing instance. This is the default instantiator for {@link InstanceBinding}s.
  * @param <T> the type of the wrapped instance
  */
 public class NoOpInstantiator<T> implements Instantiator<T> {
@@ -40,6 +40,6 @@ public class NoOpInstantiator<T> implements Instantiator<T> {
   @Override
   @SuppressWarnings("unchecked")
   public Class<T> getInstantiatedClass() {
-    return (Class<T>)instance.getClass();
+    return (Class<T>) instance.getClass();
   }
 }

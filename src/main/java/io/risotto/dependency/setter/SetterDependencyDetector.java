@@ -5,6 +5,7 @@ import io.risotto.dependency.Dependency;
 import io.risotto.dependency.DependencyDetector;
 import io.risotto.dependency.processor.DependencyProcessor;
 import io.risotto.dependency.processor.ProcessorChain;
+import io.risotto.reflection.ReflectionUtils;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -14,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import io.risotto.reflection.ReflectionUtils;
 
 /**
  * Detector implementation that inspects <b>public</b> setter methods of a class and looks for the

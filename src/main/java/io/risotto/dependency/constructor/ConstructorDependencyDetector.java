@@ -5,6 +5,7 @@ import io.risotto.dependency.Dependency;
 import io.risotto.dependency.DependencyDetector;
 import io.risotto.dependency.processor.DependencyProcessor;
 import io.risotto.dependency.processor.ProcessorChain;
+import io.risotto.reflection.ReflectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +16,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import io.risotto.reflection.ReflectionUtils;
 
 /**
  * {@code ConstructorDependencyDetector} inspects the constructors of a class and looks for the
@@ -80,7 +80,7 @@ public class ConstructorDependencyDetector<T> extends DependencyDetector<T> {
 
     Constructor<?> targetConstructor = injectableConstructors.get(0);
 
-    return Optional.of((Constructor<T>)targetConstructor);
+    return Optional.of((Constructor<T>) targetConstructor);
   }
 
   private List<Constructor<?>> getInjectableConstructors() {

@@ -1,9 +1,10 @@
 package io.risotto.configurator;
 
 import static io.risotto.binding.BasicBinding.bind;
+import static io.risotto.reflection.ReflectionUtils.getDirectlyPresentAnnotation;
 
 import io.risotto.Container;
-import io.risotto.annotations.Binding;
+import io.risotto.annotations.BindingSupplier;
 import io.risotto.annotations.Named;
 import io.risotto.annotations.WithMode;
 import io.risotto.annotations.WithScope;
@@ -12,6 +13,7 @@ import io.risotto.binding.InstantiatableBinding;
 import io.risotto.binding.MethodBinding;
 import io.risotto.binding.TerminableBinding;
 import io.risotto.exception.ContainerConfigurationException;
+import io.risotto.reflection.ReflectionUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -19,8 +21,34 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import io.risotto.reflection.ReflectionUtils;
 
+/**
+ * {@code BindingConfigurator} can inspect container classes and add bindings to them by detecting
+ * their <i>binding supplier methods</i>.
+ *
+ * A binding supplier method is annotated with the {@link BindingSupplier} annotation and may be
+ * annotated with other binding-related annotations such as {@link WithScope} or {@link WithMode}.
+ * The return type of the method will be turned into the bound type of the resulting binding. Method
+ * parameters will be dependencies of the binding. Parameter dependencies are detected the same way
+ * as in the case of setter methods, so the {@link Named} annotation and inject specifier
+ * annotations can be freely used.
+ *
+ * Furthermore, the {@code Named} and inject specifier annotations can be placed on binding supplier
+ * methods too to emulate {@link BasicBinding#as(String)} and {@link
+ * BasicBinding#withAnnotation(Class)}.
+ *
+ * An example binding supplier method:
+ * <pre>
+ * <code>
+ *   @Binding
+ *   @WithScope(PrivateScope.class)
+ *   @Named("xmlMessageLoader")
+ *   public MessageLoader messagePath(@MessagePath String path) {
+ *     return new XmlMessageLoader(path);
+ *   }
+ * </code>
+ * </pre>
+ */
 public class BindingConfigurator implements Configurator {
   @Override
   public void configure(Container containerInstance, Class<? extends Container> containerClass)
@@ -50,38 +78,30 @@ public class BindingConfigurator implements Configurator {
                                                  Method method) {
     TerminableBinding<?> terminableBinding = toTerminableBinding(binding, method);
 
-    InstantiatableBinding<?>
-        instantiatableBinding =
+    InstantiatableBinding<?> instantiatableBinding =
         new MethodBinding<>(terminableBinding, container, method);
 
-    instantiatableBinding = detectBindingScope(instantiatableBinding, method);
-
-    instantiatableBinding = detectBindingMode(instantiatableBinding, method);
-
-    return instantiatableBinding;
+    return detectMode(detectScope(instantiatableBinding, method), method);
   }
 
-  private InstantiatableBinding<?> detectBindingScope(
-      InstantiatableBinding<?> instantiatableBinding,
-      Method method) {
-    if (method.isAnnotationPresent(WithScope.class)) {
-      WithScope withScope = method.getDeclaredAnnotation(WithScope.class);
+  private InstantiatableBinding<?> detectScope(InstantiatableBinding<?> binding, Method method) {
+    Optional<WithScope> scopeOptional = getDirectlyPresentAnnotation(method, WithScope.class);
 
-      return instantiatableBinding.withScope(withScope.value());
+    if (scopeOptional.isPresent()) {
+      return binding.withScope(scopeOptional.get().value());
     }
 
-    return instantiatableBinding;
+    return binding;
   }
 
-  private InstantiatableBinding<?> detectBindingMode(InstantiatableBinding<?> instantiatableBinding,
-                                                     Method method) {
-    if (method.isAnnotationPresent(WithMode.class)) {
-      WithMode withMode = method.getDeclaredAnnotation(WithMode.class);
+  private InstantiatableBinding<?> detectMode(InstantiatableBinding<?> binding, Method method) {
+    Optional<WithMode> modeOptional = getDirectlyPresentAnnotation(method, WithMode.class);
 
-      return instantiatableBinding.withMode(withMode.value());
+    if (modeOptional.isPresent()) {
+      return binding.withMode(modeOptional.get().value());
     }
 
-    return instantiatableBinding;
+    return binding;
   }
 
   private void addToContainer(Container container, Class<? extends Container> containerClass,
@@ -103,14 +123,16 @@ public class BindingConfigurator implements Configurator {
 
   private List<Method> detectBindingMethods(Class<? extends Container> containerClass) {
     return Arrays.stream(containerClass.getDeclaredMethods())
-        .filter(m -> m.isAnnotationPresent(Binding.class))
+        .filter(m -> ReflectionUtils.isAnnotationDirectlyPresent(m, BindingSupplier.class))
         .filter(ReflectionUtils::isMethodInjectable)
         .collect(Collectors.toList());
   }
 
   private TerminableBinding<?> toTerminableBinding(BasicBinding<?> binding, Method method) {
-    if (method.isAnnotationPresent(Named.class)) {
-      return binding.as(method.getDeclaredAnnotation(Named.class).value());
+    Optional<Named> namedOptional = getDirectlyPresentAnnotation(method, Named.class);
+
+    if (namedOptional.isPresent()) {
+      return binding.as(namedOptional.get().value());
     }
 
     Optional<Class<? extends Annotation>> injectSpecifier =

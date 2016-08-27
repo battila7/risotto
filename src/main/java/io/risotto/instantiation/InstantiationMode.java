@@ -5,7 +5,6 @@ import io.risotto.binding.InstantiatableBinding;
 
 /**
  * Enumeration of the instantiation modes that can be used for bindings.
- *
  * @see InstantiatableBinding#withMode(InstantiationMode)
  */
 public enum InstantiationMode {
@@ -23,8 +22,8 @@ public enum InstantiationMode {
   INSTANCE,
 
   /**
-   * Only one instance is created in the container that will be used as a prototype to create
-   * clones for every dependency.
+   * Only one instance is created in the container that will be used as a prototype to create clones
+   * for every dependency.
    */
   PROTOTYPE
 }

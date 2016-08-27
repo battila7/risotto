@@ -146,7 +146,9 @@ public abstract class Container {
     /**
      * Do nothing by default.
      */
-  };
+  }
+
+  ;
 
   /**
    * Adds a child container to the current {@code Container} instance (to be more precise a {@code
