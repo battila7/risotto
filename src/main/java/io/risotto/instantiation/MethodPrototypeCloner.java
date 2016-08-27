@@ -5,7 +5,7 @@ import io.risotto.exception.PrototypeCloneException;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import reflection.ReflectionUtils;
+import io.risotto.reflection.ReflectionUtils;
 
 /**
  * This class can produces clones using a clone method. This method must satisfy the

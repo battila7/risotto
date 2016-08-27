@@ -15,7 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import reflection.ReflectionUtils;
+import io.risotto.reflection.ReflectionUtils;
 
 /**
  * {@code ConstructorDependencyDetector} inspects the constructors of a class and looks for the

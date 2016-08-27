@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import reflection.ReflectionUtils;
+import io.risotto.reflection.ReflectionUtils;
 
 /**
  * Detector class that inspects the fields of a class and looks for the {@link Inject} annotation on

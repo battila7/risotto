@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import reflection.ReflectionUtils;
+import io.risotto.reflection.ReflectionUtils;
 
 public class BindingConfigurator implements Configurator {
   @Override

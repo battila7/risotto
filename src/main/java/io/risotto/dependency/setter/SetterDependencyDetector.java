@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import reflection.ReflectionUtils;
+import io.risotto.reflection.ReflectionUtils;
 
 /**
  * Detector implementation that inspects <b>public</b> setter methods of a class and looks for the

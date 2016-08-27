@@ -5,7 +5,7 @@ import io.risotto.exception.PrototypeCloneException;
 
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
-import reflection.ReflectionUtils;
+import io.risotto.reflection.ReflectionUtils;
 
 /**
  * Cloner class that utilizes a copy constructor to produce clones. The copy constructor must be
