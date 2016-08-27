@@ -1,7 +1,6 @@
 package io.risotto.instantiation;
 
 import io.risotto.Container;
-import io.risotto.annotations.BindingSupplier;
 import io.risotto.dependency.Dependency;
 import io.risotto.dependency.DependencyDetector;
 import io.risotto.dependency.DependencyInjector;
@@ -20,9 +19,9 @@ import java.util.Optional;
 /**
  * Instantiator that uses a binding supplier method to create a new instance. Binding supplier
  * methods are methods declared in {@link Container} classes and annotated with the {@link
- * BindingSupplier} annotation. By convention binding supplier methods should return a new instance
- * of their return type on each invocation. Method parameters are detected and injected as
- * dependencies.
+ * io.risotto.annotations.BindingSupplier} annotation. By convention binding supplier methods should
+ * return a new instance of their return type on each invocation. Method parameters are detected and
+ * injected as dependencies.
  * @param <T> the type of the object to be instantiated
  */
 public class MethodInstantiator<T> implements Instantiator<T> {
