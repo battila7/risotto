@@ -148,8 +148,6 @@ public abstract class Container {
      */
   }
 
-  ;
-
   /**
    * Adds a child container to the current {@code Container} instance (to be more precise a {@code
    * ContainerSettings} object that will be used to add a new child instance).

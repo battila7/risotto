@@ -70,8 +70,7 @@ public class MethodInstantiator<T> implements Instantiator<T> {
       throw new DependencyDetectionException(instantiatedClass);
     }
 
-    injector =
-        new MethodDependencyInjector(instantiatedClass, dependencies.get());
+    injector = new MethodDependencyInjector(instantiatedClass, dependencies.get());
 
     return dependencies.get();
   }

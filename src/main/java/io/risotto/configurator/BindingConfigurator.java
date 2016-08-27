@@ -50,6 +50,8 @@ import java.util.stream.Collectors;
  * </pre>
  */
 public class BindingConfigurator implements Configurator {
+  private static final String ADD_BINDING_METHOD_NAME = "addBinding";
+
   @Override
   public void configure(Container containerInstance, Class<? extends Container> containerClass)
       throws ContainerConfigurationException {
@@ -111,7 +113,7 @@ public class BindingConfigurator implements Configurator {
       Class<?> superClass = containerClass.getSuperclass();
 
       Method addBindingMethod =
-          superClass.getDeclaredMethod("addBinding", InstantiatableBinding.class);
+          superClass.getDeclaredMethod(ADD_BINDING_METHOD_NAME, InstantiatableBinding.class);
 
       addBindingMethod.setAccessible(true);
 
