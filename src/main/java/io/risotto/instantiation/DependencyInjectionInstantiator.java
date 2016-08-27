@@ -13,8 +13,8 @@ import java.util.Optional;
 
 /**
  * Instantiator implementation that uses dependency injection to create new instances. Uses
- * detectors to detect the dependencies of the class to instantiate and injectors for the
- * actual object creation process. The default implementation for {@link ClassBinding}s.
+ * detectors to detect the dependencies of the class to instantiate and injectors for the actual
+ * object creation process. The default implementation for {@link ClassBinding}s.
  * @param <T> the type of the object to be instantiated
  */
 public class DependencyInjectionInstantiator<T> implements Instantiator<T> {

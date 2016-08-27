@@ -14,8 +14,8 @@ import java.util.Optional;
 /**
  * Processor implementation that's able to recognize basic dependencies. Basic dependencies are the
  * simplest dependencies withoout {@link Named} or {@link InjectSpecifier} marked annotations. If it
- * detects an annotation that might be useful for other processors, passes the processed object
- * to its successor in the responsibility chain.
+ * detects an annotation that might be useful for other processors, passes the processed object to
+ * its successor in the responsibility chain.
  */
 class BasicProcessor extends DependencyProcessor {
   @Override

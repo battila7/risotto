@@ -27,8 +27,8 @@ public class BasicBinding<T> extends TerminableBinding<T> {
 
   /**
    * Returns whether the binding can resolve the specified dependency. Returns {@code true} if the
-   * class bound by this binding is a <b>subclass</b> of the class held in the dependency, {@code false}
-   * otherwise.
+   * class bound by this binding is a <b>subclass</b> of the class held in the dependency, {@code
+   * false} otherwise.
    * @param dependency the dependency to resolve
    * @return whether the binding can resolve the dependency
    */

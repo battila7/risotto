@@ -8,6 +8,7 @@ import io.risotto.binding.InstanceBinding;
  * bounded to this instantiator.
  *
  * <b>Note</b> that this instantiator cannot be used in conjunction with {@link InstanceBinding}s.
+ * @param <T> the type of the object to be instantiated
  */
 public class InstanceInstantiator<T> extends InstantiatorDecorator<T> {
   /**

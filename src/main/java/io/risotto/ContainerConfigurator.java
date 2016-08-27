@@ -8,8 +8,8 @@ import io.risotto.exception.ContainerInstantiationException;
 import java.util.Map;
 
 /**
- * Class responsible for instantiating and configuring a container. The container tree is
- * built up using {@code ContainerConfigurator} instances.
+ * Class responsible for instantiating and configuring a container. The container tree is built up
+ * using {@code ContainerConfigurator} instances.
  */
 final class ContainerConfigurator {
   private final ContainerSettings containerSettings;
@@ -19,8 +19,8 @@ final class ContainerConfigurator {
   private Container instance;
 
   /**
-   * Constructs a new instance that will be used to add a new container to the specified
-   * parent container with the specified settings.
+   * Constructs a new instance that will be used to add a new container to the specified parent
+   * container with the specified settings.
    * @param containerSettings the settings of the container to be configured
    * @param parentContainer the parent of the new container
    */
@@ -51,14 +51,15 @@ final class ContainerConfigurator {
 
   /**
    * Configures the container instantiated with {@link #instantiateContainer()}. First calls the
-   * {@link Container#configure()} method. Then calls the {@code Configurator}s assigned to the container
-   * with {@link ContainerSettings#withConfigurators(Configurator...)}. As the last step the default
+   * {@link Container#configure()} method. Then calls the {@code Configurator}s assigned to the
+   * container with {@link ContainerSettings#withConfigurators(Configurator...)}. As the last step
+   * the default
+   * @throws ContainerInstantiationException if a child container could not been instantiated
+   * @throws ContainerConfigurationException if a child container could not been configured
    * @{code Configurator}s are called.
    *
    * If all {@code Configurator}s execute successfully the child containers of the configured
    * container will be configured.
-   * @throws ContainerInstantiationException if a child container could not been instantiated
-   * @throws ContainerConfigurationException if a child container could not been configured
    */
   public void configureContainer()
       throws ContainerInstantiationException, ContainerConfigurationException {

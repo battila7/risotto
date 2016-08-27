@@ -142,7 +142,11 @@ public abstract class Container {
    * Configures the contents of the container. By overriding this method, bindings and child
    * containers can be added to the container object.
    */
-  protected abstract void configure();
+  protected void configure() {
+    /**
+     * Do nothing by default.
+     */
+  }
 
   /**
    * Adds a child container to the current {@code Container} instance (to be more precise a {@code

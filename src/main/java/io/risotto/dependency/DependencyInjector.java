@@ -18,8 +18,8 @@ public abstract class DependencyInjector<T> {
   }
 
   /**
-   * Creates and returns a new instance of the appropriate type. The returned instance contains
-   * all of its dependencies.
+   * Creates and returns a new instance of the appropriate type. The returned instance contains all
+   * of its dependencies.
    * @return a new instance of the type parameter
    */
   public abstract T createInstance();
