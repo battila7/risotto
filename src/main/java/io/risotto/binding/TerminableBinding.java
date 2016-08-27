@@ -36,8 +36,4 @@ public abstract class TerminableBinding<T> extends Binding<T> {
   public <K extends T> InstantiatableBinding<T> toInstance(K instance) {
     return new InstanceBinding<>(this, instance);
   }
-
-  public InstantiatableBinding<T> toMethod(Container container, Method method) {
-    return new MethodBinding<>(this, container, method);
-  }
 }
