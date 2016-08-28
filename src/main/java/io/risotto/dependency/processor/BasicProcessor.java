@@ -35,9 +35,7 @@ class BasicProcessor extends DependencyProcessor {
       return super.process(method);
     }
 
-    Class<?> targetParameterType = method.getParameterTypes()[0];
-
-    return Optional.of(new Dependency<>(targetParameterType));
+    return Optional.of(new Dependency<>(method.getParameterTypes()[0]));
   }
 
   @Override
@@ -46,9 +44,7 @@ class BasicProcessor extends DependencyProcessor {
       return super.process(field);
     }
 
-    Class<?> targetFieldType = field.getType();
-
-    return Optional.of(new Dependency<>(targetFieldType));
+    return Optional.of(new Dependency<>(field.getType()));
   }
 
   private boolean shouldPassProcessing(AnnotatedElement element) {

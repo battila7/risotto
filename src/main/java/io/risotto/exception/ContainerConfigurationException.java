@@ -8,6 +8,8 @@ import io.risotto.Container;
  * default or custom {@code Configurator}s throw an exception.
  */
 public class ContainerConfigurationException extends Exception {
+  private static final String MESSAGE = "Configuration failed when configuring container: ";
+
   private final Container container;
 
   /**
@@ -16,7 +18,7 @@ public class ContainerConfigurationException extends Exception {
    * @param e the cause of the exception
    */
   public ContainerConfigurationException(Container container, Exception e) {
-    super("Configuration failed when configurating container.", e);
+    super(MESSAGE + container.toString(), e);
 
     this.container = container;
   }

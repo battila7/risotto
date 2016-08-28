@@ -46,7 +46,7 @@ public class FieldDependencyDetector<T> extends DependencyDetector<T> {
 
     List<Field> injectableFields = getInjectableFields();
 
-    if (injectableFields.size() == 0) {
+    if (injectableFields.isEmpty()) {
       return Optional.empty();
     }
 

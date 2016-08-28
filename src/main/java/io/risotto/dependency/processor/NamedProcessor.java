@@ -22,41 +22,45 @@ import java.util.Optional;
 class NamedProcessor extends DependencyProcessor {
   @Override
   public Optional<Dependency<?>> process(Parameter parameter) {
-    Optional<Named> namedOptional =
-        ReflectionUtils.getDirectlyPresentAnnotation(parameter, Named.class);
+    Optional<String> name = getName(parameter);
 
-    if (!namedOptional.isPresent()) {
+    if (!name.isPresent()) {
       return super.process(parameter);
     }
 
-    return Optional.of(new NamedDependency<>(parameter.getType(), namedOptional.get().value()));
+    return Optional.of(new NamedDependency<>(parameter.getType(), name.get()));
   }
 
   @Override
   public Optional<Dependency<?>> process(Method method) {
-    Optional<Named> namedOptional =
-        ReflectionUtils.getDirectlyPresentAnnotation(method, Named.class);
+    Optional<String> name = getName(method);
 
-    if (!namedOptional.isPresent()) {
+    if (!name.isPresent()) {
       return super.process(method);
     }
 
-    Class<?> targetParameterType = method.getParameterTypes()[0];
-
-    return Optional.of(new NamedDependency<>(targetParameterType, namedOptional.get().value()));
+    return Optional.of(new NamedDependency<>(method.getParameterTypes()[0], name.get()));
   }
 
   @Override
   public Optional<Dependency<?>> process(Field field) {
-    Optional<Named> namedOptional =
-        ReflectionUtils.getDirectlyPresentAnnotation(field, Named.class);
+    Optional<String> name = getName(field);
 
-    if (!namedOptional.isPresent()) {
+    if (!name.isPresent()) {
       return super.process(field);
     }
 
-    Class<?> targetFieldType = field.getType();
+    return Optional.of(new NamedDependency<>(field.getType(), name.get()));
+  }
 
-    return Optional.of(new NamedDependency<>(targetFieldType, namedOptional.get().value()));
+  private Optional<String> getName(AnnotatedElement element) {
+    Optional<Named> namedOptional =
+        ReflectionUtils.getDirectlyPresentAnnotation(element, Named.class);
+
+    if (!namedOptional.isPresent()) {
+      return Optional.empty();
+    }
+
+    return Optional.of(namedOptional.get().value());
   }
 }

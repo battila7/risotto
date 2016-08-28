@@ -40,7 +40,7 @@ class ConstructorPrototypeCloner<T> extends PrototypeCloner<T> {
 
     try {
       return copyConstructor.newInstance(prototype);
-    } catch (Exception e) {
+    } catch (ReflectiveOperationException | IllegalArgumentException e) {
       throw new PrototypeCloneException(e);
     }
   }

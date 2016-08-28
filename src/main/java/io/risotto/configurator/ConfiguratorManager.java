@@ -2,6 +2,7 @@ package io.risotto.configurator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -22,7 +23,7 @@ public class ConfiguratorManager {
    * @param configurators the configurators to register
    */
   public static void registerDefaultConfigurator(Configurator... configurators) {
-    defaultConfiguratorList.addAll(Arrays.asList(configurators));
+    Collections.addAll(defaultConfiguratorList, configurators);
   }
 
   /**

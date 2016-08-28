@@ -8,10 +8,13 @@ import io.risotto.Risotto;
  * Risotto#addRootContainer(ContainerSettings)} call.
  */
 public class RootContainerAlreadySetException extends Exception {
+  private static final String MESSAGE =
+      "The root container object is already set by another addRootContainer() call!";
+
   /**
    * Constructs a new instance.
    */
   public RootContainerAlreadySetException() {
-    super("The root container object is already set by another addRootContainer() call!");
+    super(MESSAGE);
   }
 }

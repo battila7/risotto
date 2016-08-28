@@ -4,6 +4,8 @@ package io.risotto.exception;
  * Thrown when {@code Risotto} is not able to instantiate a class.
  */
 public class InstantiationFailedException extends RuntimeException {
+  private static final String MESSAGE = "Could not instantiate class: ";
+
   private final Class<?> failingClass;
 
   /**
@@ -12,7 +14,7 @@ public class InstantiationFailedException extends RuntimeException {
    * @param cause the cause of the exception
    */
   public InstantiationFailedException(Class<?> failingClass, Throwable cause) {
-    super(cause);
+    super(MESSAGE + failingClass.toString(), cause);
 
     this.failingClass = failingClass;
   }

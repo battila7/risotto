@@ -28,6 +28,8 @@ import java.util.stream.Collectors;
  * @param <T> the type to dependency detect
  */
 public class SetterDependencyDetector<T> extends DependencyDetector<T> {
+  private static final String SETTER_METHOD_NAME_PREFIX = "set";
+
   /**
    * Constructs a new instance that will be used to detect the dependencies of the specified class.
    * @param clazz the dependency detectable class
@@ -46,7 +48,7 @@ public class SetterDependencyDetector<T> extends DependencyDetector<T> {
 
     List<Method> injectableMethods = getInjectableMethods();
 
-    if (injectableMethods.size() == 0) {
+    if (injectableMethods.isEmpty()) {
       return Optional.empty();
     }
 
@@ -71,7 +73,7 @@ public class SetterDependencyDetector<T> extends DependencyDetector<T> {
     return Arrays.stream(clazz.getMethods())
         .filter(ReflectionUtils::isInjectDirectlyPresent)
         .filter(m -> m.getParameterCount() == 1)
-        .filter(m -> m.getName().startsWith("set"))
+        .filter(m -> m.getName().startsWith(SETTER_METHOD_NAME_PREFIX))
         .filter(ReflectionUtils::isMethodInjectable)
         .collect(Collectors.toList());
   }
