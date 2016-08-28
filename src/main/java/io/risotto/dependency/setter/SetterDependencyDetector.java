@@ -68,7 +68,7 @@ public class SetterDependencyDetector<T> extends DependencyDetector<T> {
   }
 
   private List<Method> getInjectableMethods() {
-    return Arrays.stream(clazz.getDeclaredMethods())
+    return Arrays.stream(clazz.getMethods())
         .filter(ReflectionUtils::isInjectDirectlyPresent)
         .filter(m -> m.getParameterCount() == 1)
         .filter(m -> m.getName().startsWith("set"))

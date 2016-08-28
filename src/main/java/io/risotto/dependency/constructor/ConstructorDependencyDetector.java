@@ -84,7 +84,7 @@ public class ConstructorDependencyDetector<T> extends DependencyDetector<T> {
   }
 
   private List<Constructor<?>> getInjectableConstructors() {
-    return Arrays.stream(clazz.getDeclaredConstructors())
+    return Arrays.stream(clazz.getConstructors())
         .filter(ReflectionUtils::isInjectDirectlyPresent)
         .filter(ReflectionUtils::isPublicNotStaticNotFinal)
         .collect(Collectors.toList());

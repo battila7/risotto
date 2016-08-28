@@ -8,9 +8,10 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 
 /**
- * This class can produces clones using a clone method. This method must satisfy the {@link
- * ReflectionUtils#isMethodInjectable(Method)} predicate as well as be annotated with the {@link
- * Clone} annotation. Also the method may take no parameters and return {@code Object}.
+ * This class can produces clones using a clone method. This method must be <b>public</b> and must
+ * satisfy the {@link ReflectionUtils#isMethodInjectable(Method)} predicate as well as be annotated
+ * with the {@link Clone} annotation. Also the method may take no parameters and return {@code
+ * Object}.
  * @param <T> the type of the object to be cloned
  */
 class MethodPrototypeCloner<T> extends PrototypeCloner<T> {
@@ -45,10 +46,8 @@ class MethodPrototypeCloner<T> extends PrototypeCloner<T> {
   }
 
   private Method detectCloneMethod() {
-    Method[] methods = cloneableClass.getDeclaredMethods();
-
-    Method cloneMethod = Arrays.stream(methods)
-        .filter(m -> m.isAnnotationPresent(Clone.class))
+    Method cloneMethod = Arrays.stream(cloneableClass.getMethods())
+        .filter(m -> ReflectionUtils.isAnnotationDirectlyPresent(m, Clone.class))
         .filter(ReflectionUtils::isMethodInjectable)
         .filter(m -> m.getParameterCount() == 0)
         .filter(m -> m.getReturnType().equals(Object.class))
