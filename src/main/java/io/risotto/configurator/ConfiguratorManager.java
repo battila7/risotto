@@ -21,8 +21,15 @@ public class ConfiguratorManager {
   /**
    * Registers the specified {@code Configurator}s among the default configurators.
    * @param configurators the configurators to register
+   * @throws NullPointerException if a {@code null} value has been passed
    */
   public static void registerDefaultConfigurator(Configurator... configurators) {
+    for (Configurator configurator : configurators) {
+      if (configurator == null) {
+        throw new NullPointerException("The configurators array must not contain null elements!");
+      }
+    }
+
     Collections.addAll(defaultConfiguratorList, configurators);
   }
 

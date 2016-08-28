@@ -19,6 +19,7 @@ public abstract class Binding<T> {
   /**
    * Constructs a new binding, binding to the specified class
    * @param boundClass the bound class
+   * @throws NullPointerException if the bounded class is {@code null}
    */
   public Binding(Class<T> boundClass) {
     this.boundedClass = Objects.requireNonNull(boundClass, "The bounded class must not be null!");

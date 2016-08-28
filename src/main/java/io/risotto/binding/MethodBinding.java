@@ -18,12 +18,13 @@ public class MethodBinding<T> extends InstantiatableBinding<T> {
    * @param binding the binding to be wrapped
    * @param container the container that declares the binding supplier method
    * @param method the binding supplier method
+   * @throws NullPointerException if a parameter is {@code null}
    */
   public MethodBinding(Binding<T> binding, Container container, Method method) {
     super(binding);
 
-    if (method == null) {
-      throw new NullPointerException("The method must not be null!");
+    if ((container == null) || (method == null)) {
+      throw new NullPointerException("The container and the method must not be null!");
     }
 
     @SuppressWarnings("unchecked")

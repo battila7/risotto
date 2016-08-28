@@ -19,6 +19,7 @@ public class ClassBinding<T> extends InstantiatableBinding<T> {
    * binding.
    * @param binding the binding to wrap
    * @param targetClass the target class to be associated with the bound class
+   * @throws NullPointerException if a parameter is {@code null}
    */
   public ClassBinding(Binding<T> binding, Class<? extends T> targetClass) {
     super(binding);

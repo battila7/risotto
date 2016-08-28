@@ -62,8 +62,13 @@ public abstract class Container {
    * @param clazz the class of which an instance is requested
    * @param <T> the type of the requested instance
    * @return an {@code Optional} that either contains an instance or is empty
+   * @throws NullPointerException if the class is {@code null}
    */
   public final <T> Optional<T> getInstance(Class<T> clazz) {
+    if (clazz == null) {
+      throw new NullPointerException("The class must not be null!");
+    }
+
     Dependency<T> dependency = new Dependency<>(clazz);
 
     dependency.setOrigin(Scope.GET_INSTANCE_REQUEST);
@@ -80,8 +85,13 @@ public abstract class Container {
    * @param name the associated name that should be used to retrieve the instance
    * @param <T> the type of the requested instance
    * @return an {@code Optional} that either contains an instance or is empty
+   * @throws NullPointerException if class or name is {@code null}
    */
   public final <T> Optional<T> getInstance(Class<T> clazz, String name) {
+    if ((clazz == null) || (name == null)) {
+      throw new NullPointerException("The clazz and the name must not be null!");
+    }
+
     NamedDependency<T> dependency = new NamedDependency<>(clazz, name);
 
     dependency.setOrigin(Scope.GET_INSTANCE_REQUEST);
@@ -98,8 +108,13 @@ public abstract class Container {
    * @param annotation the associated annotation class that should be used to retrieve the instance
    * @param <T> the type of the requested instance
    * @return an {@code Optional} that either contains an instance or is empty
+   * @throws NullPointerException if class or annotation is {@code null}
    */
   public final <T> Optional<T> getInstance(Class<T> clazz, Class<? extends Annotation> annotation) {
+    if ((clazz == null) || (annotation == null)) {
+      throw new NullPointerException("The clazz and the annotation must not be null!");
+    }
+
     AnnotatedDependency<T> dependency = new AnnotatedDependency<>(clazz, annotation);
 
     dependency.setOrigin(Scope.GET_INSTANCE_REQUEST);
@@ -145,6 +160,7 @@ public abstract class Container {
    * @param path the relative path to the descendant container
    * @return an {@code Optional} that either contains a container instance or is empty if there's no
    * descendant with the specified path
+   * @throws NullPointerException if the path is {@code null}
    */
   public final Optional<Container> getDescendant(String path) {
     if (path == null) {
