@@ -1,5 +1,7 @@
 package io.risotto.dependency.processor;
 
+import static io.risotto.reflection.ReflectionUtils.getInjectSpecifier;
+
 import io.risotto.annotations.InjectSpecifier;
 import io.risotto.dependency.AnnotatedDependency;
 import io.risotto.dependency.Dependency;
@@ -62,17 +64,5 @@ class AnnotatedProcessor extends DependencyProcessor {
     }
 
     return super.process(field);
-  }
-
-  private Optional<Class<? extends Annotation>> getInjectSpecifier(AnnotatedElement element) {
-    for (Annotation annotation : element.getAnnotations()) {
-      Class<? extends Annotation> annotationType = annotation.annotationType();
-
-      if (annotationType.isAnnotationPresent(InjectSpecifier.class)) {
-        return Optional.of(annotationType);
-      }
-    }
-
-    return Optional.empty();
   }
 }

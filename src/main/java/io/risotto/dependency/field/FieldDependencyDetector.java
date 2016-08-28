@@ -69,7 +69,7 @@ public class FieldDependencyDetector<T> extends DependencyDetector<T> {
 
   private List<Field> getInjectableFields() {
     return Arrays.stream(clazz.getDeclaredFields())
-        .filter(f -> f.isAnnotationPresent(Inject.class))
+        .filter(ReflectionUtils::isInjectDirectlyPresent)
         .filter(ReflectionUtils::isFieldInjectable)
         .collect(Collectors.toList());
   }

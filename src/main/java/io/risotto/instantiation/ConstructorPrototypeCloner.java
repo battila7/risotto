@@ -5,6 +5,7 @@ import io.risotto.exception.PrototypeCloneException;
 import io.risotto.reflection.ReflectionUtils;
 
 import java.lang.reflect.Constructor;
+import java.sql.Ref;
 import java.util.Arrays;
 
 /**
@@ -49,7 +50,7 @@ class ConstructorPrototypeCloner<T> extends PrototypeCloner<T> {
     try {
       Constructor<?> constructor =
           Arrays.stream(cloneableClass.getDeclaredConstructors())
-              .filter(c -> c.isAnnotationPresent(Clone.class))
+              .filter(c -> ReflectionUtils.isAnnotationDirectlyPresent(c, Clone.class))
               .filter(c -> c.getParameterCount() == 1)
               .filter(c -> c.getParameterTypes()[0] == cloneableClass)
               .filter(ReflectionUtils::isPublicNotStaticNotFinal)

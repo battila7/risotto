@@ -4,6 +4,7 @@ import io.risotto.annotations.InjectSpecifier;
 import io.risotto.annotations.Named;
 import io.risotto.dependency.Dependency;
 import io.risotto.dependency.NamedDependency;
+import io.risotto.reflection.ReflectionUtils;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
@@ -21,36 +22,41 @@ import java.util.Optional;
 class NamedProcessor extends DependencyProcessor {
   @Override
   public Optional<Dependency<?>> process(Parameter parameter) {
-    if (!parameter.isAnnotationPresent(Named.class)) {
+    Optional<Named> namedOptional =
+        ReflectionUtils.getDirectlyPresentAnnotation(parameter, Named.class);
+
+    if (!namedOptional.isPresent()) {
       return super.process(parameter);
     }
 
-    return Optional.of(new NamedDependency<>(parameter.getType(), getAnnotationValue(parameter)));
+    return Optional.of(new NamedDependency<>(parameter.getType(), namedOptional.get().value()));
   }
 
   @Override
   public Optional<Dependency<?>> process(Method method) {
-    if (!method.isAnnotationPresent(Named.class)) {
+    Optional<Named> namedOptional =
+        ReflectionUtils.getDirectlyPresentAnnotation(method, Named.class);
+
+    if (!namedOptional.isPresent()) {
       return super.process(method);
     }
 
     Class<?> targetParameterType = method.getParameterTypes()[0];
 
-    return Optional.of(new NamedDependency<>(targetParameterType, getAnnotationValue(method)));
+    return Optional.of(new NamedDependency<>(targetParameterType, namedOptional.get().value()));
   }
 
   @Override
   public Optional<Dependency<?>> process(Field field) {
-    if (!field.isAnnotationPresent(Named.class)) {
+    Optional<Named> namedOptional =
+        ReflectionUtils.getDirectlyPresentAnnotation(field, Named.class);
+
+    if (!namedOptional.isPresent()) {
       return super.process(field);
     }
 
     Class<?> targetFieldType = field.getType();
 
-    return Optional.of(new NamedDependency<>(targetFieldType, getAnnotationValue(field)));
-  }
-
-  private String getAnnotationValue(AnnotatedElement element) {
-    return element.getDeclaredAnnotation(Named.class).value();
+    return Optional.of(new NamedDependency<>(targetFieldType, namedOptional.get().value()));
   }
 }
