@@ -21,9 +21,9 @@ import java.util.stream.Collectors;
  * them. Public, protected, private and package scoped fields are all inspected and can be a target
  * to dependency injection. If field inspection succeeds, a new {@link FieldDependencyInjector} is
  * created.
- *
+ * <p>
  * Each field (with the {@code Inject} annotation) becomes an immediate dependency.
- *
+ * <p>
  * Note that <b>static</b> and/or <b>final</b> fields are not inspected.
  * @param <T> the type to dependency detect
  */

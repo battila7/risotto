@@ -6,11 +6,11 @@ import io.risotto.binding.NamedBinding;
 /**
  * {@code NamedDependency} is used to represent dependencies marked with the {@link Named}
  * annotation.
- *
+ * <p>
  * A specific instance of {@code NamedDependency} can only be resolved by {@link NamedBinding}
  * objects binding a child type of the type represented by the {@code NamedDependency} and
  * containing the same name as the {@code NamedDependency} object in question.
- *
+ * <p>
  * For more information on dependencies, read the documentation of {@link Dependency}.
  * @param <T> the type represented by the dependency
  */

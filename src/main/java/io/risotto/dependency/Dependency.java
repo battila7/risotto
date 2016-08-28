@@ -13,11 +13,11 @@ import io.risotto.binding.InstantiatableBinding;
  * fields with the {@code Inject} annotation can produce new dependencies. These are the immediate
  * dependencies of a class. Only immediate dependencies are detected because eventually an immediate
  * dependency of a specific class might be a second or third-level dependency of another class.
- *
+ * <p>
  * When configuring containers, all the dependencies of the classes are collected and placed in a
  * set (that means, there are no duplicates). The dependencies in this set can be resolved in an
  * undefined order using the bindings created in or imported into the container.
- *
+ * <p>
  * A specific instance of {@code Dependency} can only be resolved by {@link BasicBinding} objects
  * binding a child type of the type represented by the {@code Dependency}.
  * @param <T> the type represented by the dependency

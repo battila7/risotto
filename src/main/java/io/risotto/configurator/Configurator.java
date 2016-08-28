@@ -8,7 +8,7 @@ import io.risotto.exception.ContainerConfigurationException;
  * of this interface can inspect container classes and call methods on them. This allows, for
  * example annotation-driven configuration of containers instead of overusing the {@link
  * Container#configure()} method.
- *
+ * <p>
  * Heavy use of reflection is allowed for {@code Configurator} implementations.
  */
 public interface Configurator {

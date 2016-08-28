@@ -21,10 +21,10 @@ import java.util.stream.Collectors;
  * {@code ConstructorDependencyDetector} inspects the constructors of a class and looks for the
  * {@link Inject} annotation. If an injectable constructor is found, a new {@link
  * ConstructorDependencyInjector} is created.
- *
+ * <p>
  * Dependencies are detected using constructor parameter inspection. Each constructor parameter
  * becomes an immediate dependency.
- *
+ * <p>
  * Note that only <b>public</b> constructors are inspected.
  * @param <T> the type to dependency detect
  */

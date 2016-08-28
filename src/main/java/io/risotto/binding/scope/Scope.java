@@ -8,7 +8,7 @@ import io.risotto.dependency.Dependency;
  * With {@code Scope} the visibility and importation of the bindings can be fine-grained. Besides
  * the default {@code Scope} implementations, custom scopes can be added to bindings using the
  * {@link InstantiatableBinding#withScope(Class)} method.
- *
+ * <p>
  * Dependencies and bindings (through {@code Scope} instances) have origin containers. Scopes define
  * whether a binding is visible to a dependency coming from a specific origin container. Furthermore
  * scopes allow bindings to be imported to child containers so that child containers can reach the
