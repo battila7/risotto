@@ -5,7 +5,7 @@ package io.risotto.exception;
  * child container.
  */
 public class InvalidContainerNameException extends Exception {
-  private static final String MESSAGE = "The desired container name is already in use: ";
+  private static final String MESSAGE = "The desired container name is invalid or already in use: ";
 
   private final String name;
 

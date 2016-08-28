@@ -4,6 +4,7 @@ import io.risotto.dependency.Dependency;
 import io.risotto.dependency.DependencyInjector;
 import io.risotto.exception.InstantiationFailedException;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.Map;
 
@@ -30,7 +31,11 @@ public class FieldDependencyInjector<T> extends DependencyInjector<T> {
   @Override
   public T createInstance() {
     try {
-      T instance = instantiatableClass.newInstance();
+      Constructor<T> defaultConstructor = instantiatableClass.getConstructor();
+
+      defaultConstructor.setAccessible(true);
+
+      T instance = defaultConstructor.newInstance();
 
       for (Map.Entry<Field, Dependency<?>> pair : fieldMap.entrySet()) {
         Field field = pair.getKey();
@@ -43,8 +48,7 @@ public class FieldDependencyInjector<T> extends DependencyInjector<T> {
       }
 
       return instance;
-    } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-        | SecurityException | InstantiationFailedException e) {
+    } catch (SecurityException | ReflectiveOperationException | IllegalArgumentException | InstantiationFailedException e) {
       throw new InstantiationFailedException(instantiatableClass, e);
     }
   }

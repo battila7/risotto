@@ -43,13 +43,7 @@ public class ConstructorDependencyDetector<T> extends DependencyDetector<T> {
   public Optional<List<Dependency<?>>> detectImmediateDependencies() {
     Optional<Constructor<T>> injectableConstructorOptional;
 
-    try {
-      injectableConstructorOptional = getInjectableConstructor();
-    } catch (NoSuchMethodException e) {
-      logger.warn("Constructor with @Inject found but could not been retrieved.");
-
-      return Optional.empty();
-    }
+    injectableConstructorOptional = getInjectableConstructor();
 
     if (!injectableConstructorOptional.isPresent()) {
       return Optional.empty();
@@ -71,8 +65,8 @@ public class ConstructorDependencyDetector<T> extends DependencyDetector<T> {
   }
 
   @SuppressWarnings("unchecked")
-  private Optional<Constructor<T>> getInjectableConstructor() throws NoSuchMethodException {
-    List<Constructor<?>> injectableConstructors = getInjectableConstructors();
+  private Optional<Constructor<T>> getInjectableConstructor() {
+    List<Constructor<?>> injectableConstructors = getInjectableConstructorList();
 
     if (injectableConstructors.size() != 1) {
       return Optional.empty();
@@ -83,9 +77,9 @@ public class ConstructorDependencyDetector<T> extends DependencyDetector<T> {
     return Optional.of((Constructor<T>) targetConstructor);
   }
 
-  private List<Constructor<?>> getInjectableConstructors() {
-    return Arrays.stream(clazz.getDeclaredConstructors())
-        .filter(c -> c.isAnnotationPresent(Inject.class))
+  private List<Constructor<?>> getInjectableConstructorList() {
+    return Arrays.stream(clazz.getConstructors())
+        .filter(ReflectionUtils::isInjectDirectlyPresent)
         .filter(ReflectionUtils::isPublicNotStaticNotFinal)
         .collect(Collectors.toList());
   }

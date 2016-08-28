@@ -118,7 +118,7 @@ public class BindingConfigurator implements Configurator {
       addBindingMethod.setAccessible(true);
 
       addBindingMethod.invoke(container, binding);
-    } catch (Exception e) {
+    } catch (SecurityException | IllegalArgumentException | ReflectiveOperationException e) {
       throw new ContainerConfigurationException(container, e);
     }
   }

@@ -5,6 +5,7 @@ import io.risotto.configurator.ConfiguratorManager;
 import io.risotto.exception.ContainerConfigurationException;
 import io.risotto.exception.ContainerInstantiationException;
 
+import java.lang.reflect.Constructor;
 import java.util.Map;
 
 /**
@@ -41,10 +42,14 @@ final class ContainerConfigurator {
     Class<? extends Container> containerClass = containerSettings.getContainerClass();
 
     try {
-      instance = containerClass.newInstance();
+      Constructor<? extends Container> defaultConstructor = containerClass.getConstructor();
+
+      defaultConstructor.setAccessible(true);
+
+      instance = defaultConstructor.newInstance();
 
       return instance;
-    } catch (IllegalAccessException | InstantiationException e) {
+    } catch (SecurityException | ReflectiveOperationException | IllegalArgumentException e) {
       throw new ContainerInstantiationException(containerClass, e);
     }
   }

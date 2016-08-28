@@ -127,8 +127,7 @@ public class MethodInstantiator<T> implements Instantiator<T> {
         Object instance = method.invoke(container, bindingResults.toArray());
 
         return (T) instance;
-      } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException |
-          NullPointerException e) {
+      } catch (ReflectiveOperationException | IllegalArgumentException e) {
         throw new InstantiationFailedException(instantiatableClass, e);
       }
     }

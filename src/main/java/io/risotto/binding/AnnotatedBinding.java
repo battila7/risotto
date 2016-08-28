@@ -45,11 +45,8 @@ public class AnnotatedBinding<T> extends TerminableBinding<T> {
 
     AnnotatedDependency<?> annotatedDependency = (AnnotatedDependency<?>) dependency;
 
-    if (!(annotatedDependency.getAnnotation().equals(annotationClass))) {
-      return false;
-    }
-
-    return dependency.getBoundedClass().isAssignableFrom(boundedClass);
+    return annotatedDependency.getAnnotation().equals(annotationClass)
+        && annotatedDependency.getBoundedClass().isAssignableFrom(boundedClass);
   }
 
   /**

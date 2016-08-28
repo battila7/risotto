@@ -21,7 +21,7 @@ public class ChildConfigurator implements Configurator {
   @Override
   public void configure(Container containerInstance, Class<? extends Container> containerClass)
       throws ContainerConfigurationException {
-    Child[] annotations = containerClass.getAnnotationsByType(Child.class);
+    Child[] annotations = containerClass.getDeclaredAnnotationsByType(Child.class);
 
     Method addChildMethod = getAddChildMethod(containerInstance, containerClass);
 
@@ -35,12 +35,12 @@ public class ChildConfigurator implements Configurator {
     ContainerSettings childSettings = container(annotation.containerClass());
 
     if (!annotation.name().equals(EMPTY_STRING)) {
-      childSettings.as(annotation.name());
+      childSettings = childSettings.as(annotation.name());
     }
 
     try {
       addChildMethod.invoke(containerInstance, childSettings);
-    } catch (Exception e) {
+    } catch (ReflectiveOperationException | IllegalArgumentException e) {
       throw new ContainerConfigurationException(containerInstance, e);
     }
   }
@@ -57,7 +57,7 @@ public class ChildConfigurator implements Configurator {
       addChildMethod.setAccessible(true);
 
       return addChildMethod;
-    } catch (Exception e) {
+    } catch (SecurityException | NoSuchMethodException e) {
       throw new ContainerConfigurationException(containerInstance, e);
     }
   }

@@ -4,6 +4,7 @@ import io.risotto.annotations.InjectSpecifier;
 import io.risotto.annotations.Named;
 import io.risotto.dependency.Dependency;
 import io.risotto.dependency.NamedDependency;
+import io.risotto.reflection.ReflectionUtils;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
@@ -21,36 +22,45 @@ import java.util.Optional;
 class NamedProcessor extends DependencyProcessor {
   @Override
   public Optional<Dependency<?>> process(Parameter parameter) {
-    if (!parameter.isAnnotationPresent(Named.class)) {
+    Optional<String> name = getName(parameter);
+
+    if (!name.isPresent()) {
       return super.process(parameter);
     }
 
-    return Optional.of(new NamedDependency<>(parameter.getType(), getAnnotationValue(parameter)));
+    return Optional.of(new NamedDependency<>(parameter.getType(), name.get()));
   }
 
   @Override
   public Optional<Dependency<?>> process(Method method) {
-    if (!method.isAnnotationPresent(Named.class)) {
+    Optional<String> name = getName(method);
+
+    if (!name.isPresent()) {
       return super.process(method);
     }
 
-    Class<?> targetParameterType = method.getParameterTypes()[0];
-
-    return Optional.of(new NamedDependency<>(targetParameterType, getAnnotationValue(method)));
+    return Optional.of(new NamedDependency<>(method.getParameterTypes()[0], name.get()));
   }
 
   @Override
   public Optional<Dependency<?>> process(Field field) {
-    if (!field.isAnnotationPresent(Named.class)) {
+    Optional<String> name = getName(field);
+
+    if (!name.isPresent()) {
       return super.process(field);
     }
 
-    Class<?> targetFieldType = field.getType();
-
-    return Optional.of(new NamedDependency<>(targetFieldType, getAnnotationValue(field)));
+    return Optional.of(new NamedDependency<>(field.getType(), name.get()));
   }
 
-  private String getAnnotationValue(AnnotatedElement element) {
-    return element.getDeclaredAnnotation(Named.class).value();
+  private Optional<String> getName(AnnotatedElement element) {
+    Optional<Named> namedOptional =
+        ReflectionUtils.getDirectlyPresentAnnotation(element, Named.class);
+
+    if (!namedOptional.isPresent()) {
+      return Optional.empty();
+    }
+
+    return Optional.of(namedOptional.get().value());
   }
 }

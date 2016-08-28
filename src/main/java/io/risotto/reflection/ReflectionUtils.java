@@ -5,6 +5,7 @@ import static java.lang.reflect.Modifier.isFinal;
 import static java.lang.reflect.Modifier.isPublic;
 import static java.lang.reflect.Modifier.isStatic;
 
+import io.risotto.annotations.Inject;
 import io.risotto.annotations.InjectSpecifier;
 
 import java.lang.annotation.Annotation;
@@ -107,6 +108,16 @@ public class ReflectionUtils {
   public static boolean isAnnotationDirectlyPresent(AnnotatedElement element,
                                                     Class<? extends Annotation> annotationClass) {
     return getDirectlyPresentAnnotation(element, annotationClass).isPresent();
+  }
+
+  /**
+   * Checks whether the {@link Inject} annotation is directly present on the specified element.
+   * Shorthand for {@code isAnnotationDirectlyPresent(element, Inject.class)}.
+   * @param element the element to be checked for the {@code Inject} annotation
+   * @return whether the {@code Inject} is present on the element or not.
+   */
+  public static boolean isInjectDirectlyPresent(AnnotatedElement element) {
+    return isAnnotationDirectlyPresent(element, Inject.class);
   }
 
   private ReflectionUtils() {

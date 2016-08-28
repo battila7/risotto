@@ -11,6 +11,7 @@ import io.risotto.exception.InvalidContainerNameException;
 import io.risotto.exception.ScopeInstantiationException;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -77,7 +78,7 @@ public abstract class Container {
    * @return an {@code Optional} that either contains an instance or is empty
    */
   public final <T> Optional<T> getInstance(Class<T> clazz, String name) {
-    NamedDependency<T> dependency = new NamedDependency<T>(clazz, name);
+    NamedDependency<T> dependency = new NamedDependency<>(clazz, name);
 
     dependency.setOrigin(Scope.GET_INSTANCE_REQUEST);
 
@@ -95,7 +96,7 @@ public abstract class Container {
    * @return an {@code Optional} that either contains an instance or is empty
    */
   public final <T> Optional<T> getInstance(Class<T> clazz, Class<? extends Annotation> annotation) {
-    AnnotatedDependency<T> dependency = new AnnotatedDependency<T>(clazz, annotation);
+    AnnotatedDependency<T> dependency = new AnnotatedDependency<>(clazz, annotation);
 
     dependency.setOrigin(Scope.GET_INSTANCE_REQUEST);
 
@@ -264,12 +265,16 @@ public abstract class Container {
     try {
       Class<? extends Scope> scopeClass = instantiatableBinding.getScopeClass();
 
-      Scope bindingScope = scopeClass.newInstance();
+      Constructor<? extends Scope> defaultConstructor = scopeClass.getConstructor();
+
+      defaultConstructor.setAccessible(true);
+
+      Scope bindingScope = defaultConstructor.newInstance();
 
       bindingScope.setOrigin(this);
 
       instantiatableBinding.setScope(bindingScope);
-    } catch (InstantiationException | IllegalAccessException e) {
+    } catch (SecurityException | ReflectiveOperationException | IllegalArgumentException e) {
       throw new ScopeInstantiationException(instantiatableBinding,
           instantiatableBinding.getScopeClass(), e);
     }

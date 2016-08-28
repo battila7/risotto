@@ -7,7 +7,6 @@ import io.risotto.instantiation.MethodInstantiator;
 import java.lang.reflect.Method;
 
 public class MethodBinding<T> extends InstantiatableBinding<T> {
-  @SuppressWarnings("unchecked")
   public MethodBinding(Binding<T> binding, Container container, Method method) {
     super(binding);
 
@@ -15,8 +14,10 @@ public class MethodBinding<T> extends InstantiatableBinding<T> {
       throw new NullPointerException("The method must not be null!");
     }
 
-    this.instantiator =
-        InstantiatorFactory.decorateWithDefaultInstantiator(
-            new MethodInstantiator<>((Class<T>) method.getReturnType(), container, method));
+    @SuppressWarnings("unchecked")
+    Class<T> returnType = (Class<T>)method.getReturnType();
+
+    this.instantiator = InstantiatorFactory.decorateWithDefaultInstantiator(
+            new MethodInstantiator<>(returnType, container, method));
   }
 }
