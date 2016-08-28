@@ -62,8 +62,13 @@ public abstract class Container {
    * @param clazz the class of which an instance is requested
    * @param <T> the type of the requested instance
    * @return an {@code Optional} that either contains an instance or is empty
+   * @throws NullPointerException if the class is {@code null}
    */
   public final <T> Optional<T> getInstance(Class<T> clazz) {
+    if (clazz == null) {
+      throw new NullPointerException("The class must not be null!");
+    }
+
     Dependency<T> dependency = new Dependency<>(clazz);
 
     dependency.setOrigin(Scope.GET_INSTANCE_REQUEST);
@@ -80,8 +85,13 @@ public abstract class Container {
    * @param name the associated name that should be used to retrieve the instance
    * @param <T> the type of the requested instance
    * @return an {@code Optional} that either contains an instance or is empty
+   * @throws NullPointerException if class or name is {@code null}
    */
   public final <T> Optional<T> getInstance(Class<T> clazz, String name) {
+    if ((clazz == null) || (name == null)) {
+      throw new NullPointerException("The clazz and the name must not be null!");
+    }
+
     NamedDependency<T> dependency = new NamedDependency<>(clazz, name);
 
     dependency.setOrigin(Scope.GET_INSTANCE_REQUEST);
@@ -98,8 +108,13 @@ public abstract class Container {
    * @param annotation the associated annotation class that should be used to retrieve the instance
    * @param <T> the type of the requested instance
    * @return an {@code Optional} that either contains an instance or is empty
+   * @throws NullPointerException if class or annotation is {@code null}
    */
   public final <T> Optional<T> getInstance(Class<T> clazz, Class<? extends Annotation> annotation) {
+    if ((clazz == null) || (annotation == null)) {
+      throw new NullPointerException("The clazz and the annotation must not be null!");
+    }
+
     AnnotatedDependency<T> dependency = new AnnotatedDependency<>(clazz, annotation);
 
     dependency.setOrigin(Scope.GET_INSTANCE_REQUEST);
@@ -112,7 +127,7 @@ public abstract class Container {
    * container.
    * @return the parent container
    */
-  public Container getParentContainer() {
+  public final Container getParentContainer() {
     return parentContainer;
   }
 
@@ -145,6 +160,7 @@ public abstract class Container {
    * @param path the relative path to the descendant container
    * @return an {@code Optional} that either contains a container instance or is empty if there's no
    * descendant with the specified path
+   * @throws NullPointerException if the path is {@code null}
    */
   public final Optional<Container> getDescendant(String path) {
     if (path == null) {
@@ -159,20 +175,6 @@ public abstract class Container {
         new LinkedList<>(Arrays.asList(path.split(Risotto.CONTAINER_PATH_DELIMITER)));
 
     return getDescendantFromArray(fragmentList);
-  }
-
-  private Optional<Container> getDescendantFromArray(List<String> pathFragmentList) {
-    if (pathFragmentList.isEmpty()) {
-      return Optional.of(this);
-    }
-
-    Container child = childContainerMap.get(pathFragmentList.remove(0));
-
-    if (child == null) {
-      return Optional.empty();
-    }
-
-    return child.getDescendantFromArray(pathFragmentList);
   }
 
   /**
@@ -214,7 +216,7 @@ public abstract class Container {
    * @throws NullPointerException if the {@code instantiatableBinding} parameter is {@code null}
    * @see BasicBinding#bind(Class)
    */
-  protected void addBinding(InstantiatableBinding<?> instantiatableBinding) {
+  protected final void addBinding(InstantiatableBinding<?> instantiatableBinding) {
     if (instantiatableBinding == null) {
       throw new NullPointerException("The binding must not be null!");
     }
@@ -236,7 +238,7 @@ public abstract class Container {
    * post-order traversal of the container tree.
    * @throws DependencyResolutionFailedException if a dependency cannot be resolved
    */
-  /* package */ void performResolution() throws DependencyResolutionFailedException {
+  /* package */ final void performResolution() throws DependencyResolutionFailedException {
     for (Container childContainer : childContainerMap.values()) {
       childContainer.performResolution();
     }
@@ -256,7 +258,7 @@ public abstract class Container {
    * Gets the map of child containers.
    * @return the map of child containers
    */
-  /* package */ Map<String, Container> getChildContainerMap() {
+  /* package */ final Map<String, Container> getChildContainerMap() {
     return childContainerMap;
   }
 
@@ -264,7 +266,7 @@ public abstract class Container {
    * Gets the list of children added using {@link #addChild(ContainerSettings)}.
    * @return the list of configurable child containers
    */
-  /* package */ List<ContainerSettings> getConfigurableChildList() {
+  /* package */ final List<ContainerSettings> getConfigurableChildList() {
     return configurableChildList;
   }
 
@@ -274,7 +276,7 @@ public abstract class Container {
    * @param targetContainer the container the bindings should be imported to
    * @see Scope#isImportAllowedTo(Container)
    */
-  /* package */ void importBindingsTo(Container targetContainer) {
+  /* package */ final void importBindingsTo(Container targetContainer) {
     bindingList.stream()
         .filter(b -> b.isImportAllowedTo(targetContainer))
         .forEach(b -> targetContainer.bindingList.add(b));
@@ -324,5 +326,19 @@ public abstract class Container {
     InstantiatableBinding<?> binding = bindingOptional.get();
 
     return Optional.of(clazz.cast(binding.getInstance()));
+  }
+
+  private Optional<Container> getDescendantFromArray(List<String> pathFragmentList) {
+    if (pathFragmentList.isEmpty()) {
+      return Optional.of(this);
+    }
+
+    Container child = childContainerMap.get(pathFragmentList.remove(0));
+
+    if (child == null) {
+      return Optional.empty();
+    }
+
+    return child.getDescendantFromArray(pathFragmentList);
   }
 }

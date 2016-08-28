@@ -19,6 +19,7 @@ public class InstanceBinding<T> extends InstantiatableBinding<T> {
    * @param binding the binding to wrap
    * @param instance the associated instance
    * @param <I> the type of the instance, must be a subtype of the bound type
+   * @throws NullPointerException if a parameter is {@code null}
    */
   public <I extends T> InstanceBinding(Binding<T> binding, I instance) {
     super(binding);

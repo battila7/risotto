@@ -18,6 +18,7 @@ public class NamedBinding<T> extends TerminableBinding<T> {
    * Constructs a new binding, binding to the specified class with the specified name.
    * @param boundClass the bound class
    * @param name the name of the binding
+   * @throws NullPointerException if a parameter is {@code null}
    */
   public NamedBinding(Class<T> boundClass, String name) {
     super(boundClass);

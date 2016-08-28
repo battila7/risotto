@@ -11,6 +11,7 @@ import io.risotto.instantiation.Instantiator;
 import io.risotto.instantiation.InstantiatorFactory;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Abstract decorator class that can be used as a basis for bindings that can be used as sources of
@@ -29,11 +30,12 @@ public abstract class InstantiatableBinding<T> extends Binding<T> {
   /**
    * Constructs a new instance decorating the specified binding.
    * @param binding the binding to decorate
+   * @throws NullPointerException if the binding is {@code null}
    */
   public InstantiatableBinding(Binding<T> binding) {
     super(binding.getBoundedClass());
 
-    this.binding = binding;
+    this.binding = Objects.requireNonNull(binding);
 
     this.scopeClass = PublicScope.class;
   }
@@ -79,8 +81,13 @@ public abstract class InstantiatableBinding<T> extends Binding<T> {
    * behaviour of {@link #getInstance()}.
    * @param mode the new mode
    * @return the current instance
+   * @throws NullPointerException if the mode is {@code null}
    */
   public InstantiatableBinding<T> withMode(InstantiationMode mode) {
+    if (mode == null) {
+      throw new NullPointerException("The mode must not be null!");
+    }
+
     this.instantiator = InstantiatorFactory.decorateInstantiatorForMode(instantiator, mode);
 
     return this;
@@ -91,9 +98,10 @@ public abstract class InstantiatableBinding<T> extends Binding<T> {
    * {@link #isImportAllowedTo(Container)}.
    * @param scopeClass the scope to be used
    * @return the current instance
+   * @throws NullPointerException if the scope class is null
    */
   public InstantiatableBinding<T> withScope(Class<? extends Scope> scopeClass) {
-    this.scopeClass = scopeClass;
+    this.scopeClass = Objects.requireNonNull(scopeClass);
 
     return this;
   }
@@ -141,8 +149,9 @@ public abstract class InstantiatableBinding<T> extends Binding<T> {
   /**
    * Sets the actual scope instance used by the binding.
    * @param scope the scope instance
+   * @throws NullPointerException if the scope is {@code null}
    */
   public void setScope(Scope scope) {
-    this.scope = scope;
+    this.scope = Objects.requireNonNull(scope);
   }
 }

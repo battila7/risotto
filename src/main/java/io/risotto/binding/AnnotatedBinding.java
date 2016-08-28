@@ -22,6 +22,7 @@ public class AnnotatedBinding<T> extends TerminableBinding<T> {
    * annotation class.
    * @param boundClass the bound class
    * @param annotationClass the associated annotation class
+   * @throws NullPointerException if a parameter is {@code null}
    */
   public AnnotatedBinding(Class<T> boundClass, Class<? extends Annotation> annotationClass) {
     super(boundClass);
