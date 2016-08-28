@@ -9,7 +9,6 @@ import io.risotto.dependency.NamedDependency;
 import io.risotto.exception.DependencyResolutionFailedException;
 import io.risotto.exception.InvalidContainerNameException;
 import io.risotto.exception.ScopeInstantiationException;
-import io.risotto.reflection.ReflectionUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;

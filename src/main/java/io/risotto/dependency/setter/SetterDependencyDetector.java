@@ -8,7 +8,6 @@ import io.risotto.dependency.processor.ProcessorChain;
 import io.risotto.reflection.ReflectionUtils;
 
 import java.lang.reflect.Method;
-import java.sql.Ref;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
