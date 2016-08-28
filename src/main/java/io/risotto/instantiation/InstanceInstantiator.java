@@ -6,7 +6,7 @@ import io.risotto.binding.InstanceBinding;
  * {@code InstanceInstantiator} creates a brand new object on every request. In contrast to the
  * {@link SingletonInstantiator}, a new instance is injected into every reference to the type
  * bounded to this instantiator.
- *
+ * <p>
  * <b>Note</b> that this instantiator cannot be used in conjunction with {@link InstanceBinding}s.
  * @param <T> the type of the object to be instantiated
  */

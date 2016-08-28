@@ -13,7 +13,9 @@ import io.risotto.exception.ScopeInstantiationException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -23,9 +25,11 @@ import java.util.Optional;
  */
 public abstract class Container {
   /**
-   * The parent of the root container.
+   * Constant used as the parent of the root container.
    */
   public static final Container HAS_NO_PARENT = null;
+
+  private static final String EMPTY_STRING = "";
 
   private final Map<String, Container> childContainerMap;
 
@@ -53,7 +57,7 @@ public abstract class Container {
   /**
    * Returns an instance of the specified class if there's an appropriate binding in the current
    * container's context.
-   *
+   * <p>
    * If no instance can be returned, returns an empty {@code Optional}.
    * @param clazz the class of which an instance is requested
    * @param <T> the type of the requested instance
@@ -70,7 +74,7 @@ public abstract class Container {
   /**
    * Returns an instance of the specified class if there's an appropriate named binding with the
    * specified name in the current container's context.
-   *
+   * <p>
    * If no instance can be returned, returns an empty {@code Optional}.
    * @param clazz the class of which an instance is requested
    * @param name the associated name that should be used to retrieve the instance
@@ -88,7 +92,7 @@ public abstract class Container {
   /**
    * Returns an instance of the specified class if there's an appropriate annotated binding with the
    * specified annotation in the current container's context.
-   *
+   * <p>
    * If no instance can be returned, returns an empty {@code Optional}.
    * @param clazz the class of which an instance is requested
    * @param annotation the associated annotation class that should be used to retrieve the instance
@@ -104,7 +108,8 @@ public abstract class Container {
   }
 
   /**
-   * Gets the parent container or {@link Container#HAS_NO_PARENT} if there's no parent container.
+   * Gets the parent container or returns {@link Container#HAS_NO_PARENT} if there's no parent
+   * container.
    * @return the parent container
    */
   public Container getParentContainer() {
@@ -120,23 +125,54 @@ public abstract class Container {
   }
 
   /**
-   * Gets the child container with the specified name.
-   * @param name the name of the child container
+   * Gets the descendant container with the specified path relative to the current container. This
+   * means that only descendants of the current container are used for retrieval. The current
+   * container can be retrieved by passing the empty string to the method. Subsequent container
+   * names must be delimited with {@value Risotto#CONTAINER_PATH_DELIMITER}.
+   * <p>
+   * For example if you have the following container structure:
+   * <pre>
+   * <code>
+   *   A(current) &lt;- B &lt;- C &lt;- D
+   * </code>
+   * </pre>
+   * then you can retrieve {@code C} using
+   * <pre>
+   * <code>
+   *   container.getDescendant("B/C/D");
+   * </code>
+   * </pre>
+   * @param path the relative path to the descendant container
    * @return an {@code Optional} that either contains a container instance or is empty if there's no
-   * child with the specified name
+   * descendant with the specified path
    */
-  public final Optional<Container> getChild(String name) {
-    if (name == null) {
-      throw new NullPointerException("The name must not be null!");
+  public final Optional<Container> getDescendant(String path) {
+    if (path == null) {
+      throw new NullPointerException("The path must not be null!");
     }
 
-    Container container = childContainerMap.get(name);
+    if (EMPTY_STRING.equals(path)) {
+      return Optional.of(this);
+    }
 
-    if (container == null) {
+    List<String> fragmentList =
+        new LinkedList<>(Arrays.asList(path.split(Risotto.CONTAINER_PATH_DELIMITER)));
+
+    return getDescendantFromArray(fragmentList);
+  }
+
+  private Optional<Container> getDescendantFromArray(List<String> pathFragmentList) {
+    if (pathFragmentList.isEmpty()) {
+      return Optional.of(this);
+    }
+
+    Container child = childContainerMap.get(pathFragmentList.remove(0));
+
+    if (child == null) {
       return Optional.empty();
     }
 
-    return Optional.of(container);
+    return child.getDescendantFromArray(pathFragmentList);
   }
 
   /**
@@ -154,12 +190,10 @@ public abstract class Container {
    * ContainerSettings} object that will be used to add a new child instance).
    * @param containerSettings the settings of the new child container
    * @throws NullPointerException if the {@code containerSettings} parameter is {@code null}
-   * @throws InvalidContainerNameException if the name set in the parameter is already used or
-   * invalid
+   * @throws InvalidContainerNameException if the name set in the parameter is already used
    * @see ContainerSettings#container(Class)
    */
-  protected final void addChild(ContainerSettings containerSettings)
-      throws InvalidContainerNameException {
+  protected final void addChild(ContainerSettings containerSettings) {
     if (containerSettings == null) {
       throw new NullPointerException("The container settings parameter must not be null!");
     }

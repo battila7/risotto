@@ -2,9 +2,10 @@ package io.risotto.exception;
 
 /**
  * This kind of exception occurs when a specific child container name is already assigned to another
- * child container.
+ * child container or is invalid. A valid container name does not contain the {@code /} character
+ * and any whitespace and must be at least one character long.
  */
-public class InvalidContainerNameException extends Exception {
+public class InvalidContainerNameException extends RuntimeException {
   private static final String MESSAGE = "The desired container name is invalid or already in use: ";
 
   private final String name;

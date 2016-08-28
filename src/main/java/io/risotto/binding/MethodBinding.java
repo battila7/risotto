@@ -6,7 +6,19 @@ import io.risotto.instantiation.MethodInstantiator;
 
 import java.lang.reflect.Method;
 
+/**
+ * Binding that can be associated with <i>binding supplier</i> methods. Primarily used by
+ * {@link io.risotto.configurator.BindingConfigurator}.
+ * @param <T> the bound type
+ */
 public class MethodBinding<T> extends InstantiatableBinding<T> {
+  /**
+   * Constructs a new binding wrapping the passed binding and using the specified
+   * container and method.
+   * @param binding the binding to be wrapped
+   * @param container the container that declares the binding supplier method
+   * @param method the binding supplier method
+   */
   public MethodBinding(Binding<T> binding, Container container, Method method) {
     super(binding);
 

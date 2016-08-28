@@ -25,25 +25,25 @@ import java.util.stream.Collectors;
 /**
  * {@code BindingConfigurator} can inspect container classes and add bindings to them by detecting
  * their <i>binding supplier methods</i>.
- *
+ * <p>
  * A binding supplier method is annotated with the {@link BindingSupplier} annotation and may be
  * annotated with other binding-related annotations such as {@link WithScope} or {@link WithMode}.
  * The return type of the method will be turned into the bound type of the resulting binding. Method
  * parameters will be dependencies of the binding. Parameter dependencies are detected the same way
  * as in the case of setter methods, so the {@link Named} annotation and inject specifier
  * annotations can be freely used.
- *
+ * <p>
  * Furthermore, the {@code Named} and inject specifier annotations can be placed on binding supplier
  * methods too to emulate {@link BasicBinding#as(String)} and {@link
  * BasicBinding#withAnnotation(Class)}.
- *
+ * <p>
  * An example binding supplier method:
  * <pre>
  * <code>
- *   @Binding
- *   @WithScope(PrivateScope.class)
- *   @Named("xmlMessageLoader")
- *   public MessageLoader messagePath(@MessagePath String path) {
+ *   &#64;BindingSupplier
+ *   &#64;WithScope(PrivateScope.class)
+ *   &#64;Named("xmlMessageLoader")
+ *   public MessageLoader messagePath(&#64;MessagePath String path) {
  *     return new XmlMessageLoader(path);
  *   }
  * </code>

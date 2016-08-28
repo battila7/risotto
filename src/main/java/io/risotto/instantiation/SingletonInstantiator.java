@@ -5,7 +5,7 @@ package io.risotto.instantiation;
  * frequent that only one instance of a class should be used every where - that's the problem the
  * singleton pattern tries to solve. However making lots of classes singletons is considered an
  * anti-pattern.
- *
+ * <p>
  * In such situations {@code SingletionInstantiator} can be used because it ensures that only one
  * instance of a specific class exists in a container.
  * @param <T> the type of the cached instance

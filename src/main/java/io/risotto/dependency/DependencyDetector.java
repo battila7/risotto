@@ -14,7 +14,7 @@ import java.util.Optional;
  * immediate dependencies. Currently there are three strategies implemented: constructor, setter
  * method and field-based dependency detection. All of these strategies are driven by the {@link
  * Inject} annotation.
- *
+ * <p>
  * Detectors must be able to return an injector that can perform dependency injection (and therefore
  * instantiation) on the class on which dependency detection took place.
  * @param <T> the type to dependency detect
