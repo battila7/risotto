@@ -35,8 +35,8 @@ public class MethodBinding<T> extends InstantiatableBinding<T> {
     @SuppressWarnings("unchecked")
     Class<T> returnType = (Class<T>)method.getReturnType();
 
-    this.instantiator = InstantiatorFactory.decorateWithDefaultInstantiator(
-            new MethodInstantiator<>(returnType, container, method));
+    this.instantiator = InstantiatorFactory.decorateInstantiatorForMode(
+            new MethodInstantiator<>(returnType, container, method), instantiationMode);
   }
 
   @Override

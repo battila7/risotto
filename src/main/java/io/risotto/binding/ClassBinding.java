@@ -27,7 +27,8 @@ public class ClassBinding<T> extends InstantiatableBinding<T> {
     this.targetClass = Objects.requireNonNull(targetClass, "The target class must not be null!");
 
     instantiator = InstantiatorFactory
-        .decorateWithDefaultInstantiator(new DependencyInjectionInstantiator<>(targetClass));
+        .decorateInstantiatorForMode(new DependencyInjectionInstantiator<>(targetClass),
+            instantiationMode);
   }
 
   /**
