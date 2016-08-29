@@ -79,6 +79,15 @@ public class Dependency<T> {
   }
 
   @Override
+  public String toString() {
+    return "Dependency{" +
+        "boundedClass=" + boundedClass +
+        ", origin=" + origin +
+        ", resolvingBinding=" + resolvingBinding +
+        '}';
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (this == o) {
       return true;
@@ -89,11 +98,22 @@ public class Dependency<T> {
 
     Dependency<?> that = (Dependency<?>) o;
 
-    return boundedClass.equals(that.boundedClass);
+    if (!boundedClass.equals(that.boundedClass)) {
+      return false;
+    }
+    if (origin != null ? !origin.equals(that.origin) : that.origin != null) {
+      return false;
+    }
+    return resolvingBinding != null ? resolvingBinding.equals(that.resolvingBinding)
+        : that.resolvingBinding == null;
+
   }
 
   @Override
   public int hashCode() {
-    return boundedClass.hashCode();
+    int result = boundedClass.hashCode();
+    result = 31 * result + (origin != null ? origin.hashCode() : 0);
+    result = 31 * result + (resolvingBinding != null ? resolvingBinding.hashCode() : 0);
+    return result;
   }
 }
