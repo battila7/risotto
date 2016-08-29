@@ -60,4 +60,9 @@ public class BasicBinding<T> extends TerminableBinding<T> {
   public AnnotatedBinding<T> withAnnotation(Class<? extends Annotation> annotationClass) {
     return new AnnotatedBinding<>(boundedClass, annotationClass);
   }
+
+  @Override
+  public String toString() {
+    return "BasicBinding{boundedClass=" + boundedClass + "}";
+  }
 }

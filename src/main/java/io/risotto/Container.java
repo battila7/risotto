@@ -41,6 +41,8 @@ public abstract class Container {
 
   private Container parentContainer;
 
+  private String name;
+
   /**
    * Constructs a new {@code Container} instance.
    */
@@ -129,6 +131,14 @@ public abstract class Container {
    */
   public final Container getParentContainer() {
     return parentContainer;
+  }
+
+  /**
+   * Gets the name of the container.
+   * @return the name of the container
+   */
+  public final String getName() {
+    return name;
   }
 
   /**
@@ -255,6 +265,14 @@ public abstract class Container {
   }
 
   /**
+   * Sets the name of the container.
+   * @param name the name of the container
+   */
+  /* package */ final void setName(String name) {
+    this.name = name;
+  }
+
+  /**
    * Gets the map of child containers.
    * @return the map of child containers
    */
@@ -340,5 +358,13 @@ public abstract class Container {
     }
 
     return child.getDescendantFromArray(pathFragmentList);
+  }
+
+  @Override
+  public String toString() {
+    return "Container{" +
+        ", name='" + name + '\'' +
+        "parentContainer=" + parentContainer +
+        '}';
   }
 }

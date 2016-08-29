@@ -41,6 +41,13 @@ public class AnnotatedDependency<T> extends Dependency<T> {
   }
 
   @Override
+  public String toString() {
+    return "AnnotatedDependency{" +
+        "annotation=" + annotation +
+        "} " + super.toString();
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (this == o) {
       return true;

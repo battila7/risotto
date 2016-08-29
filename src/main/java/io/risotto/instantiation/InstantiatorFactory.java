@@ -29,15 +29,12 @@ public final class InstantiatorFactory {
   }
 
   /**
-   * Returns a decorated instantiator decorated with the default decorator implementation.
-   * @param instantiator the instantiator to decorate
-   * @param <T> the requested instance's type
-   * @return the decorated instantiator
+   * Gets the default instantiation mode. This it the mode that will be assigned to every {@code
+   * InstantiatableBinding} at creation.
+   * @return the default instantiation mode
    */
-  public static <T> Instantiator<T> decorateWithDefaultInstantiator(Instantiator<T> instantiator) {
-    Instantiator<T> base = instantiator.getBaseInstantiator();
-
-    return new SingletonInstantiator<>(base);
+  public static InstantiationMode getDefaultInstantiationMode() {
+    return InstantiationMode.SINGLETON;
   }
 
   private InstantiatorFactory() {

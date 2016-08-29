@@ -23,6 +23,8 @@ public abstract class InstantiatableBinding<T> extends Binding<T> {
 
   protected Instantiator<? extends T> instantiator;
 
+  protected InstantiationMode instantiationMode;
+
   private Class<? extends Scope> scopeClass;
 
   private Scope scope;
@@ -38,6 +40,8 @@ public abstract class InstantiatableBinding<T> extends Binding<T> {
     this.binding = Objects.requireNonNull(binding);
 
     this.scopeClass = PublicScope.class;
+
+    this.instantiationMode = InstantiatorFactory.getDefaultInstantiationMode();
   }
 
   /**
@@ -46,6 +50,14 @@ public abstract class InstantiatableBinding<T> extends Binding<T> {
    */
   public T getInstance() {
     return instantiator.getInstance();
+  }
+
+  /**
+   * Gets the instantiation mode associated with the binding.
+   * @return the associated instantiation mode
+   */
+  public InstantiationMode getInstantiationMode() {
+    return instantiationMode;
   }
 
   /**
@@ -153,5 +165,48 @@ public abstract class InstantiatableBinding<T> extends Binding<T> {
    */
   public void setScope(Scope scope) {
     this.scope = Objects.requireNonNull(scope);
+  }
+
+  @Override
+  public String toString() {
+    return "InstantiatableBinding{" +
+        "scopeClass=" + scopeClass +
+        ", instantiationMode=" + instantiationMode +
+        ", instantiator=" + instantiator +
+        ", binding=" + binding +
+        "} " + super.toString();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
+
+    InstantiatableBinding<?> that = (InstantiatableBinding<?>) o;
+
+    if (!binding.equals(that.binding)) {
+      return false;
+    }
+    if (instantiationMode != that.instantiationMode) {
+      return false;
+    }
+    return scopeClass.equals(that.scopeClass);
+
+  }
+
+  @Override
+  public int hashCode() {
+    int result = super.hashCode();
+    result = 31 * result + binding.hashCode();
+    result = 31 * result + instantiationMode.hashCode();
+    result = 31 * result + scopeClass.hashCode();
+    return result;
   }
 }

@@ -51,4 +51,36 @@ public class NamedBinding<T> extends TerminableBinding<T> {
   public String getName() {
     return name;
   }
+
+  @Override
+  public String toString() {
+    return "NamedBinding{" +
+        "name='" + name + '\'' +
+        "} " + super.toString();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
+
+    NamedBinding<?> that = (NamedBinding<?>) o;
+
+    return name.equals(that.name);
+
+  }
+
+  @Override
+  public int hashCode() {
+    int result = super.hashCode();
+    result = 31 * result + name.hashCode();
+    return result;
+  }
 }
