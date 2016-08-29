@@ -37,4 +37,36 @@ public class ClassBinding<T> extends InstantiatableBinding<T> {
   public Class<? extends T> getTargetClass() {
     return targetClass;
   }
+
+  @Override
+  public String toString() {
+    return "ClassBinding{" +
+        "targetClass=" + targetClass +
+        "} " + super.toString();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
+
+    ClassBinding<?> that = (ClassBinding<?>) o;
+
+    return targetClass.equals(that.targetClass);
+
+  }
+
+  @Override
+  public int hashCode() {
+    int result = super.hashCode();
+    result = 31 * result + targetClass.hashCode();
+    return result;
+  }
 }

@@ -39,4 +39,23 @@ public abstract class Binding<T> {
   public Class<T> getBoundedClass() {
     return boundedClass;
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Binding<?> binding = (Binding<?>) o;
+
+    return boundedClass.equals(binding.boundedClass);
+  }
+
+  @Override
+  public int hashCode() {
+    return boundedClass.hashCode();
+  }
 }

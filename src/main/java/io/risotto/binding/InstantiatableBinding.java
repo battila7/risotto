@@ -154,4 +154,41 @@ public abstract class InstantiatableBinding<T> extends Binding<T> {
   public void setScope(Scope scope) {
     this.scope = Objects.requireNonNull(scope);
   }
+
+  @Override
+  public String toString() {
+    return "InstantiatableBinding{" +
+        "binding=" + binding +
+        ", instantiator=" + instantiator +
+        ", scopeClass=" + scopeClass +
+        '}';
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
+
+    InstantiatableBinding<?> that = (InstantiatableBinding<?>) o;
+
+    if (!binding.equals(that.binding)) {
+      return false;
+    }
+    return scopeClass.equals(that.scopeClass);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = super.hashCode();
+    result = 31 * result + binding.hashCode();
+    result = 31 * result + scopeClass.hashCode();
+    return result;
+  }
 }
