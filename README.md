@@ -1,7 +1,11 @@
 # Risotto
 [![Build Status](https://travis-ci.org/battila7/risotto.svg?branch=master)](https://travis-ci.org/battila7/risotto)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/e5d73d8dcd744407ac39a7ed53e72deb)](https://www.codacy.com/app/bagossyattila_2/risotto?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=battila7/risotto&amp;utm_campaign=Badge_Grade)
+<<<<<<< HEAD
+[![Stories in Ready](https://badge.waffle.io/battila7/risotto.png?label=ready&title=Ready)](https://waffle.io/battila7/risotto)
+=======
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/battila7/risotto/blob/master/LICENSE)
+>>>>>>> release-1.2.0
 [![Beerpay](https://beerpay.io/battila7/risotto/badge.svg)](https://beerpay.io/battila7/risotto)
 
 Risotto allows you to create delicious applications whatever your ingredients are.
