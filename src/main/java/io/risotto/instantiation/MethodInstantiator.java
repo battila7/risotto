@@ -110,6 +110,8 @@ public class MethodInstantiator<T> implements Instantiator<T> {
   }
 
   private class MethodDependencyInjector extends DependencyInjector<T> {
+    private final Logger logger = LoggerFactory.getLogger(MethodDependencyInjector.class);
+
     private final List<Dependency<?>> dependencies;
 
     MethodDependencyInjector(Class<T> instantiatableClass,
@@ -122,6 +124,8 @@ public class MethodInstantiator<T> implements Instantiator<T> {
     @Override
     @SuppressWarnings("unchecked")
     public T createInstance() {
+      logger.debug("Retrieving instance of {} using method call {}", instantiatableClass, method);
+
       try {
         List<Object> bindingResults = new ArrayList<>();
 
