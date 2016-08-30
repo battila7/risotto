@@ -2,14 +2,14 @@ package io.risotto.instantiation;
 
 import io.risotto.annotations.Clone;
 import io.risotto.exception.PrototypeCloneException;
+import io.risotto.reflection.ReflectionUtils;
 
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
-import reflection.ReflectionUtils;
 
 /**
- * Cloner class that utilizes a copy constructor to produce clones. The copy constructor must be
- * a public constructor of the class with the {@link Clone} annotation present. The constructor
+ * Cloner class that utilizes a copy constructor to produce clones. The copy constructor must be a
+ * <b>public</b> constructor of the class with the {@link Clone} annotation present. The constructor
  * may only have a single parameter with the same type of the object itself.
  * @param <T> the type of the object to be cloned
  */
@@ -39,7 +39,7 @@ class ConstructorPrototypeCloner<T> extends PrototypeCloner<T> {
 
     try {
       return copyConstructor.newInstance(prototype);
-    } catch (Exception e) {
+    } catch (ReflectiveOperationException | IllegalArgumentException e) {
       throw new PrototypeCloneException(e);
     }
   }
@@ -48,8 +48,8 @@ class ConstructorPrototypeCloner<T> extends PrototypeCloner<T> {
   private Constructor<T> detectCopyConstructor() {
     try {
       Constructor<?> constructor =
-          Arrays.stream(cloneableClass.getDeclaredConstructors())
-              .filter(c -> c.isAnnotationPresent(Clone.class))
+          Arrays.stream(cloneableClass.getConstructors())
+              .filter(c -> ReflectionUtils.isAnnotationDirectlyPresent(c, Clone.class))
               .filter(c -> c.getParameterCount() == 1)
               .filter(c -> c.getParameterTypes()[0] == cloneableClass)
               .filter(ReflectionUtils::isPublicNotStaticNotFinal)
@@ -59,7 +59,7 @@ class ConstructorPrototypeCloner<T> extends PrototypeCloner<T> {
         constructor.setAccessible(true);
       }
 
-      return (Constructor<T>)constructor;
+      return (Constructor<T>) constructor;
     } catch (SecurityException e) {
       return null;
     }

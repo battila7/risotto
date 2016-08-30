@@ -18,6 +18,7 @@ public class NamedBinding<T> extends TerminableBinding<T> {
    * Constructs a new binding, binding to the specified class with the specified name.
    * @param boundClass the bound class
    * @param name the name of the binding
+   * @throws NullPointerException if a parameter is {@code null}
    */
   public NamedBinding(Class<T> boundClass, String name) {
     super(boundClass);
@@ -39,11 +40,8 @@ public class NamedBinding<T> extends TerminableBinding<T> {
 
     NamedDependency<?> namedDependency = (NamedDependency<?>) dependency;
 
-    if (!(namedDependency.getName().equals(name))) {
-      return false;
-    }
-
-    return dependency.getBoundedClass().isAssignableFrom(boundedClass);
+    return namedDependency.getName().equals(name)
+        && namedDependency.getBoundedClass().isAssignableFrom(boundedClass);
   }
 
   /**
@@ -52,5 +50,37 @@ public class NamedBinding<T> extends TerminableBinding<T> {
    */
   public String getName() {
     return name;
+  }
+
+  @Override
+  public String toString() {
+    return "NamedBinding{" +
+        "name='" + name + '\'' +
+        "} " + super.toString();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
+
+    NamedBinding<?> that = (NamedBinding<?>) o;
+
+    return name.equals(that.name);
+
+  }
+
+  @Override
+  public int hashCode() {
+    int result = super.hashCode();
+    result = 31 * result + name.hashCode();
+    return result;
   }
 }

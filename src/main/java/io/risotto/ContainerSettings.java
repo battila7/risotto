@@ -1,15 +1,21 @@
 package io.risotto;
 
 import io.risotto.configurator.Configurator;
+import io.risotto.exception.InvalidContainerNameException;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 /**
  * This class hold the settings needed for container instantiation and configuration.
  */
 public final class ContainerSettings {
+  private static final Predicate<String> containerNamePredicate =
+      Pattern.compile("[^/\\s]+").asPredicate();
+
   private final Class<? extends Container> containerClass;
 
   private final List<Configurator> configuratorList;
@@ -20,8 +26,13 @@ public final class ContainerSettings {
    * Creates a new {@code ContainerSettings} object using the specified container class.
    * @param containerClass the container class to be instantiated
    * @return a new {@code ContainerSettings} object
+   * @throws NullPointerException if the continer class is {@code null}
    */
   public static ContainerSettings container(Class<? extends Container> containerClass) {
+    if (containerClass == null) {
+      throw new NullPointerException("The container class must not be null!");
+    }
+
     return new ContainerSettings(containerClass);
   }
 
@@ -38,8 +49,18 @@ public final class ContainerSettings {
    * @param name The name of the container. Must be a unique container name in the parent container
    * of the container to be instantiated.
    * @return the current {@code ContainerSettings} instance
+   * @throws InvalidContainerNameException if the specified name is invalid
+   * @throws NullPointerException if the name is {@code null}
    */
   public ContainerSettings as(String name) {
+    if (name == null) {
+      throw new NullPointerException("The name must not be null!");
+    }
+
+    if (!containerNamePredicate.test(name)) {
+      throw new InvalidContainerNameException(name);
+    }
+
     this.name = name;
 
     return this;
@@ -79,5 +100,13 @@ public final class ContainerSettings {
    */
   public String getName() {
     return name;
+  }
+
+  @Override
+  public String toString() {
+    return "ContainerSettings{" +
+        "containerClass=" + containerClass +
+        ", name='" + name + '\'' +
+        '}';
   }
 }

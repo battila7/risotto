@@ -8,18 +8,17 @@ import io.risotto.dependency.Dependency;
  * With {@code Scope} the visibility and importation of the bindings can be fine-grained. Besides
  * the default {@code Scope} implementations, custom scopes can be added to bindings using the
  * {@link InstantiatableBinding#withScope(Class)} method.
- *
- * Dependencies and bindings (through {@code Scope} instances) have origin containers. Scopes
- * define whether a binding is visible to a dependency coming from a specific origin container.
- * Furthermore scopes allow bindings to be imported to child containers so that child containers
- * can reach the bindings of their parent container.
+ * <p>
+ * Dependencies and bindings (through {@code Scope} instances) have origin containers. Scopes define
+ * whether a binding is visible to a dependency coming from a specific origin container. Furthermore
+ * scopes allow bindings to be imported to child containers so that child containers can reach the
+ * bindings of their parent container.
  */
 public abstract class Scope {
   /**
-   * Enables the detection of requests that come from outside of the container tree and
-   * enables scopes to alter the visibility of the underlying binding based on whether the request
-   * was made by the library itself or by user code.
-   *
+   * Enables the detection of requests that come from outside of the container tree and enables
+   * scopes to alter the visibility of the underlying binding based on whether the request was made
+   * by the library itself or by user code.
    * @see Container#getInstance(Class)
    */
   public static final Container GET_INSTANCE_REQUEST = null;
@@ -27,8 +26,8 @@ public abstract class Scope {
   protected Container origin;
 
   /**
-   * Gets the origin container of the {@code Scope}. The origin container is the container
-   * in which the scope object was created.
+   * Gets the origin container of the {@code Scope}. The origin container is the container in which
+   * the scope object was created.
    * @return the origin container
    */
   public final Container getOrigin() {
@@ -44,8 +43,8 @@ public abstract class Scope {
   }
 
   /**
-   * Checks whether the scope allows importation from its origin container to
-   * the specified target container.
+   * Checks whether the scope allows importation from its origin container to the specified target
+   * container.
    * @param targetContainer the container the import is requested into
    * @return whether the import is allowed or not
    */

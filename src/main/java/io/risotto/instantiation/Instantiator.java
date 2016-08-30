@@ -17,15 +17,15 @@ public interface Instantiator<T> {
   T getInstance();
 
   /**
-   * Gets the actual {@code Instantiator} used by the current {@code Instantiator}. When there is
-   * no base instantiator, {@code null} should be returned.
+   * Gets the actual {@code Instantiator} used by the current {@code Instantiator}. When there is no
+   * base instantiator, {@code null} should be returned.
    * @return the base instantiator of the current instance
    */
   Instantiator<T> getBaseInstantiator();
 
   /**
-   * Gets the list of {@code Dependency} objects that should be resolved before object
-   * instantiation can take place. Only immediate dependencies are returned.
+   * Gets the list of {@code Dependency} objects that should be resolved before object instantiation
+   * can take place. Only immediate dependencies are returned.
    * @return the list of immediate dependencies
    */
   List<Dependency<?>> getImmediateDependencies();

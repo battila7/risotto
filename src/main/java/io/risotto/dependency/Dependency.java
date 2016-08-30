@@ -13,11 +13,11 @@ import io.risotto.binding.InstantiatableBinding;
  * fields with the {@code Inject} annotation can produce new dependencies. These are the immediate
  * dependencies of a class. Only immediate dependencies are detected because eventually an immediate
  * dependency of a specific class might be a second or third-level dependency of another class.
- *
- * When configuring containers, all the dependencies of the classes are collected and placed in a set
- * (that means, there are no duplicates). The dependencies in this set can be resolved in an undefined
- * order using the bindings created in or imported into the container.
- *
+ * <p>
+ * When configuring containers, all the dependencies of the classes are collected and placed in a
+ * set (that means, there are no duplicates). The dependencies in this set can be resolved in an
+ * undefined order using the bindings created in or imported into the container.
+ * <p>
  * A specific instance of {@code Dependency} can only be resolved by {@link BasicBinding} objects
  * binding a child type of the type represented by the {@code Dependency}.
  * @param <T> the type represented by the dependency
@@ -70,12 +70,21 @@ public class Dependency<T> {
   }
 
   /**
-   * Sets the binding that is able to resolve the dependency. This binding is found when
-   * dependency resolution is performed.
+   * Sets the binding that is able to resolve the dependency. This binding is found when dependency
+   * resolution is performed.
    * @param resolvingBinding the binding that can resolve the dependency
    */
   public void setResolvingBinding(InstantiatableBinding<?> resolvingBinding) {
     this.resolvingBinding = resolvingBinding;
+  }
+
+  @Override
+  public String toString() {
+    return "Dependency{" +
+        "boundedClass=" + boundedClass +
+        ", origin=" + origin +
+        ", resolvingBinding=" + resolvingBinding +
+        '}';
   }
 
   @Override
@@ -89,11 +98,22 @@ public class Dependency<T> {
 
     Dependency<?> that = (Dependency<?>) o;
 
-    return boundedClass.equals(that.boundedClass);
+    if (!boundedClass.equals(that.boundedClass)) {
+      return false;
+    }
+    if (origin != null ? !origin.equals(that.origin) : that.origin != null) {
+      return false;
+    }
+    return resolvingBinding != null ? resolvingBinding.equals(that.resolvingBinding)
+        : that.resolvingBinding == null;
+
   }
 
   @Override
   public int hashCode() {
-    return boundedClass.hashCode();
+    int result = boundedClass.hashCode();
+    result = 31 * result + (origin != null ? origin.hashCode() : 0);
+    result = 31 * result + (resolvingBinding != null ? resolvingBinding.hashCode() : 0);
+    return result;
   }
 }

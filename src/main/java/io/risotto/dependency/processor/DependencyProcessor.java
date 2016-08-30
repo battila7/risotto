@@ -45,8 +45,8 @@ public abstract class DependencyProcessor {
   }
 
   /**
-   * Processes a {@code Field} and produces a new dependency. Returns an empty {@code Optional}
-   * upon failure, otherwise, a dependency object is wrapped in the returned {@code Optional}.
+   * Processes a {@code Field} and produces a new dependency. Returns an empty {@code Optional} upon
+   * failure, otherwise, a dependency object is wrapped in the returned {@code Optional}.
    * @param field the method to process
    * @return an {@code Optional} with the resulting dependency
    */

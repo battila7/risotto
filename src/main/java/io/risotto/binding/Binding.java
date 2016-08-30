@@ -7,7 +7,7 @@ import java.util.Objects;
 /**
  * Bindings are the objects that can resolve dependencies. Each binding has a bound type. Bindings
  * can resolve dependencies of their supertypes.
- *
+ * <p>
  * When there are multiple bindings to the same type, named or annotated bindings/dependencies could
  * be used to ensure that a specific binding is used to resolve a dependency. Otherwise it's
  * unpredictable which binding will be used to resolve the dependency.
@@ -19,6 +19,7 @@ public abstract class Binding<T> {
   /**
    * Constructs a new binding, binding to the specified class
    * @param boundClass the bound class
+   * @throws NullPointerException if the bounded class is {@code null}
    */
   public Binding(Class<T> boundClass) {
     this.boundedClass = Objects.requireNonNull(boundClass, "The bounded class must not be null!");
@@ -37,5 +38,24 @@ public abstract class Binding<T> {
    */
   public Class<T> getBoundedClass() {
     return boundedClass;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Binding<?> binding = (Binding<?>) o;
+
+    return boundedClass.equals(binding.boundedClass);
+  }
+
+  @Override
+  public int hashCode() {
+    return boundedClass.hashCode();
   }
 }

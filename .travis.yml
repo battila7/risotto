@@ -1,8 +1,12 @@
 language: java
 jdk:
   - oraclejdk8
+before_install:
+  - chmod +x gradlew
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -rf $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
-    - $HOME/.m2
-before_cache:
-  - mvn build-helper:remove-project-artifact
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/

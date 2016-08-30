@@ -3,8 +3,10 @@ package io.risotto.dependency.setter;
 import io.risotto.dependency.Dependency;
 import io.risotto.dependency.DependencyInjector;
 import io.risotto.exception.InstantiationFailedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Map;
 
@@ -14,6 +16,8 @@ import java.util.Map;
  * @param <T> the target type of dependency injection
  */
 public class SetterDependencyInjector<T> extends DependencyInjector<T> {
+  private static final Logger logger = LoggerFactory.getLogger(SetterDependencyInjector.class);
+
   private final Map<Method, Dependency<?>> methodMap;
 
   /**
@@ -30,8 +34,14 @@ public class SetterDependencyInjector<T> extends DependencyInjector<T> {
 
   @Override
   public T createInstance() {
+    logger.debug("Creating new instance of {}", instantiatableClass);
+
     try {
-      T instance = instantiatableClass.newInstance();
+      Constructor<T> defaultConstructor = instantiatableClass.getConstructor();
+
+      defaultConstructor.setAccessible(true);
+
+      T instance = defaultConstructor.newInstance();
 
       for (Map.Entry<Method, Dependency<?>> pair : methodMap.entrySet()) {
         Method method = pair.getKey();
@@ -42,7 +52,7 @@ public class SetterDependencyInjector<T> extends DependencyInjector<T> {
       }
 
       return instance;
-    } catch (InstantiationException | IllegalAccessException | InvocationTargetException | InstantiationFailedException e) {
+    } catch (SecurityException | ReflectiveOperationException | IllegalArgumentException | InstantiationFailedException e) {
       throw new InstantiationFailedException(instantiatableClass, e);
     }
   }

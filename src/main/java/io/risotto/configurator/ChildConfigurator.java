@@ -6,6 +6,8 @@ import io.risotto.Container;
 import io.risotto.ContainerSettings;
 import io.risotto.annotations.Child;
 import io.risotto.exception.ContainerConfigurationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 
@@ -14,6 +16,8 @@ import java.lang.reflect.Method;
  * {@link Container#addChild(ContainerSettings)} under the hood.
  */
 public class ChildConfigurator implements Configurator {
+  private static final Logger logger = LoggerFactory.getLogger(ChildConfigurator.class);
+
   private static final String EMPTY_STRING = "";
 
   private static final String ADD_CHILD_METHOD_NAME = "addChild";
@@ -21,7 +25,7 @@ public class ChildConfigurator implements Configurator {
   @Override
   public void configure(Container containerInstance, Class<? extends Container> containerClass)
       throws ContainerConfigurationException {
-    Child[] annotations = containerClass.getAnnotationsByType(Child.class);
+    Child[] annotations = containerClass.getDeclaredAnnotationsByType(Child.class);
 
     Method addChildMethod = getAddChildMethod(containerInstance, containerClass);
 
@@ -35,12 +39,12 @@ public class ChildConfigurator implements Configurator {
     ContainerSettings childSettings = container(annotation.containerClass());
 
     if (!annotation.name().equals(EMPTY_STRING)) {
-      childSettings.as(annotation.name());
+      childSettings = childSettings.as(annotation.name());
     }
 
     try {
       addChildMethod.invoke(containerInstance, childSettings);
-    } catch (Exception e) {
+    } catch (ReflectiveOperationException | IllegalArgumentException e) {
       throw new ContainerConfigurationException(containerInstance, e);
     }
   }
@@ -57,7 +61,7 @@ public class ChildConfigurator implements Configurator {
       addChildMethod.setAccessible(true);
 
       return addChildMethod;
-    } catch (Exception e) {
+    } catch (SecurityException | NoSuchMethodException e) {
       throw new ContainerConfigurationException(containerInstance, e);
     }
   }

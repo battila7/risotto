@@ -5,6 +5,9 @@ import io.risotto.dependency.Dependency;
 import io.risotto.dependency.DependencyDetector;
 import io.risotto.dependency.processor.DependencyProcessor;
 import io.risotto.dependency.processor.ProcessorChain;
+import io.risotto.reflection.ReflectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -14,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import reflection.ReflectionUtils;
 
 /**
  * Detector implementation that inspects <b>public</b> setter methods of a class and looks for the
@@ -27,6 +29,10 @@ import reflection.ReflectionUtils;
  * @param <T> the type to dependency detect
  */
 public class SetterDependencyDetector<T> extends DependencyDetector<T> {
+  private static final Logger logger = LoggerFactory.getLogger(SetterDependencyDetector.class);
+
+  private static final String SETTER_METHOD_NAME_PREFIX = "set";
+
   /**
    * Constructs a new instance that will be used to detect the dependencies of the specified class.
    * @param clazz the dependency detectable class
@@ -45,9 +51,13 @@ public class SetterDependencyDetector<T> extends DependencyDetector<T> {
 
     List<Method> injectableMethods = getInjectableMethods();
 
-    if (injectableMethods.size() == 0) {
+    if (injectableMethods.isEmpty()) {
+      logger.debug("Could not detect injectable setter methods for {}", clazz);
+
       return Optional.empty();
     }
+
+    logger.debug("Methods {} detected for {}", methodMap.keySet(), clazz);
 
     for (Method method : injectableMethods) {
       Optional<Dependency<?>> dependencyOptional = processorChain.process(method);
@@ -67,10 +77,10 @@ public class SetterDependencyDetector<T> extends DependencyDetector<T> {
   }
 
   private List<Method> getInjectableMethods() {
-    return Arrays.stream(clazz.getDeclaredMethods())
-        .filter(m -> m.isAnnotationPresent(Inject.class))
+    return Arrays.stream(clazz.getMethods())
+        .filter(ReflectionUtils::isInjectDirectlyPresent)
         .filter(m -> m.getParameterCount() == 1)
-        .filter(m -> m.getName().startsWith("set"))
+        .filter(m -> m.getName().startsWith(SETTER_METHOD_NAME_PREFIX))
         .filter(ReflectionUtils::isMethodInjectable)
         .collect(Collectors.toList());
   }

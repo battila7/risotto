@@ -27,8 +27,8 @@ public class BasicBinding<T> extends TerminableBinding<T> {
 
   /**
    * Returns whether the binding can resolve the specified dependency. Returns {@code true} if the
-   * class bound by this binding is a <b>subclass</b> of the class held in the dependency, {@code false}
-   * otherwise.
+   * class bound by this binding is a <b>subclass</b> of the class held in the dependency, {@code
+   * false} otherwise.
    * @param dependency the dependency to resolve
    * @return whether the binding can resolve the dependency
    */
@@ -59,5 +59,10 @@ public class BasicBinding<T> extends TerminableBinding<T> {
    */
   public AnnotatedBinding<T> withAnnotation(Class<? extends Annotation> annotationClass) {
     return new AnnotatedBinding<>(boundedClass, annotationClass);
+  }
+
+  @Override
+  public String toString() {
+    return "BasicBinding{boundedClass=" + boundedClass + "}";
   }
 }

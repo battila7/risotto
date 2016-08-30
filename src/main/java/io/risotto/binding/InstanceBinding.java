@@ -6,6 +6,8 @@ import io.risotto.instantiation.InstantiationMode;
 import io.risotto.instantiation.InstantiatorFactory;
 import io.risotto.instantiation.NoOpInstantiator;
 
+import java.util.Objects;
+
 /**
  * This binding binds an actual instance to its bound class. The class of the instance held in the
  * binding must be a subclass of the binding's bound class. This instance is then used to resolve
@@ -13,22 +15,24 @@ import io.risotto.instantiation.NoOpInstantiator;
  * @param <T> the bound type
  */
 public class InstanceBinding<T> extends InstantiatableBinding<T> {
+  private final T instance;
+
   /**
    * Constructs a new {@code InstanceBinding} holding the specified instance and wrapping the
    * specified binding.
    * @param binding the binding to wrap
    * @param instance the associated instance
    * @param <I> the type of the instance, must be a subtype of the bound type
+   * @throws NullPointerException if a parameter is {@code null}
    */
   public <I extends T> InstanceBinding(Binding<T> binding, I instance) {
     super(binding);
 
-    if (instance == null) {
-      throw new NullPointerException("The instance must not be null!");
-    }
+    this.instance = Objects.requireNonNull(instance);
 
     instantiator =
-        InstantiatorFactory.decorateWithDefaultInstantiator(new NoOpInstantiator<>(instance));
+        InstantiatorFactory
+            .decorateInstantiatorForMode(new NoOpInstantiator<>(instance), instantiationMode);
   }
 
   /**
@@ -45,5 +49,37 @@ public class InstanceBinding<T> extends InstantiatableBinding<T> {
     }
 
     return super.withMode(mode);
+  }
+
+  @Override
+  public String toString() {
+    return "InstanceBinding{" +
+        "instance=" + instance +
+        "} " + super.toString();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
+
+    InstanceBinding<?> that = (InstanceBinding<?>) o;
+
+    return instance.equals(that.instance);
+
+  }
+
+  @Override
+  public int hashCode() {
+    int result = super.hashCode();
+    result = 31 * result + instance.hashCode();
+    return result;
   }
 }

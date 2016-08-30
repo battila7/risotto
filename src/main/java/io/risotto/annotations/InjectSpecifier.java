@@ -11,7 +11,6 @@ import java.lang.annotation.Target;
 
 /**
  * Signals that an annotation can be used to specify the class or instance to be injected.
- *
  * @see AnnotatedBinding
  */
 @Target({ANNOTATION_TYPE})

@@ -7,17 +7,22 @@ import io.risotto.dependency.Dependency;
 import io.risotto.dependency.DependencyDetector;
 import io.risotto.dependency.DependencyInjector;
 import io.risotto.exception.DependencyDetectionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Optional;
 
 /**
  * Instantiator implementation that uses dependency injection to create new instances. Uses
- * detectors to detect the dependencies of the class to instantiate and injectors for the
- * actual object creation process. The default implementation for {@link ClassBinding}s.
+ * detectors to detect the dependencies of the class to instantiate and injectors for the actual
+ * object creation process. The default implementation for {@link ClassBinding}s.
  * @param <T> the type of the object to be instantiated
  */
 public class DependencyInjectionInstantiator<T> implements Instantiator<T> {
+  private static final Logger logger =
+      LoggerFactory.getLogger(DependencyInjectionInstantiator.class);
+
   private final Class<T> instantiatableClass;
 
   private DependencyInjector<T> injector;
@@ -32,6 +37,8 @@ public class DependencyInjectionInstantiator<T> implements Instantiator<T> {
 
   @Override
   public T getInstance() {
+    logger.debug("Serving new instance of {}", getInstantiatedClass());
+
     return injector.createInstance();
   }
 

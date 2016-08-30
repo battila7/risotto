@@ -14,9 +14,8 @@ import java.lang.annotation.Target;
 
 /**
  * Signals that a child container should be added to the container on which the annotation is
- * present. The annotation is processed by the {@code ChildConfigurator} and can be used instead of
+ * present. The annotation is processed by the {@link ChildConfigurator} and can be used instead of
  * {@link Container#addChild(ContainerSettings)}.
- * @see ChildConfigurator
  */
 @Target(TYPE)
 @Retention(RUNTIME)

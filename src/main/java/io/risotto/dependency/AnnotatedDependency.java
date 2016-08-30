@@ -8,12 +8,12 @@ import java.lang.annotation.Annotation;
 /**
  * {@code AnnotatedDependency} is used to represent dependencies annotated with an inject specifier
  * annotation. These are annotation marked with the {@link InjectSpecifier} annotation.
- *
+ * <p>
  * A specific instance of {@code AnnotatedDependency} can only be resolved by {@link
  * AnnotatedBinding} objects binding a child type of the type represented by the {@code
  * AnnotatedDependency} and containing the same annotation as the {@code AnnotatedDependency} object
  * in question.
- *
+ * <p>
  * For more information on dependencies, read the documentation of {@link Dependency}.
  * @param <T> the type represented by the dependency
  */
@@ -38,6 +38,13 @@ public class AnnotatedDependency<T> extends Dependency<T> {
    */
   public Class<? extends Annotation> getAnnotation() {
     return annotation;
+  }
+
+  @Override
+  public String toString() {
+    return "AnnotatedDependency{" +
+        "annotation=" + annotation +
+        "} " + super.toString();
   }
 
   @Override

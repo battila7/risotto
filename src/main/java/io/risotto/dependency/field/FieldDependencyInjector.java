@@ -3,7 +3,10 @@ package io.risotto.dependency.field;
 import io.risotto.dependency.Dependency;
 import io.risotto.dependency.DependencyInjector;
 import io.risotto.exception.InstantiationFailedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.Map;
 
@@ -13,6 +16,8 @@ import java.util.Map;
  * @param <T> the target type of dependency injection
  */
 public class FieldDependencyInjector<T> extends DependencyInjector<T> {
+  private static final Logger logger = LoggerFactory.getLogger(FieldDependencyInjector.class);
+
   private final Map<Field, Dependency<?>> fieldMap;
 
   /**
@@ -29,8 +34,14 @@ public class FieldDependencyInjector<T> extends DependencyInjector<T> {
 
   @Override
   public T createInstance() {
+    logger.debug("Creating new instance of {}", instantiatableClass);
+
     try {
-      T instance = instantiatableClass.newInstance();
+      Constructor<T> defaultConstructor = instantiatableClass.getConstructor();
+
+      defaultConstructor.setAccessible(true);
+
+      T instance = defaultConstructor.newInstance();
 
       for (Map.Entry<Field, Dependency<?>> pair : fieldMap.entrySet()) {
         Field field = pair.getKey();
@@ -43,8 +54,7 @@ public class FieldDependencyInjector<T> extends DependencyInjector<T> {
       }
 
       return instance;
-    } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-        | SecurityException | InstantiationFailedException e) {
+    } catch (SecurityException | ReflectiveOperationException | IllegalArgumentException | InstantiationFailedException e) {
       throw new InstantiationFailedException(instantiatableClass, e);
     }
   }
