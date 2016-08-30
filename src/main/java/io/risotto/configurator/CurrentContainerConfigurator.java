@@ -21,7 +21,10 @@ public class CurrentContainerConfigurator implements Configurator {
   public void configure(Container containerInstance, Class<? extends Container> containerClass)
       throws ContainerConfigurationException {
     InstantiatableBinding<Container> binding =
-        bind(Container.class).withAnnotation(CurrentContainer.class).toInstance(containerInstance);
+        bind(Container.class)
+            .withAnnotation(CurrentContainer.class)
+            .toInstance(containerInstance)
+            .privateScope();
 
     addToContainer(containerInstance, containerClass, binding);
   }

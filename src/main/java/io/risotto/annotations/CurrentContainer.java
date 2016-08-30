@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 /**
  * Inject specifier annotation that can be used to mark a target to current container instance
  * injection.
- * @see io.risotto.configurator.CurrentContainerConfigurator;
+ * @see io.risotto.configurator.CurrentContainerConfigurator
  */
 @InjectSpecifier
 @Target({ANNOTATION_TYPE})
