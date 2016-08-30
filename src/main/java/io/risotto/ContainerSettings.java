@@ -101,4 +101,12 @@ public final class ContainerSettings {
   public String getName() {
     return name;
   }
+
+  @Override
+  public String toString() {
+    return "ContainerSettings{" +
+        "containerClass=" + containerClass +
+        ", name='" + name + '\'' +
+        '}';
+  }
 }

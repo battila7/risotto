@@ -9,6 +9,8 @@ import io.risotto.dependency.NamedDependency;
 import io.risotto.exception.DependencyResolutionFailedException;
 import io.risotto.exception.InvalidContainerNameException;
 import io.risotto.exception.ScopeInstantiationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -24,6 +26,8 @@ import java.util.Optional;
  * Abstract dependency container class that must be subclassed by custom dependency containers.
  */
 public abstract class Container {
+  private static final Logger logger = LoggerFactory.getLogger(Container.class);
+
   /**
    * Constant used as the parent of the root container.
    */
@@ -216,6 +220,8 @@ public abstract class Container {
       }
     }
 
+    logger.debug("Added child container settings: {}", containerSettings);
+
     configurableChildList.add(containerSettings);
   }
 
@@ -231,6 +237,8 @@ public abstract class Container {
       throw new NullPointerException("The binding must not be null!");
     }
 
+    logger.debug("Added binding: {}", instantiatableBinding);
+
     // TODO: Check if exists
     bindingList.add(instantiatableBinding);
 
@@ -239,6 +247,9 @@ public abstract class Container {
     instantiatableBinding.getImmediateDependencies().stream()
         .forEach(d -> {
           d.setOrigin(this);
+
+          logger.debug("Immediate dependency from binding added: {}", d);
+
           dependencyList.add(d);
         });
   }
@@ -253,6 +264,8 @@ public abstract class Container {
       childContainer.performResolution();
     }
 
+    logger.info("Performing dependency resolution for container: {}", name);
+
     for (Dependency<?> dependency : dependencyList) {
       Optional<InstantiatableBinding<?>> bindingOptional = resolve(dependency);
 
@@ -260,7 +273,11 @@ public abstract class Container {
         throw new DependencyResolutionFailedException(dependency);
       }
 
-      dependency.setResolvingBinding(bindingOptional.get());
+      InstantiatableBinding<?> resolvingBinding = bindingOptional.get();
+
+      logger.debug("Resolved {} with {}", dependency, resolvingBinding);
+
+      dependency.setResolvingBinding(resolvingBinding);
     }
   }
 
@@ -289,7 +306,7 @@ public abstract class Container {
   }
 
   /**
-   * Imports the appropiate bindings from the current container instance to the specified target
+   * Imports the appropriate bindings from the current container instance to the specified target
    * container.
    * @param targetContainer the container the bindings should be imported to
    * @see Scope#isImportAllowedTo(Container)
@@ -297,15 +314,23 @@ public abstract class Container {
   /* package */ final void importBindingsTo(Container targetContainer) {
     bindingList.stream()
         .filter(b -> b.isImportAllowedTo(targetContainer))
-        .forEach(b -> targetContainer.bindingList.add(b));
+        .forEach(b -> {
+          logger.debug("Importing binding: {} to: {}", b, targetContainer.getName());
+
+          targetContainer.bindingList.add(b);
+        });
   }
 
   private Optional<InstantiatableBinding<?>> resolve(Dependency<?> dependency) {
+    logger.debug("Resolving dependency: {}", dependency);
+
     for (InstantiatableBinding<?> binding : bindingList) {
       if (binding.canResolve(dependency)) {
         return Optional.of(binding);
       }
     }
+
+    logger.debug("Could not resolve locally, checking child containers.");
 
     return childContainerMap.values().stream()
         .map(c -> c.resolve(dependency))

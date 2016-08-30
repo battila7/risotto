@@ -7,6 +7,8 @@ import io.risotto.dependency.Dependency;
 import io.risotto.dependency.DependencyDetector;
 import io.risotto.dependency.DependencyInjector;
 import io.risotto.exception.DependencyDetectionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +20,9 @@ import java.util.Optional;
  * @param <T> the type of the object to be instantiated
  */
 public class DependencyInjectionInstantiator<T> implements Instantiator<T> {
+  private static final Logger logger =
+      LoggerFactory.getLogger(DependencyInjectionInstantiator.class);
+
   private final Class<T> instantiatableClass;
 
   private DependencyInjector<T> injector;
@@ -32,6 +37,8 @@ public class DependencyInjectionInstantiator<T> implements Instantiator<T> {
 
   @Override
   public T getInstance() {
+    logger.debug("Serving new instance of {}", getInstantiatedClass());
+
     return injector.createInstance();
   }
 

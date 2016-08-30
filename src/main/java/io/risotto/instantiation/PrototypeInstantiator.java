@@ -2,6 +2,8 @@ package io.risotto.instantiation;
 
 
 import io.risotto.exception.PrototypeCloneException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,6 +16,8 @@ import java.util.List;
  * @param <T> the type of the object to be instantiated
  */
 public class PrototypeInstantiator<T> extends InstantiatorDecorator<T> {
+  private static final Logger logger = LoggerFactory.getLogger(PrototypeInstantiator.class);
+
   private final PrototypeCloner<T> prototypeCloner;
 
   private T prototype;
@@ -42,8 +46,13 @@ public class PrototypeInstantiator<T> extends InstantiatorDecorator<T> {
     }
 
     if (prototype == null) {
+      logger.debug("Obtaining prototype instance of {}", getInstantiatedClass());
+
       prototype = super.getInstance();
     }
+
+
+    logger.debug("Serving a new clone of {}", getInstantiatedClass());
 
     return prototypeCloner.createClone(prototype);
   }

@@ -8,8 +8,9 @@ import io.risotto.dependency.processor.DependencyProcessor;
 import io.risotto.dependency.processor.ProcessorChain;
 import io.risotto.exception.DependencyDetectionException;
 import io.risotto.exception.InstantiationFailedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
@@ -25,6 +26,8 @@ import java.util.Optional;
  * @param <T> the type of the object to be instantiated
  */
 public class MethodInstantiator<T> implements Instantiator<T> {
+  private static final Logger logger = LoggerFactory.getLogger(MethodInstantiator.class);
+
   private final Class<T> instantiatedClass;
 
   private final Container container;
@@ -50,6 +53,8 @@ public class MethodInstantiator<T> implements Instantiator<T> {
 
   @Override
   public T getInstance() {
+    logger.debug("Serving new instance of {}", getInstantiatedClass());
+
     return injector.createInstance();
   }
 
@@ -105,6 +110,8 @@ public class MethodInstantiator<T> implements Instantiator<T> {
   }
 
   private class MethodDependencyInjector extends DependencyInjector<T> {
+    private final Logger logger = LoggerFactory.getLogger(MethodDependencyInjector.class);
+
     private final List<Dependency<?>> dependencies;
 
     MethodDependencyInjector(Class<T> instantiatableClass,
@@ -117,6 +124,8 @@ public class MethodInstantiator<T> implements Instantiator<T> {
     @Override
     @SuppressWarnings("unchecked")
     public T createInstance() {
+      logger.debug("Retrieving instance of {} using method call {}", instantiatableClass, method);
+
       try {
         List<Object> bindingResults = new ArrayList<>();
 

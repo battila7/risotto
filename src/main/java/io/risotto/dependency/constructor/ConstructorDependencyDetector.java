@@ -20,12 +20,9 @@ import java.util.stream.Collectors;
 /**
  * {@code ConstructorDependencyDetector} inspects the constructors of a class and looks for the
  * {@link Inject} annotation. If an injectable constructor is found, a new {@link
- * ConstructorDependencyInjector} is created.
- * <p>
- * Dependencies are detected using constructor parameter inspection. Each constructor parameter
- * becomes an immediate dependency.
- * <p>
- * Note that only <b>public</b> constructors are inspected.
+ * ConstructorDependencyInjector} is created. <p> Dependencies are detected using constructor
+ * parameter inspection. Each constructor parameter becomes an immediate dependency. <p> Note that
+ * only <b>public</b> constructors are inspected.
  * @param <T> the type to dependency detect
  */
 public class ConstructorDependencyDetector<T> extends DependencyDetector<T> {
@@ -54,7 +51,8 @@ public class ConstructorDependencyDetector<T> extends DependencyDetector<T> {
     Optional<List<Dependency<?>>> dependenciesOptional = processParameters(injectableConstructor);
 
     if (dependenciesOptional.isPresent()) {
-      logger.info("Successfully set up constructor injection for {}.", clazz.getCanonicalName());
+      logger.debug("Successfully set up constructor injection for {} using constructor {}.", clazz,
+          injectableConstructor);
 
       dependencyInjector =
           new ConstructorDependencyInjector<>(clazz, dependenciesOptional.get(),
@@ -69,6 +67,8 @@ public class ConstructorDependencyDetector<T> extends DependencyDetector<T> {
     List<Constructor<?>> injectableConstructors = getInjectableConstructorList();
 
     if (injectableConstructors.size() != 1) {
+      logger.debug("Zero or more than one injectable constructors found, detection failed.");
+
       return Optional.empty();
     }
 
@@ -90,6 +90,8 @@ public class ConstructorDependencyDetector<T> extends DependencyDetector<T> {
     List<Dependency<?>> dependencies = new LinkedList<>();
 
     DependencyProcessor processorChain = ProcessorChain.getProcessorChain();
+
+    logger.debug("Processing parameters of injectable constructor {}", constructor);
 
     for (Parameter parameter : parameters) {
       Optional<Dependency<?>> dependencyOptional = processorChain.process(parameter);

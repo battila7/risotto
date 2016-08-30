@@ -6,6 +6,8 @@ import io.risotto.Container;
 import io.risotto.ContainerSettings;
 import io.risotto.annotations.Child;
 import io.risotto.exception.ContainerConfigurationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 
@@ -14,6 +16,8 @@ import java.lang.reflect.Method;
  * {@link Container#addChild(ContainerSettings)} under the hood.
  */
 public class ChildConfigurator implements Configurator {
+  private static final Logger logger = LoggerFactory.getLogger(ChildConfigurator.class);
+
   private static final String EMPTY_STRING = "";
 
   private static final String ADD_CHILD_METHOD_NAME = "addChild";
