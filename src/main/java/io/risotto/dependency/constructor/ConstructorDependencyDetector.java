@@ -67,6 +67,8 @@ public class ConstructorDependencyDetector<T> extends DependencyDetector<T> {
     List<Constructor<?>> injectableConstructors = getInjectableConstructorList();
 
     if (injectableConstructors.size() != 1) {
+      logger.debug("Zero or more than one injectable constructors found, detection failed.");
+
       return Optional.empty();
     }
 
@@ -88,6 +90,8 @@ public class ConstructorDependencyDetector<T> extends DependencyDetector<T> {
     List<Dependency<?>> dependencies = new LinkedList<>();
 
     DependencyProcessor processorChain = ProcessorChain.getProcessorChain();
+
+    logger.debug("Processing parameters of injectable constructor {}", constructor);
 
     for (Parameter parameter : parameters) {
       Optional<Dependency<?>> dependencyOptional = processorChain.process(parameter);

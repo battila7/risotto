@@ -52,11 +52,12 @@ public class SetterDependencyDetector<T> extends DependencyDetector<T> {
     List<Method> injectableMethods = getInjectableMethods();
 
     if (injectableMethods.isEmpty()) {
+      logger.debug("Could not detect injectable setter methods for {}", clazz);
+
       return Optional.empty();
     }
 
-    logger.debug("Successfully set up setter method injection for {} using methods {}", clazz,
-        methodMap.keySet());
+    logger.debug("Methods {} detected for {}", methodMap.keySet(), clazz);
 
     for (Method method : injectableMethods) {
       Optional<Dependency<?>> dependencyOptional = processorChain.process(method);

@@ -48,11 +48,12 @@ public class FieldDependencyDetector<T> extends DependencyDetector<T> {
     List<Field> injectableFields = getInjectableFields();
 
     if (injectableFields.isEmpty()) {
+      logger.debug("Could not detect injectable fields for {}", clazz);
+
       return Optional.empty();
     }
 
-    logger.debug("Successfully set up field injection for {} using fields {}", clazz,
-        fieldMap.keySet());
+    logger.debug("Fields {} detected for {}", fieldMap.keySet(), clazz);
 
     for (Field field : injectableFields) {
       Optional<Dependency<?>> dependencyOptional = processorChain.process(field);
