@@ -22,7 +22,7 @@ When writing Java applications, we pay special attention to encapsulation and co
 Actually, it's not! Cooking some tasty Risotto is as easy as:
 
 ~~~~Java
-    Container rootContainer = Risotto.addRootContainer(container(MyRootContainer.class);
+    Container rootContainer = Risotto.addRootContainer(container(MyRootContainer.class));
 ~~~~
 
 When adding a root container, Risotto configures the whole container tree and performs dependency resolution. Then you can request instances:
@@ -37,7 +37,7 @@ When adding a root container, Risotto configures the whole container tree and pe
 Right away, sir! A simple container would look somehow like this:
 
 ~~~~Java
-public final class MyContainer extends Container {
+public final class MyRootContainer extends Container {
     @BindingSupplier
     public Application application() {
         return new Application();
