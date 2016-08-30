@@ -1,16 +1,24 @@
 package io.risotto.dependency.processor;
 
+import static io.risotto.reflection.ReflectionUtils.getInjectSpecifier;
+import static io.risotto.reflection.ReflectionUtils.isAnnotationDirectlyPresent;
+
 import io.risotto.annotations.InjectSpecifier;
 import io.risotto.annotations.Named;
 import io.risotto.dependency.Dependency;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Optional;
 
+/**
+ * Processor implementation that's able to recognize basic dependencies. Basic dependencies are the
+ * simplest dependencies withoout {@link Named} or {@link InjectSpecifier} marked annotations. If it
+ * detects an annotation that might be useful for other processors, passes the processed object to
+ * its successor in the responsibility chain.
+ */
 class BasicProcessor extends DependencyProcessor {
   @Override
   public Optional<Dependency<?>> process(Parameter parameter) {
@@ -27,9 +35,7 @@ class BasicProcessor extends DependencyProcessor {
       return super.process(method);
     }
 
-    Class<?> targetParameterType = method.getParameterTypes()[0];
-
-    return Optional.of(new Dependency<>(targetParameterType));
+    return Optional.of(new Dependency<>(method.getParameterTypes()[0]));
   }
 
   @Override
@@ -38,24 +44,11 @@ class BasicProcessor extends DependencyProcessor {
       return super.process(field);
     }
 
-    Class<?> targetFieldType = field.getType();
-
-    return Optional.of(new Dependency<>(targetFieldType));
+    return Optional.of(new Dependency<>(field.getType()));
   }
 
   private boolean shouldPassProcessing(AnnotatedElement element) {
-    if (element.isAnnotationPresent(Named.class)) {
-      return true;
-    }
-
-    for (Annotation annotation : element.getAnnotations()) {
-      Class<? extends Annotation> annotationType = annotation.annotationType();
-
-      if (annotationType.isAnnotationPresent(InjectSpecifier.class)) {
-        return true;
-      }
-    }
-
-    return false;
+    return isAnnotationDirectlyPresent(element, Named.class)
+        || getInjectSpecifier(element).isPresent();
   }
 }

@@ -1,14 +1,13 @@
 package io.risotto.dependency.setter;
 
-import static java.lang.reflect.Modifier.isAbstract;
-import static java.lang.reflect.Modifier.isPublic;
-import static java.lang.reflect.Modifier.isStatic;
-
 import io.risotto.annotations.Inject;
 import io.risotto.dependency.Dependency;
 import io.risotto.dependency.DependencyDetector;
 import io.risotto.dependency.processor.DependencyProcessor;
 import io.risotto.dependency.processor.ProcessorChain;
+import io.risotto.reflection.ReflectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -19,7 +18,25 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Detector implementation that inspects <b>public</b> setter methods of a class and looks for the
+ * {@link Inject} annotation on them. If setter inspection succeeds, a new {@link
+ * SetterDependencyInjector} is created.
+ *
+ * Only <b>public</b> methods having name starting with {@code set} and having one parameter are
+ * considered as a target to dependency injection. Note that <b>static</b> or <b>abstract</b>
+ * methods are ignored.
+ * @param <T> the type to dependency detect
+ */
 public class SetterDependencyDetector<T> extends DependencyDetector<T> {
+  private static final Logger logger = LoggerFactory.getLogger(SetterDependencyDetector.class);
+
+  private static final String SETTER_METHOD_NAME_PREFIX = "set";
+
+  /**
+   * Constructs a new instance that will be used to detect the dependencies of the specified class.
+   * @param clazz the dependency detectable class
+   */
   public SetterDependencyDetector(Class<T> clazz) {
     super(clazz);
   }
@@ -34,9 +51,13 @@ public class SetterDependencyDetector<T> extends DependencyDetector<T> {
 
     List<Method> injectableMethods = getInjectableMethods();
 
-    if (injectableMethods.size() == 0) {
+    if (injectableMethods.isEmpty()) {
+      logger.debug("Could not detect injectable setter methods for {}", clazz);
+
       return Optional.empty();
     }
+
+    logger.debug("Methods {} detected for {}", methodMap.keySet(), clazz);
 
     for (Method method : injectableMethods) {
       Optional<Dependency<?>> dependencyOptional = processorChain.process(method);
@@ -56,21 +77,11 @@ public class SetterDependencyDetector<T> extends DependencyDetector<T> {
   }
 
   private List<Method> getInjectableMethods() {
-    return Arrays.stream(clazz.getDeclaredMethods())
-        .filter(m -> m.isAnnotationPresent(Inject.class))
+    return Arrays.stream(clazz.getMethods())
+        .filter(ReflectionUtils::isInjectDirectlyPresent)
         .filter(m -> m.getParameterCount() == 1)
-        .filter(m -> m.getName().startsWith("set"))
-        .filter(m -> isMethodInjectable(m))
+        .filter(m -> m.getName().startsWith(SETTER_METHOD_NAME_PREFIX))
+        .filter(ReflectionUtils::isMethodInjectable)
         .collect(Collectors.toList());
-  }
-
-  private boolean isMethodInjectable(Method method) {
-    int modifiers = method.getModifiers();
-
-    if (isStatic(modifiers)) {
-      return false;
-    }
-
-    return (isPublic(modifiers)) && (!isAbstract(modifiers));
   }
 }
