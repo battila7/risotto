@@ -20,7 +20,8 @@ public class ConfiguratorManager {
       new ArrayList<>();
 
   static {
-    registerDefaultConfigurator(new ChildConfigurator(), new BindingConfigurator());
+    registerDefaultConfigurator(new ChildConfigurator(), new BindingConfigurator(),
+        new CurrentContainerConfigurator());
   }
 
   /**
