@@ -6,6 +6,8 @@ import io.risotto.dependency.DependencyDetector;
 import io.risotto.dependency.processor.DependencyProcessor;
 import io.risotto.dependency.processor.ProcessorChain;
 import io.risotto.reflection.ReflectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -20,14 +22,13 @@ import java.util.stream.Collectors;
  * Detector class that inspects the fields of a class and looks for the {@link Inject} annotation on
  * them. Public, protected, private and package scoped fields are all inspected and can be a target
  * to dependency injection. If field inspection succeeds, a new {@link FieldDependencyInjector} is
- * created.
- * <p>
- * Each field (with the {@code Inject} annotation) becomes an immediate dependency.
- * <p>
+ * created. <p> Each field (with the {@code Inject} annotation) becomes an immediate dependency. <p>
  * Note that <b>static</b> and/or <b>final</b> fields are not inspected.
  * @param <T> the type to dependency detect
  */
 public class FieldDependencyDetector<T> extends DependencyDetector<T> {
+  private static final Logger logger = LoggerFactory.getLogger(FieldDependencyDetector.class);
+
   /**
    * Constructs a new instance that will be used to detect the dependencies of the specified class.
    * @param clazz the dependency detectable class
@@ -49,6 +50,9 @@ public class FieldDependencyDetector<T> extends DependencyDetector<T> {
     if (injectableFields.isEmpty()) {
       return Optional.empty();
     }
+
+    logger.debug("Successfully set up field injection for {} using fields {}", clazz,
+        fieldMap.keySet());
 
     for (Field field : injectableFields) {
       Optional<Dependency<?>> dependencyOptional = processorChain.process(field);

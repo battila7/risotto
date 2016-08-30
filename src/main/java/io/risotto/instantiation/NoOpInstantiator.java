@@ -2,6 +2,8 @@ package io.risotto.instantiation;
 
 import io.risotto.binding.InstanceBinding;
 import io.risotto.dependency.Dependency;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
@@ -12,6 +14,8 @@ import java.util.List;
  * @param <T> the type of the wrapped instance
  */
 public class NoOpInstantiator<T> implements Instantiator<T> {
+  private static final Logger logger = LoggerFactory.getLogger(NoOpInstantiator.class);
+
   private final T instance;
 
   /**
@@ -24,6 +28,8 @@ public class NoOpInstantiator<T> implements Instantiator<T> {
 
   @Override
   public T getInstance() {
+    logger.debug("Serving wrapped instance of {}", getInstantiatedClass());
+
     return instance;
   }
 

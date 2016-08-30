@@ -1,5 +1,8 @@
 package io.risotto.instantiation;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * {@code SingletonInstantiator} caches an instance and returns that on every request. It's very
  * frequent that only one instance of a class should be used every where - that's the problem the
@@ -11,6 +14,8 @@ package io.risotto.instantiation;
  * @param <T> the type of the cached instance
  */
 public class SingletonInstantiator<T> extends InstantiatorDecorator<T> {
+  private static final Logger logger = LoggerFactory.getLogger(SingletonInstantiator.class);
+
   private T instance;
 
   /**
@@ -32,8 +37,12 @@ public class SingletonInstantiator<T> extends InstantiatorDecorator<T> {
   @Override
   public T getInstance() {
     if (instance == null) {
+      logger.debug("Caching instance of {}", getInstantiatedClass());
+
       instance = super.getInstance();
     }
+
+    logger.debug("Serving cached instance of {}", getInstantiatedClass());
 
     return instance;
   }

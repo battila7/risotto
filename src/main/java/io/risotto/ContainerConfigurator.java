@@ -4,6 +4,8 @@ import io.risotto.configurator.Configurator;
 import io.risotto.configurator.ConfiguratorManager;
 import io.risotto.exception.ContainerConfigurationException;
 import io.risotto.exception.ContainerInstantiationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.util.Map;
@@ -13,6 +15,8 @@ import java.util.Map;
  * using {@code ContainerConfigurator} instances.
  */
 final class ContainerConfigurator {
+  private static final Logger logger = LoggerFactory.getLogger(ContainerConfigurator.class);
+
   private final ContainerSettings containerSettings;
 
   private final Container parentContainer;
@@ -41,6 +45,9 @@ final class ContainerConfigurator {
   public Container instantiateContainer() throws ContainerInstantiationException {
     Class<? extends Container> containerClass = containerSettings.getContainerClass();
 
+    logger.info("Instantiating container class: {} with name: {}", containerClass,
+        containerSettings.getName());
+
     try {
       Constructor<? extends Container> defaultConstructor = containerClass.getConstructor();
 
@@ -68,7 +75,13 @@ final class ContainerConfigurator {
    */
   public void configureContainer()
       throws ContainerInstantiationException, ContainerConfigurationException {
+    logger.info("Configuring container: {}", containerSettings.getName());
+
     instance.setParentContainer(parentContainer);
+
+    instance.setName(containerSettings.getName());
+
+    logger.debug("Calling configure() method of container class.");
 
     instance.configure();
 
@@ -79,10 +92,14 @@ final class ContainerConfigurator {
 
   private void callConfigurators() throws ContainerConfigurationException {
     for (Configurator configurator : ConfiguratorManager.getDefaultConfigurators()) {
+      logger.debug("Calling configurator: {}", configurator);
+
       configurator.configure(instance, containerSettings.getContainerClass());
     }
 
     for (Configurator configurator : containerSettings.getConfiguratorList()) {
+      logger.debug("Calling configurator: {}", configurator);
+
       configurator.configure(instance, containerSettings.getContainerClass());
     }
   }
@@ -95,6 +112,8 @@ final class ContainerConfigurator {
       ContainerConfigurator childConfigurator = new ContainerConfigurator(settings, instance);
 
       String name = settings.getName();
+
+      logger.debug("Initiating configuration process for child: {}", name);
 
       Container childInstance = childConfigurator.instantiateContainer();
 

@@ -1,5 +1,8 @@
 package io.risotto.configurator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -11,6 +14,8 @@ import java.util.List;
  * registered using the {@link #registerDefaultConfigurator(Configurator...)} method.
  */
 public class ConfiguratorManager {
+  private static final Logger logger = LoggerFactory.getLogger(ConfiguratorManager.class);
+
   private static final List<Configurator> defaultConfiguratorList =
       new ArrayList<>();
 
@@ -24,6 +29,8 @@ public class ConfiguratorManager {
    * @throws NullPointerException if a {@code null} value has been passed
    */
   public static void registerDefaultConfigurator(Configurator... configurators) {
+    logger.info("Registered default configurators: {}", Arrays.toString(configurators));
+
     for (Configurator configurator : configurators) {
       if (configurator == null) {
         throw new NullPointerException("The configurators array must not contain null elements!");

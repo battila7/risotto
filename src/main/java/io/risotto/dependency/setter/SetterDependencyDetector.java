@@ -6,6 +6,8 @@ import io.risotto.dependency.DependencyDetector;
 import io.risotto.dependency.processor.DependencyProcessor;
 import io.risotto.dependency.processor.ProcessorChain;
 import io.risotto.reflection.ReflectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -27,6 +29,8 @@ import java.util.stream.Collectors;
  * @param <T> the type to dependency detect
  */
 public class SetterDependencyDetector<T> extends DependencyDetector<T> {
+  private static final Logger logger = LoggerFactory.getLogger(SetterDependencyDetector.class);
+
   private static final String SETTER_METHOD_NAME_PREFIX = "set";
 
   /**
@@ -50,6 +54,9 @@ public class SetterDependencyDetector<T> extends DependencyDetector<T> {
     if (injectableMethods.isEmpty()) {
       return Optional.empty();
     }
+
+    logger.debug("Successfully set up setter method injection for {} using methods {}", clazz,
+        methodMap.keySet());
 
     for (Method method : injectableMethods) {
       Optional<Dependency<?>> dependencyOptional = processorChain.process(method);

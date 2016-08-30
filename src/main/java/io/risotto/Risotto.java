@@ -7,6 +7,8 @@ import io.risotto.exception.ContainerInstantiationException;
 import io.risotto.exception.DependencyResolutionFailedException;
 import io.risotto.exception.RootContainerAlreadySetException;
 import io.risotto.exception.RootContainerUnsetException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
@@ -15,6 +17,7 @@ import java.util.Optional;
  * Instantiation is prohibited, only contains static methods.
  */
 public final class Risotto {
+  private static final Logger logger = LoggerFactory.getLogger(Risotto.class);
   /**
    * The path that can be used with {@link #getContainer(String)} to retrieve the root container.
    */
@@ -56,10 +59,14 @@ public final class Risotto {
       throw new NullPointerException("The container settings parameter must not be null!");
     }
 
+    logger.info("Attempting to set root container: {}", containerSettings);
+
     synchronized (rootContainerLockObject) {
       if (rootContainer != null) {
         throw new RootContainerAlreadySetException();
       }
+
+      logger.debug("Root container unset, initiating configuration process.");
 
       ContainerConfigurator configurator =
           new ContainerConfigurator(containerSettings, HAS_NO_PARENT);
@@ -69,6 +76,8 @@ public final class Risotto {
       configurator.configureContainer();
 
       rootContainer.performResolution();
+
+      logger.info("The container tree is ready.");
 
       return rootContainer;
     }
